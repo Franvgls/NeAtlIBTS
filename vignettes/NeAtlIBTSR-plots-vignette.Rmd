@@ -1,0 +1,76 @@
+---
+title: "NeAtlIBTSR"
+author: "Fran Velasco"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: yeti
+    encoding: {UTF-8}
+---
+
+```{r}
+library(NeAtlIBTS.R)
+
+```
+
+### Plots of gear behaviour from the NorthEastern Atlantic IBTS
+
+* Graphs available from the HH DATRAS files
+* This package produces figures of the different parameters of the gear behaviour in relation to Depth and between them.
+  - Data can be downloaded directly from DATRAS making use of the icesDATRAS library, 
+  - Or taken from the working directory, where they should be loaded in advance with the DATRAS HH format 
+  - Default colors are dark blue for the depth, and steelblue for the shallower depths.
+
+
+## Warp vs Depth graphs
+
+```{r Warp-Depth, fig.width=10.1,fig.height=5.1,include=TRUE,results='hide'}
+par(mfrow=c(1,2))
+gearPlotHH.wrpdp("SWC-IBTS",c(2011:2016),1,col1="darkblue")
+gearPlotHH.wrpdp("SWC-IBTS",c(2011:2016),1,col1="darkblue",pF=F)
+```
+
+* pF option hides the points and leaves the curves to remark gear behaviour
+* You can download the data for the years selected using the function getHHdata.ts
+
+```{r Get data,include=TRUE,results='hide'}
+ieigfs<-getHHdata.ts(Survey="IE-IGFS",years=c(2011:2016),quarter=4)
+```
+
+
+## Door spread vs depth graphs
+
+* Once downloaded the data we can produce plots and format them without downloading again
+
+```{r DoorSpread, fig.width=10.2,fig.height=5.1,include=TRUE,results='hide',fig.align='left',echo=FALSE,message=FALSE}
+par(mfrow=c(1,2))
+gearPlotHH.dodp(ieigfs,years=c(2011:2016),quarter=4,getICES = FALSE)
+gearPlotHH.dodp(ieigfs,c(2011:2016),4,pF=F,getICES=F)
+```
+
+
+## Wing spread vs depth graphs
+
+```{r WingSpread, fig.width=10,fig.height=4.1,fig.align='left',include=TRUE,results='hide',echo=FALSE,message=FALSE}
+par(mfrow=c(1,2))
+gearPlotHH.wgdp("EVHOE",c(2011:2016),4,.3)
+gearPlotHH.wgdp("EVHOE",c(2011:2016),4,.4,pF=F)
+```
+
+## Net opening (Vertical) vs depth graphs
+
+```{r NetOpening,echo=FALSE,fig.align='center', fig.width=10, fig.height=4.1,include=TRUE,results='hide',message=FALSE}
+par(mfrow=c(1,2))
+gearPlotHH.nodp("SP-PORC",c(2011:2016),3,.3)
+gearPlotHH.nodp("SP-PORC",c(2011:2016),3,.4,pF=F)
+```
+
+## Door spread vs Wing spread graphs
+
+```{r DoorSpread vs WingSpread, fig.width=10, fig.height=4.1,include=TRUE,results='hide'}
+par(mfrow=c(1,2))
+gearPlotHH.wgdo("SP-ARSA",c(2014:2016),1,col1="darkblue",col2="steelblue2")
+gearPlotHH.wgdo("SP-ARSA",c(2014:2016),1,col1="darkblue",col2="steelblue2",pF=F)
+```
