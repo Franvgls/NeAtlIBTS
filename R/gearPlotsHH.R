@@ -27,9 +27,8 @@
 #' @examples gearPlotsHH(damb,c(2014:2016),4,getICES=F)
 #' @export
 gearPlotsHH<-function(Survey,years,quarter,c.inta=.5,c.intb=.5,col1="darkblue",col2="steelblue2",getICES=T,pF=T) {
-   require(icesDatras)                                         
   if (getICES) {
-    dumb<-getHHdata.ts(Survey,years,quarter)
+    dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
   }
   if (!getICES) {
     dumb<-Survey

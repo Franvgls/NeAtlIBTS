@@ -2,10 +2,13 @@
 
 export(IBTSNeAtl_map)
 export(InfoHH)
+export(SpeciesCAperYear)
 export(gearPlotHH.dodp)
 export(gearPlotHH.nodp)
 export(gearPlotHH.wgdo)
 export(gearPlotHH.wgdp)
 export(gearPlotHH.wrpdp)
 export(gearPlotsHH)
+export(getCAdata.ts)
 export(getHHdata.ts)
+export(getHLdata.ts)

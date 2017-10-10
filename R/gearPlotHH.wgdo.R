@@ -28,7 +28,7 @@
 #' @export
 gearPlotHH.wgdo<-function(Survey,years,quarter,col1="darkblue",col2="steelblue2",getICES=T,pF=T) {
   if (getICES) {
-    dumb<-getHHdata.ts(Survey,years,quarter)
+    dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
   }
   if (!getICES) {
     dumb<-Survey

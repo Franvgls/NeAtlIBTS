@@ -11,7 +11,7 @@
 #' @export
 InfoHH<-function(Survey,years,quarter,getICES=T) {
   if (getICES) {
-    dumb<-getHHdata.ts(Survey,years,quarter)
+    dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
     print(tapply(dumb$HaulNo,dumb[,c("SweepLngt","Year")],"length"))
   }
   if (!getICES) {
