@@ -1,15 +1,22 @@
 Package: NeAtlIBTS
+<<<<<<< HEAD
 Title: R Library for the Northeastern Atlantic & NS IBTS Surveys
 Description: Produces graphs and gear parameters for the Northeastern Atlantic Manual and Surveys
 Version: 0.1.9
 Author: FVG <franvgls@gmail.com>
+=======
+Title: R Library for the Northeastern Atlantic IBTS Surveys
+Description: Produces graphs and parameters for the Northeastern Atlantic Manual and Surveys
+Version: 0.2
+Author: Fran Velasco <franvgls@gmail.com>
+>>>>>>> 265322e23ae60ac2836c70fd4a1edcb96a3ea0ed
 Maintainer: FVG <franvgls@gmail.com>
 Depends:
     R (>= 2.15.2)
 Lazydata: true
 Imports:
-    icesDatras,
-    tidyverse,
+    icesDatras (>= 1.2),
+    SSOAP (>= 0.91),
 License: GPL
 Encoding: UTF-8
 LazyData: True

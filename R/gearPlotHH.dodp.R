@@ -18,9 +18,12 @@
 #' @examples gearPlotHHNS.dodp("NS-IBTS",c(2014:2017),3,"SCO",.8,.3,col1="darkblue",col2="darkgreen")
 #' @export
 gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblue",col2="steelblue2",getICES=T,pF=T) {
-   require(icesDatras)                                         
   if (getICES) {
+<<<<<<< HEAD
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
+=======
+    dumb<-getDatras2("HH",Survey,years,quarter)
+>>>>>>> 265322e23ae60ac2836c70fd4a1edcb96a3ea0ed
   }
   if (!getICES) {
     dumb<-Survey

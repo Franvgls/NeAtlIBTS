@@ -13,11 +13,14 @@
 InfoHH<-function(Survey,years,quarter,country=NA,getICES=T) {
   if (getICES) {
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
+<<<<<<< HEAD
     countries<-unique(dumb$Country)
     if(!is.na(country)) {
       if (!country %in% countries) stop(paste(country,"is not present in this survey/quarter"))
     dumb<-dplyr::filter(dumb,Country==country)
     }
+=======
+>>>>>>> 265322e23ae60ac2836c70fd4a1edcb96a3ea0ed
     print(tapply(dumb$HaulNo,dumb[,c("SweepLngt","Year")],"length"))
   }
   if (!getICES) {
