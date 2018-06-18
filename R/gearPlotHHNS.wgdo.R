@@ -6,27 +6,17 @@
 #' @param Survey: either the Survey to be downloaded from DATRAS (see details), or a data frame with the HH information with  the DATRAS HH format  and the years and quarter selected in years and quarter 
 #' @param years: years to be downloaded and used, had to be available in DATRAS. The time series will be ploted in grey dots, last year in steelblue2, it depends on the order of years, not the actual chronological year.
 #' @param quarter: the quarter of the survey to be ploted
+#' @param country: The country chosen to be plotted (checks if it's available in the HH file)
 #' @param datHH: an HH data object with Survey, Year and Quarter columns, overrides Survey, Years, Quarters
 #' @param col1: color for the symbols and lines for the whole set if only one set of sweeps are used, and for the data from the long set of sweeps.
 #' @param col2: color for the symbols and lines for the data from the short sweeps in case there are two.
 #' @param pF: takes out the points and leaves only the lines in the graphs
 #' @details Surveys available in DATRAS: i.e. SWC-IBTS, ROCKALL, NIGFS, IE-IGFS, SP-PORC, FR-CGFS, EVHOE, SP-NORTH, PT-IBTS and SP-ARSA
 #' @return Produces a graph with DoorSpread vs. WingSpread, it also includes information on the ship, the time series used, the models and parameters estimated.
-#' @examples gearPlotHH.wgdo("SWC-IBTS",c(2014:2016),1,col1="darkblue",col2="steelblue3")
-#' @examples gearPlotHH.wgdo("SWC-IBTS",c(2013:2016),4)
-#' @examples gearPlotHH.wgdo("ROCKALL",c(2013:2016),3)
-#' @examples gearPlotHH.wgdo("NIGFS",c(2005:2016),1)
-#' @examples gearPlotHH.wgdo("NIGFS",c(2006:2007,2009:2016),4)
-#' @examples gearPlotHH.wgdo("IE-IGFS",c(2011:2016),4)
-#' @examples gearPlotHH.wgdo("SP-PORC",c(2003:2016),3)
-#' @examples gearPlotHH.wgdo("FR-CGFS",c(1998:2016),4)
-#' @examples gearPlotHH.wgdo("EVHOE",c(1997:2016),4)
-#' @examples gearPlotHH.wgdo("SP-NORTH",c(2014:2016),4,col1="darkblue")
-#' @examples gearPlotHH.wgdo("SP-ARSA",c(2014:2016),1,col1="darkblue",col2="steelblue2")
-#' @examples gearPlotHH.wgdo("SP-ARSA",c(2014:2016),4)
-#' @examples gearPlotHH.wgdo(damb,c(2014:2016),4,getICES=F,pF=F)
+#' @examples gearPlotHHNS.wgdo("NS-IBTS",c(2016:2017),1,"SWE")
+#' @examples gearPlotHHNS.wgdo("NS-IBTS",c(2015:2017),1,"SWE")
 #' @export
-gearPlotHH.wgdo<-function(Survey,years,quarter,col1="darkblue",col2="steelblue2",getICES=T,pF=T) {
+gearPlotHHNS.wgdo<-function(Survey="NS-IBTS",years,quarter,country,col1="darkblue",col2="steelblue2",getICES=T,pF=T) {
   if (getICES) {
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
   }
@@ -35,26 +25,31 @@ gearPlotHH.wgdo<-function(Survey,years,quarter,col1="darkblue",col2="steelblue2"
     if (!all(unique(years) %in% unique(dumb$Year))) stop(paste0("Not all years selected in years are present in the data.frame, check: ",unique(years)[which(!(unique(years) %in% unique(dumb$Year)))]))
     if (unique(dumb$Quarter)!=quarter) stop(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
   }
-  # if (all(is.na(dumb$SweepLngt))) {stop("All information on sweeplength is NA. No wings used in this survey?")}
-  dumb$SweepLngt[is.na(dumb$SweepLngt)]<-0
-  dumb$sweeplngt[dumb$SweepLngt>0]<-factor(dumb$SweepLngt[dumb$SweepLngt>0])
-   if (length(levels(dumb$sweeplngt))>2) {
-     print(tapply(dumb$sweeplngt,dumb[,c("sweeplngt","Year")],"length"))
-     stop("This function only works with data sets with two different sweep lengths, check you data")}
-   if (length(subset(dumb$WingSpread,dumb$WingSpread> c(-9)))==0) {stop("No records with valid WingSpread>0")}
+  dumb<-dplyr::filter(dumb,HaulVal=="V")
+  countries<-unique(dumb$Country)
+  if (!country %in% countries) stop(paste(country,"is not present in this survey/quarter"))
+  dumb<-dplyr::filter(dumb,Country==country)
+  if (length(unique(dumb$SweepLngt))>2) {
+    print(tapply(dumb$SweepLngt,dumb[,c("SweepLngt","Year")],"length"))
+    stop("This function only works with data sets with two different sweep lengths, check your data")
+  }
+  if (all(is.na(dumb$SweepLngt))) {stop("All information on sweeplength is NA. No wings used in this survey?")}
+    dumb$sweeplngt[dumb$SweepLngt>0]<-factor(dumb$SweepLngt[dumb$SweepLngt>0])
+   if (length(levels(dumb$SweepLngt))>2) {
+     print(tapply(dumb$SweepLngt,dumb[,c("SweepLngt","Year")],"length"))
+     stop("This function only works with data sets with two different sweep lengths, check your data")}
+   if (length(subset(dumb$WingSpread,dumb$WingSpread> c(-9)))==0) {stop("No records with WingSpread>0")}
    if (length(subset(dumb,DoorSpread>c(-9)))>0){
-     dumb<-dplyr::filter(dumb,HaulVal=="V")
-     dumb<-dumb[c(dumb$WingSpread>c(-9) & dumb$DoorSpread>c(-9)),]
-     wspr<-range(subset(dumb$WingSpread,dumb$WingSpread> c(0)))
-     dspr<-range(subset(dumb$DoorSpread,dumb$DoorSpread>c(0)))
-     if (length(levels(factor(dumb$sweeplngt)))<2) {
+         wspr<-range(subset(dumb$WingSpread,dumb$WingSpread> c(0)))
+         dspr<-range(subset(dumb$DoorSpread,dumb$DoorSpread>c(0)))
+         if (length(levels(factor(dumb$sweeplngt)))<2) {
             lm.WingVsDoor<-lm(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & WingSpread > c(0) & DoorSpread> c(0))
             #outlierTest(lm.WingVsDoor,data=dumb)
             ds<-data.frame(DoorSpread=seq(dspr[1],dspr[2],length.out = 10))
             plot(WingSpread~DoorSpread,dumb,type="n",subset=HaulVal=="V" & Year!=years[length(years)],xlim=c(dspr[1]-20,dspr[2]+20),ylim=c(wspr[1]-10,wspr[2]+10),xlab="Door Spread (m)",ylab="Wing Spread (m)",pch=21,col="grey")
             if (pF) {points(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & Year!=years[length(years)])}
-            title(main=paste0("Wing Spread vs. door spread in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
-            mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
+            title(main=paste0("Wing Spread vs. door spread in ",country," ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+            mtext(paste(c("Ship: ", unique(dumb$Ship)), collapse=" "),line=.4,cex=.8,adj=0)
             if (pF) {points(WingSpread~DoorSpread,dumb,subset=c(HaulVal=="V" & Year==years[length(years)]),pch=21,bg=col1)}
             ds<-data.frame(DoorSpread=seq(dspr[1],dspr[2],length.out = 10))
             pred <- predict(lm.WingVsDoor, newdata = ds)
@@ -66,13 +61,13 @@ gearPlotHH.wgdo<-function(Survey,years,quarter,col1="darkblue",col2="steelblue2"
             mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
             }
          if (length(levels(factor(dumb$sweeplngt)))==2) {
-            lm.WingVsDoor.short<-lm(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & WingSpread > c(-9) & DoorSpread> c(-9) & sweeplngt==levels(factor(sweeplngt))[1] & c(StNo!="FG1"&Year!=2015) )
+            lm.WingVsDoor.short<-lm(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & WingSpread > c(-9) & DoorSpread> c(-9) & sweeplngt==levels(factor(sweeplngt))[1])
             lm.WingVsDoor.long<-lm(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & WingSpread > c(-9) & DoorSpread> c(-9) & sweeplngt==levels(factor(sweeplngt))[2])
             plot(WingSpread~DoorSpread,dumb,type="n",subset=HaulVal=="V" & Year!=years[length(years)],xlim=c(dspr[1]-20,dspr[2]+20),ylim=c(wspr[1]-10,wspr[2]+10),xlab="Door Spread (m)",ylab="Wing Spread (m)",pch=21,col="grey")
-            title(main=paste0("Wing Spread vs. door spread in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
-            mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
+            title(main=paste0("Wing Spread vs. door spread in ",country," ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+            mtext(paste(c("Ship: ", unique(dumb$Ship)), collapse=" "),line=.4,cex=.8,adj=0)
             if (pF){
-              points(WingSpread~DoorSpread,dumb,subset=c(HaulVal=="V" & sweeplngt==levels(factor(sweeplngt))[1] & c(StNo!="FG1" & Year!=2015)),pch=21,col=col2)
+              points(WingSpread~DoorSpread,dumb,subset=c(HaulVal=="V" & sweeplngt==levels(factor(sweeplngt))[1]),pch=21,col=col2)
               points(WingSpread~DoorSpread,dumb,subset=c(HaulVal=="V" & sweeplngt==levels(factor(sweeplngt))[2]),pch=21,col=col1)
               points(WingSpread~DoorSpread,dumb,
                 subset=c(HaulVal=="V" & Year==years[length(years)]& sweeplngt==levels(factor(sweeplngt))[1]),pch=21,bg=col2)

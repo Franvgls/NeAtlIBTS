@@ -17,7 +17,7 @@ getHHdata.ts(Survey, years, quarter)
 Function getHHdata.ts to download from DATRAS HH records getting several years in a row, uses getHHdata from icesDatras that only gets one year
 }
 \details{
-Surveys available in DATRAS: i.e. SWC-IBTS, ROCKALL, NIGFS, IE-IGFS, SP-PORC, FR-CGFS, EVHOE, SP-NORTH, PT-IBTS and SP-ARSA
+Surveys available in DATRAS: i.e. SWC-IBTS,SCOWCGFS,SCOROC, ROCKALL, NIGFS, IE-IGFS, SP-PORC, FR-CGFS, EVHOE, SP-NORTH, PT-IBTS, SP-ARSA and recently include also NS-IBTS
 }
 \examples{
 getHHdata.ts("SWC-IBTS",c(2014:2016),1)

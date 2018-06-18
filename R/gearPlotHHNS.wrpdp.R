@@ -1,11 +1,12 @@
-#' Function gearPlotHH.wrpdp plots warp length vs. Depth behaviour 
+#' Function gearPlotHHNS.wrpdp plots warp length vs. Depth behaviour 
 #' 
-#' Produces a warplength vs. DoorSpread plot and a model with lm unction. Data are taken directly from DATRAS using function getDATRAS from library(icesDatras)
+#' Produces a warplength vs. DoorSpread plot and a model with lm unction. Data are taken directly from DATRAS using function getHHdata from library(icesDatras)
 #' It only produces plots for surveys with HH files uploaded in DATRAS
 #' Since sweeps length does not affect the warp that is decided by the chief scientist, there are no differences depending on sweeps
 #' @param Survey: either the Survey to be downloaded from DATRAS (see details), or a data frame with the HH information with  the DATRAS HH format  and the years and quarter selected in years and quarter 
 #' @param years: years to be downloaded and used, had to be available in DATRAS. The time series will be ploted in grey dots, last year in steelblue2, it depends on the order of years, not the actual chronological year.
 #' @param quarter: the quarter of the survey to be ploted
+#' @param country: The country chosen to be plotted (checks if it's available in the HH file)
 #' @param line: includes a regression line between Warp and depth and the formula of the linear regression. If F the line is omited
 #' @param c.inta: the confidence interval to be used in the predict.lm function 
 #' @param col1: the color of the points, last year fill and previous years empty symbol
@@ -14,21 +15,9 @@
 #' @details Surveys available in DATRAS: i.e. SWC-IBTS, ROCKALL, NIGFS, IE-IGFS, SP-PORC, FR-CGFS, EVHOE, SP-NORTH, PT-IBTS and SP-ARSA
 #' @return Produces a graph Warp length vs. Depth for the years selected.
 #, it also includes information on the ship, the time series used the model used and parameters estimated.
-#' @examples gearPlotHH.wrpdp("SWC-IBTS",c(2011:2016),1,c.inta=.95,col1="darkblue",pF=F)
-#' @examples gearPlotHH.wrpdp("SWC-IBTS",c(2013:2016),4)
-#' @examples gearPlotHH.wrpdp("ROCKALL",c(2013:2016),3)
-#' @examples gearPlotHH.wrpdp("NIGFS",c(2005:2016),1)
-#' @examples gearPlotHH.wrpdp("NIGFS",c(2006:2007,2009:2016),4)
-#' @examples gearPlotHH.wrpdp("IE-IGFS",c(2005:2016),4)
-#' @examples gearPlotHH.wrpdp("SP-PORC",c(2003:2016),3)
-#' @examples gearPlotHH.wrpdp("FR-CGFS",c(1998:2016),4)
-#' @examples gearPlotHH.wrpdp("EVHOE",c(1997:2016),4)
-#' @examples gearPlotHH.wrpdp("SP-NORTH",c(2014:2016),4)
-#' @examples gearPlotHH.wrpdp("SP-ARSA",c(2014:2016),1)
-#' @examples gearPlotHH.wrpdp("SP-ARSA",c(2014:2016),4)
-#' @examples gearPlotHH.wrpdp(damb,c(2014:2016),4,getICES=F,pF=F)
+#' @examples gearPlotHHNS.wrpdp("NS-IBTS",c(2014:2017),1,"SWE")
 #' @export
-gearPlotHH.wrpdp<-function(Survey,years,quarter,line=T,c.inta=.85,col1="darkblue",getICES=T,pF=T) {
+gearPlotHHNS.wrpdp<-function(Survey="NS-IBTS",years,quarter,country,line=T,c.inta=.85,col1="darkblue",getICES=T,pF=T) {
   if (getICES) {
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
   }
@@ -38,16 +27,19 @@ gearPlotHH.wrpdp<-function(Survey,years,quarter,line=T,c.inta=.85,col1="darkblue
     if (unique(dumb$Quarter)!=quarter) stop(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
   }
   dumb<-dplyr::filter(dumb,HaulVal=="V")
+  countries<-unique(dumb$Country)
+  if (!country %in% countries) stop(paste(country,"is not present in this survey/quarter"))
+  dumb<-dplyr::filter(dumb,Country==country)
   if (any(!is.na(dumb$Warplngt))) warps=T else warps=F       # Present graphs
    if (warps) {
      wrp<-range(subset(dumb$Warplngt,dumb$Warplngt> c(0)),na.rm=T)
      dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)
      plot(Warplngt~Depth,dumb,type="n",subset=c(HaulVal!="I" & Year!=years[length(years)]),cex=1,pch=21,col=col1,ylab="Warp length (m)",xlab="Depth (m)",xlim=c(0,max(dumb$Depth,na.rm=T)),ylim=c(0,max(dumb$Warplngt,na.rm=T)*1.1))
-     title(main=paste0("Warp shot vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+     title(main=paste0("Warp shot vs. Depth in ",country," ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
      if (pF) {points(Warplngt~Depth,dumb,subset=c(HaulVal!="I" & Year %in% years),pch=21,cex=1,col=col1)
         points(Warplngt~Depth,dumb,subset=c(HaulVal!="I" & Year==years[length(years)]),pch=21,bg=col1,col=grey(.0))
      }
-     mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
+     mtext(paste(c("Ship: ", unique(dumb$Ship)), collapse=" "),line=.4,cex=.8,adj=0)
      if (line) {
        lm.WarpVsDepth<-lm(Warplngt~Depth,dumb,subset=HaulVal=="V" & Warplngt > c(0) & Depth> c(0))
        dpt<-data.frame(Depth=seq(dpthA[1],dpthA[2],length.out = 100))
@@ -71,7 +63,7 @@ gearPlotHH.wrpdp<-function(Survey,years,quarter,line=T,c.inta=.85,col1="darkblue
       }
      if (length(years)>1) {
      txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=""),collapse="")
-     mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.9)
+     mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.8)
      }
    }
 }

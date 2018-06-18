@@ -1,11 +1,11 @@
-#' Function gearPlotHH.dodp Door Spread versus Depth
+#' Function gearPlotHH.dodp Door Spread versus Depth 
 #' 
-#' Produces a DoorSpread vs. Depth plot and model with nls R function. Data are taken directly from DATRAS using function getDATRAS from library(icesDatras)
+#' Produces a DoorSpread vs. Depth plot and model with nls R function. Data are taken directly from DATRAS using function getHHdata from library(icesDatras)
 #' it only produces plots for surveys with HH files uploaded in DATRAS
 #' If there are two different sweeps in the data, produces a model for each sweep length.
 #' @param Survey: either the Survey to be downloaded from DATRAS (see details), or a data frame with the HH information with  the DATRAS HH format  and the years and quarter selected in years and quarter 
 #' @param years: years to be downloaded and used, had to be available in DATRAS. The time series will be ploted in grey dots, last year in steelblue2, it depends on the order of years, not the actual chronological year.
-#' @param quarter: the quarter of the survey to be plotted
+#' @param quarter: the quarter of the survey to be ploted
 #' @param c.int: the confidenc interval to be used in the confint function
 #' @param c.inta: the confidence interval to be used in the confint function for all data if only one sweep length, and for the short sweeps in case there are two
 #' @param c.intb: the confidence interval to be used in the confint function for the long set of sweeps.
@@ -15,19 +15,30 @@
 #' @param pF: takes out the points and leaves only the lines in the graphs
 #' @details Surveys available in DATRAS: i.e. SWC-IBTS, ROCKALL, NIGFS, IE-IGFS, SP-PORC, FR-CGFS, EVHOE, SP-NORTH, PT-IBTS and SP-ARSA
 #' @return Produces a graph DoorSpread vs. Depth, it also includes information on the ship, the time series used, the models and parameters estimated.
-#' @examples gearPlotHHNS.dodp("NS-IBTS",c(2014:2017),3,"SCO",.8,.3,col1="darkblue",col2="darkgreen")
+#' @examples gearPlotHH.dodp("SWC-IBTS",c(2014:2016),1,.8,.3,col1="darkblue",col2="darkgreen")
+#' @examples gearPlotHH.dodp("SWC-IBTS",c(2013:2016),4)
+#' @examples gearPlotHH.dodp("ROCKALL",c(2013:2016),3)
+#' @examples gearPlotHH.dodp("NIGFS",c(2005:2016),1)
+#' @examples gearPlotHH.dodp("NIGFS",c(2006:2007,2009:2016),4)
+#' @examples gearPlotHH.dodp("IE-IGFS",c(2006:2016),4)
+#' @examples gearPlotHH.dodp("SP-PORC",c(2010:2016),3)
+#' @examples gearPlotHH.dodp("FR-CGFS",c(1998:2016),4)
+#' @examples gearPlotHH.dodp("EVHOE",c(1997:2015),4)
+#' @examples gearPlotHH.dodp("SP-NORTH",c(2014:2016),4,col1="darkblue",col2="green")
+#' @examples gearPlotHH.dodp("SP-ARSA",c(2014:2016),1)
+#' @examples gearPlotHH.dodp("SP-ARSA",c(2014:2016),4)
+#' @examples gearPlotHH.dodp(getICES=F,damb,c(2014:2016),4,pF=F)
 #' @export
-gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblue",col2="steelblue2",getICES=T,pF=T) {
+gearPlotHHNS.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblue",col2="steelblue2",getICES=T,pF=T) {
    require(icesDatras)                                         
   if (getICES) {
-    dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
+    dumb<-getHHdata.ts(Survey,years,quarter)
   }
   if (!getICES) {
     dumb<-Survey
     if (!all(unique(years) %in% unique(dumb$Year))) stop(paste0("Not all years selected in years are present in the data.frame, check: ",unique(years)[which(!(unique(years) %in% unique(dumb$Year)))]))
     if (unique(dumb$Quarter)!=quarter) stop(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
   }
-  dumb<-dplyr::filter(dumb,HaulVal=="V")
   dumb$sweeplngt<-factor(dumb$SweepLngt)
    if (length(subset(dumb$DoorSpread,dumb$DoorSpread> c(-9)))>0){
       dspr<-range(subset(dumb$DoorSpread,dumb$DoorSpread>c(-9)))
@@ -40,7 +51,7 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
          DoorSpread.log<-nls(DoorSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9))
          dspr<-range(subset(dumb,DoorSpread>c(-9))$DoorSpread,na.rm=T)
          if (pF) {points(DoorSpread~Depth,dumb,subset=Year==years[length(years)],pch=21,bg=col1)}
-         mtext(paste("Ship:",dumb$Ship[1]),line=.4,cex=.8,adj=0)
+         mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
          a1<-round(coef(DoorSpread.log)[1],2)
          b1<-round(coef(DoorSpread.log)[2],2)
          lines(dp,a1+b1*log(dp),col=col1,lwd=2)

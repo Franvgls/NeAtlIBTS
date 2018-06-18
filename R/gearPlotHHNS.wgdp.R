@@ -1,33 +1,24 @@
-#' Function gearPlotHH.wgdp plots Wing Spread vs. Depth behaviour 
+#' Function gearPlotHHNS.wgdp plots Wing Spread vs. Depth behaviour including the NS
 #' 
-#' Produces a WingSpread vs. DoorSpread plot and a model with nls R function. Data are taken directly from DATRAS using function getDATRAS from library(icesDatras)
+#' Produces a WingSpread vs. DoorSpread plot and a model with nls R function. Data are taken directly from DATRAS using function getHHdata from library(icesDatras)
 #' It only produces plots for surveys with HH files uploaded in DATRAS
 #' If there are two different sweeps in the data, produces a model for each sweep length.
 #' @param Survey: either the Survey to be downloaded from DATRAS (see details), or a data frame with the HH information with  the DATRAS HH format  and the years and quarter selected in years and quarter 
 #' @param years: years to be downloaded and used, had to be available in DATRAS. The time series will be ploted in grey dots, last year in steelblue2, it depends on the order of years, not the actual chronological year.
 #' @param quarter: the quarter of the survey to be ploted
+#' @param country: The country chosen to be plotted (checks if it's available in the HH file)
 #' @param c.inta: the confidence interval to be used in the confint function for long sweeps and for sweeps if there is only one length
 #' @param c.intb: the confidence interval to be used in the confint function for short sweeps if there are two
 #' @param col1: color for the symbols and lines for the whole set if only one set of sweeps are used, and for the data from the long set of sweeps.
 #' @param col2: color for the symbols and lines for the data from the short sweeps in case there are two.
 #' @param getICES: Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDATRAS package.
-#' @param pF: takes out the points and leaves only the lines in the graphs
+#' @param pF: if set to F takes out the points and leaves only the lines in the graphs
 #' @details Surveys available in DATRAS: i.e. SWC-IBTS, ROCKALL, NIGFS, IE-IGFS, SP-PORC, FR-CGFS, EVHOE, SP-NORTH, PT-IBTS and SP-ARSA
 #' @return Produces a graph with WingSpread vs. Depth. it also includes information on the ship, the time series used, the models and parameters estimated.
-#' @examples gearPlotHH.wgdp("SWC-IBTS",c(2014:2016),1,.6,.2,col1="darkblue",col2="steelblue")
-#' @examples gearPlotHH.wgdp("SWC-IBTS",c(2013:2016),4,.6,.2)
-#' @examples gearPlotHH.wgdp("ROCKALL",c(2013:2016),3,.8)
-#' @examples gearPlotHH.wgdp("NIGFS",c(2005:2016),1,.2)
-#' @examples gearPlotHH.wgdp("IE-IGFS",c(2005:2016),4,.9,.8,pF=F)
-#' @examples gearPlotHH.wgdp("SP-PORC",c(2015:2016),3,.5)
-#' @examples gearPlotHH.wgdp("FR-CGFS",c(1998:2016),4,.8)
-#' @examples gearPlotHH.wgdp("EVHOE",c(1997:2016),4,.9)
-#' @examples gearPlotHH.wgdp("SP-NORTH",c(2014:2016),4,.3,col1="darkblue")
-#' @examples gearPlotHH.wgdp("SP-ARSA",c(2014:2016),1,.2)
-#' @examples gearPlotHH.wgdp("SP-ARSA",c(2014:2016),4,.5)
-#' @examples gearPlotHH.wgdp(damb,c(2014:2016),4,pF=F,getICES=F)
+#' @examples gearPlotHHNS.wgdp("NS-IBTS",c(2015:2017),1,"SWE",c.inta=.5,c.intb=.8,pF=T)
+#' @examples gearPlotHHNS.wgdp("NS-IBTS",c(2015:2017),1,"SWE",c.inta=.2,c.intb=.3,pF=F)
 #' @export
-gearPlotHH.wgdp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblue",col2="steelblue2",getICES=T,pF=T) {
+gearPlotHHNS.wgdp<-function(Survey="NS-IBTS",years,quarter,country,c.inta=.8,c.intb=.3,col1="darkblue",col2="steelblue2",getICES=T,pF=T) {
   if (getICES) {
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
   }
@@ -36,14 +27,17 @@ gearPlotHH.wgdp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
     if (!all(unique(years) %in% unique(dumb$Year))) stop(paste0("Not all years selected in years are present in the data.frame, check: ",unique(years)[which(!(unique(years) %in% unique(dumb$Year)))]))
     if (unique(dumb$Quarter)!=quarter) stop(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
   }
+  countries<-unique(dumb$Country)
+  if (!country %in% countries) stop(paste(country,"is not present in this survey/quarter"))
+  dumb<-dplyr::filter(dumb,Country==country)
   dumb<-dplyr::filter(dumb,HaulVal=="V")
-  #if (all(is.na(dumb$SweepLngt))) {stop("No valid Sweep Length data, this graph can not be produced")}
-  dumb$SweepLngt[is.na(dumb$SweepLngt)]<-0
-  dumb$sweeplngt[dumb$SweepLngt>0]<-factor(dumb$SweepLngt[dumb$SweepLngt>0])
+  if (all(is.na(dumb$SweepLngt))) {stop("No valid Sweep Length data, this graph can not be produced")}
+    dumb$sweeplngt[dumb$SweepLngt>0]<-factor(dumb$SweepLngt[dumb$SweepLngt>0])
       if (length(levels(factor(dumb$sweeplngt)))>2) {
         print(tapply(dumb$sweeplngt,dumb[,c("sweeplngt","Year")],"length"))
         stop("This function only works with data sets with two different sweep lengths, check you data")}
       if (length(subset(dumb$WingSpread,dumb$WingSpread> c(-9)))>0){
+         dumb<-dumb[c(dumb$WingSpread>c(-9) & dumb$DoorSpread>c(-9)),]
          wspr<-range(subset(dumb$WingSpread,dumb$WingSpread> c(0)))
          dspr<-range(subset(dumb$DoorSpread,dumb$DoorSpread>c(0)))
          dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)
@@ -51,16 +45,15 @@ gearPlotHH.wgdp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
            if(pF) {points(WingSpread~Depth,dumb,subset=WingSpread!=c(-9) & Year!=years[length(years)],pch=21,col=grey(.5))}
            }
          if (length(years)==1) {plot(WingSpread~Depth,dumb,xlim=c(0,dpthA[2]+20),ylim=c(0,wspr[2]+10),type="n",subset=WingSpread!=c(-9) & WingSpread>0,pch=21,col=grey(.5),ylab="Wing spread (m)",xlab="Depth (m)")
-           if (pF) {points(WingSpread~Depth,dumb,xlim=c(0,dpthA[2]+20),subset=WingSpread!=c(-9) & WingSpread>0,pch=21,col=grey(.5))} 
+           if (pF) {points(WingSpread~Depth,dumb,xlim=c(0,dpthA[2]+20),,subset=WingSpread!=c(-9) & WingSpread>0,pch=21,col=grey(.5))} 
            }
-         title(main=paste0("Wing Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+         title(paste0("Wing Spread vs. Depth in ",country," ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+         mtext(paste("Ship:",paste0(unique(dumb$Ship),collapse=" ")),line=.4,cex=.8,adj=0)
          if (length(levels(factor(dumb$sweeplngt)))<2) {
             dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)
             dp<-seq(dpthA[1],dpthA[2]+20,length=650)
             WingSpread.log<-nls(WingSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9) & WingSpread>0)
             if (pF) {points(WingSpread~Depth,dumb,subset=Year==years[length(years)],pch=21,bg=col1)}
-            title(paste0("Wing Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
-            mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
             a1<-round(coef(WingSpread.log)[1],2)
             b1<-round(coef(WingSpread.log)[2],2)
             lines(dp,a1+b1*log(dp),col=col1,lwd=2)
@@ -86,8 +79,6 @@ gearPlotHH.wgdp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
             WingSpreadlg.log<-nls(WingSpread~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9))
             if (pF) {points(WingSpread~Depth,dumbshort,subset=HaulVal=="V",pch=21,col=col2)
             points(WingSpread~Depth,dumblong,subset=HaulVal=="V",pch=21,col=col1)}
-            title(paste0("Wing Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
-            mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
             a1st<-round(coef(WingSpreadst.log)[1],2)
             b1st<-round(coef(WingSpreadst.log)[2],2)
             lines(dpst,a1st+b1st*log(dpst),col=col2,lwd=2)
@@ -117,5 +108,5 @@ gearPlotHH.wgdp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
          }
    }
    txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
-   mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.9)
+   mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.8)
 }

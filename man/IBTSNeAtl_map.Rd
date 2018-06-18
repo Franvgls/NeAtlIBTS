@@ -29,6 +29,8 @@ IBTSNeAtl_map(nl = 60.5, sl = 36, xlims = c(-18, 3), leg = TRUE,
 \item{nfile}{= name for the output file}
 
 \item{shpdir}{= path to the folder with the shapefiles}
+
+\item{load}{= T or F to load all the shapes files.}
 }
 \description{
 Produces a map from the shapefiles that define the IBTSNeAtl Surveys from Scotland to Cádiz, Still needs to include the shapefiles within the package, or right references.

@@ -1,58 +1,48 @@
-#' Function gearPlotHH.nodp to plot net opening vs. depth 
+#' Function gearPlotHH.nodp to plot net opening vs. depth including the NS-IBTS and producing plots by country
 #' 
 #'  
-#' Produces Net Vertical opening vs. Depth plot and a model with nls R function. Data are taken directly from DATRAS getting all the data from DATRAS using function getDATRAS from library(icesDatras)
+#' Produces Net Vertical opening vs. Depth plot and a model with nls R function. Data are taken directly from DATRAS getting all the data from DATRAS using function getHHdata from library(icesDatras)
 #' it only produces plots for surveys with HH files uploaded in DATRAS
 #' If there are two different sweeps in the data, produces a model for each sweep length.
 #' @param Survey: either the Survey to be downloaded from DATRAS (see details), or a data frame with the HH information with  the DATRAS HH format  and the years and quarter selected in years and quarter 
 #' @param years: years to be downloaded and used, had to be available in DATRAS. The time series will be ploted in grey dots, last year in steelblue2, it depends on the order of years, not the actual chronological year.
 #' @param quarter: the quarter of the survey to be ploted
+#' @param country: The country chosen to be plotted (checks if it's available in the HH file)
 #' @param c.inta: the confidence interval to be used in the confint function for all data if only one sweep length, and for the short sweeps in case there are two
 #' @param c.intb: the confidence interval to be used in the confint function for the long set of sweeps.
 #' @param col1: color for the symbols and lines for the whole set if only one set of sweeps are used, and for the data from the long set of sweeps.
 #' @param col2: color for the symbols and lines for the data from the short sweeps in case there are two.
 #' @param getICES: Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDATRAS package.
 #' @param pF: takes out the points and leaves only the lines in the graphs
-#' @details Surveys available in DATRAS: i.e. SWC-IBTS, ROCKALL, NIGFS, IE-IGFS, SP-PORC, FR-CGFS, EVHOE, SP-NORTH, PT-IBTS and SP-ARSA
+#' @details Surveys available in DATRAS: i.e. NS-IBTS,SWC-IBTS, ROCKALL, NIGFS, IE-IGFS, SP-PORC, FR-CGFS, EVHOE, SP-NORTH, PT-IBTS and SP-ARSA
 #' @return Produces Net Vertical opening vs. Depth plot it also includes information on the ship, the time series used (bottom fourth graph), the models and parameters estimated.
-#' @examples gearPlotHH.nodp("SWC-IBTS",c(2014:2016),1,.07,.5,col1="darkblue",col2="steelblue2")
-#' @examples gearPlotHH.nodp("SWC-IBTS",c(2014:2016),1,.07,.5,col1="darkblue",col2="steelblue2",pF=F)
-#' @examples gearPlotHH.nodp("SWC-IBTS",c(2013:2016),4)
-#' @examples gearPlotHH.nodp("ROCKALL",c(2013:2016),3)
-#' @examples gearPlotHH.nodp("NIGFS",c(2005:2016),1)
-#' @examples gearPlotHH.nodp("NIGFS",c(2006:2007,2009:2016),4)
-#' @examples gearPlotHH.nodp("IE-IGFS",c(2011:2016),4,.8)
-#' @examples gearPlotHH.nodp("SP-PORC",c(2010:2016),3)
-#' @examples gearPlotHH.nodp("FR-CGFS",c(2014:2016),4)
-#' @examples gearPlotHH.nodp("EVHOE",c(1997:2015),4)
-#' @examples gearPlotHH.nodp("SP-NORTH",c(2014:2016),4,col1="darkblue",col2="yellow")
-#' @examples gearPlotHH.nodp("SP-ARSA",c(2014:2016),1)
-#' @examples gearPlotHH.nodp("SP-ARSA",c(2014:2016),4)
-#' @examples gearPlotHH.nodp(getICES=F,damb,c(2014:2016),4,pF=F)
-#' @examples gearPlotHH.nodp(getICES=F,Survey=damb,years=c(2014:2016),quarter=4,pF=F)
+#' @examples gearPlotHHNS.nodp(Survey="NS-IBTS",years=c(2014:2016),quarter=3,country="ENG")
 #' @export
-gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblue",col2="steelblue2",getICES=T,pF=T) {
+gearPlotHHNS.nodp<-function(Survey="NS-IBTS",years,quarter,country,c.inta=.8,c.intb=.3,col1="darkblue",col2="steelblue2",getICES=T,pF=T) {
   if (getICES) {
-   dumb<-getDATRAS("HH",Survey,years,quarter)
+   dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
    }
   if (!getICES) {
     dumb<-Survey
     if (!all(unique(years) %in% unique(dumb$Year))) stop(paste0("Not all years selected in years are present in the data.frame, check: ",unique(years)[which(!(unique(years) %in% unique(dumb$Year)))]))
-    if (unique(dumb$Quarter)!=quarter) stop(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
+    if (unique(dumb$Quarter)!=quarter) stop(paste0("Quarter selected ",country," ",quarter," is not available in the data.frame, check please"))
     }
-  dumb<-dplyr::filter(dumb,HaulVal=="V")
-  dumb$sweeplngt<-factor(dumb$SweepLngt)
-   if (length(subset(dumb$Netopening,dumb$Netopening> c(-9)))>0){
+    dumb<-dplyr::filter(dumb,HaulVal=="V")
+    countries<-unique(dumb$Country)
+    if (!country %in% countries) stop(paste(country,"is not present in this survey/quarter"))
+    dumb<-dplyr::filter(dumb,Country==country)
+    dumb$sweeplngt<-factor(dumb$SweepLngt)
+    if (length(subset(dumb$Netopening,dumb$Netopening> c(-9)))>0){
       dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)
       vrt<-range(subset(dumb$Netopening,dumb$Netopening> c(0)))
       plot(Netopening~Depth,dumb,xlim=c(0,dpthA[2]+20),ylim=c(0,vrt[2]+2),type="n",pch=21,col=col1,
          ylab="Vertical opening (m)",xlab="Depth (m)",subset=Year!=years[length(years)] & Netopening> c(-9))
+         title(main=paste0("Vertical opening vs. Depth in ",country," ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+         mtext(paste("Ship: ",paste0(unique(dumb$Ship),collapse=" ")),line=.4,cex=.8,adj=0)
       if (pF) points(Netopening~Depth,dumb,pch=21,col=col1,subset=Year!=years[length(years)] & Netopening> c(-9))    
              if (length(levels(dumb$sweeplngt))<2) {
            dp<-seq(dpthA[1],dpthA[2]+20,length=650)
            Netopening.log<-nls(Netopening~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(0))
-           title(main=paste0("Vertical opening vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
-           mtext(dumb$Ship[length(dumb$Ship)],line=.4,cex=.9,adj=0)
            a1<-round(coef(Netopening.log)[1],2)
            b1<-round(coef(Netopening.log)[2],2)
            lines(dp,a1+b1*log(dp),col=col1,lwd=2)
@@ -83,8 +73,6 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
               points(Netopening~Depth,dumblong,subset=HaulVal=="V",pch=21,col=col1)   
               points(Netopening~Depth,dumblong,subset=Year==years[length(years)],pch=21,bg=col1,lwd=1)   
            }
-           title(main=paste0("Vertical opening vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
-           mtext(dumb$Ship[length(dumb$Ship)],line=.4,cex=.9,adj=0)
            a1st<-round(coef(Netopeningst.log)[1],2)
            b1st<-round(coef(Netopeningst.log)[2],2)
            lines(dpst,a1st+b1st*log(dpst),col=col2,lwd=2)
@@ -111,7 +99,8 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
            dumbo<-bquote("Net Vert. opening"== a + b %*% log("Depth"))
            mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
          txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
-         text(0,0, txt,adj=0.01,font=1, cex=.9,pos=4)
+         mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.8)
+#         text(0,0, txt,adj=0.01,font=1, cex=.9,pos=4)
       }
       }
             

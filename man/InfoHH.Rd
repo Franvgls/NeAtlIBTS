@@ -5,7 +5,7 @@
 \title{Function InfoHH gives the information on Sweep lengths for the years selected
 Data are taken directly from DATRAS getting all the data from DATRAS using function getHHdata from library(icesDatras)}
 \usage{
-InfoHH(Survey, years, quarter, getICES = T)
+InfoHH(Survey, years, quarter, country = NA, getICES = T)
 }
 \arguments{
 \item{Survey:}{either the Survey to be downloaded from DATRAS (see details), or a data frame with the HH information with  the DATRAS HH format  and the years and quarter selected in years and quarter}
@@ -13,6 +13,8 @@ InfoHH(Survey, years, quarter, getICES = T)
 \item{years:}{years to be downloaded and used, had to be available in DATRAS. The time series will be ploted in grey dots, last year in yellow, it depends on the order of years, not the actual chronological year.}
 
 \item{quarter:}{the quarter of the survey to be ploted}
+
+\item{country:}{The country chosen to be plotted (checks if it's available in the HH file)}
 
 \item{getICES:}{Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDATRAS package. If F it analyzes the HH dataframe just with the available years independently of the years and quarter asked for.}
 }
@@ -24,7 +26,7 @@ Function InfoHH gives the information on Sweep lengths for the years selected
 Data are taken directly from DATRAS getting all the data from DATRAS using function getHHdata from library(icesDatras)
 }
 \details{
-Surveys available in DATRAS: i.e. SWC-IBTS, ROCKALL, NIGFS, IE-IGFS, SP-PORC, FR-CGFS, EVHOE, SP-NORTH, PT-IBTS and SP-ARSA
+Surveys available in DATRAS: i.e. NS-IBTS, SWC-IBTS, ROCKALL, NIGFS, IE-IGFS, SP-PORC, FR-CGFS, EVHOE, SP-NORTH, PT-IBTS and SP-ARSA
 }
 \examples{
 InfoHH("SWC-IBTS",c(2011:2016),4)
