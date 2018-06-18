@@ -38,11 +38,12 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30
   Porc_w84<-spTransform(Porc,CRS("+proj=longlat +datum=WGS84")) 
   EVHOE<-readOGR(paste0(shpdir,"EVHOE.dbf"),"EVHOE",verbose = F)
   EVHOE_w84<-spTransform(EVHOE,CRS("+proj=longlat +datum=WGS84"))
-  Sp_North<-readOGR(paste0(shpdir,"Sp_North.dbf"),"Sp_North",verbose = F)
+  Sp_North<-readOGR(paste0(shpdir,"Sp_North.shp"),verbose = F)
   Sp_North_w84<-spTransform(Sp_North,CRS("+proj=longlat +datum=WGS84")) 
-  Sp_Cadiz<-readOGR(paste0(shpdir,"Sp_Cadiz.dbf"),"Sp_Cadiz",verbose = F)
+  Sp_Cadiz<-readOGR(paste0(shpdir,"Sp_Cadiz.shp"),verbose = F)
   Sp_Cadiz_w84<-spTransform(Sp_Cadiz,CRS("+proj=longlat +datum=WGS84"))
   PT_IBTS<-readOGR(paste0(shpdir,"PT_IBTS_2015.dbf"),"PT_IBTS_2015",verbose = F)
+#  ICES_StatRec<-readOGR(paste0(shpdir,"StatRec_map_Areas_Full_20170124.shp"),verbose=F)
   switch(out,
          "pdf" = pdf(file = paste0(nfile,".pdf")),
          "tiff" = tiff(filename=paste0(nfile,".tiff"),width=660*ancho/largo,height=800*largo/ancho),
