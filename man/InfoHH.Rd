@@ -10,11 +10,11 @@ InfoHH(Survey, years, quarter, getICES = T)
 \arguments{
 \item{Survey:}{either the Survey to be downloaded from DATRAS (see details), or a data frame with the HH information with  the DATRAS HH format  and the years and quarter selected in years and quarter}
 
-\item{years:}{years to be downloaded and used, had to be available in DATRAS. The time series will be ploted in grey dots, last year in yellow, it depends on the order of years, not the actual chronological year.}
+\item{years:}{years to be downloaded and used in the graphs, Years have to be available in DATRAS, had to be available in DATRAS. The time series will be ploted in grey dots, last year in yellow, but it depends on the order of 'years', not the actual chronological year.}
 
 \item{quarter:}{the quarter of the survey to be ploted}
 
-\item{getICES:}{Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDATRAS package. If F it analyzes the HH dataframe just with the available years independently of the years and quarter asked for.}
+\item{getICES:}{Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package. If F it analyzes the HH dataframe just with the available years independently of the years and quarter asked for.}
 }
 \value{
 Produces a graph with WingSpread vs. Depth. it also includes information on the ship, the time series used, the models and parameters estimated.
