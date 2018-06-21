@@ -2,7 +2,11 @@
 #' 
 #' Plots Door Spread vs. Wing Spread behaviour and produces a model using lm. If there are DoorSpread and WingSpread values.  
 #' If there are two different sweeps in the data, produces a model for each sweep length.
+<<<<<<< HEAD
 #' @param getICES: Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDATRAS package.
+=======
+#' @param getICES: Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.
+>>>>>>> develop
 #' @param Survey: either the Survey to be downloaded from DATRAS (see details), or a data frame with the HH information with  the DATRAS HH format  and the years and quarter selected in years and quarter 
 #' @param years: years to be downloaded and used, had to be available in DATRAS. The time series will be ploted in grey dots, last year in steelblue2, it depends on the order of years, not the actual chronological year.
 #' @param quarter: the quarter of the survey to be ploted

@@ -22,7 +22,11 @@ gearPlotHHNS.wrpdp(Survey = "NS-IBTS", years, quarter, country, line = T,
 
 \item{col1:}{the color of the points, last year fill and previous years empty symbol}
 
+<<<<<<< HEAD
 \item{getICES:}{Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDATRAS package.}
+=======
+\item{getICES:}{Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.}
+>>>>>>> develop
 
 \item{pF:}{takes out the points and leaves only the lines in the graphs}
 }

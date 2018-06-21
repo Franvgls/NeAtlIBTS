@@ -25,7 +25,7 @@ gearPlotsHH(Survey, years, quarter, c.inta = 0.5, c.intb = 0.5,
 
 \item{col2:}{color for the symbols and lines for the data from the short sweeps in case there are two.}
 
-\item{getICES:}{Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDATRAS package.}
+\item{getICES:}{Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.}
 
 \item{pF:}{takes out the points and leaves only the lines in the graphs}
 }

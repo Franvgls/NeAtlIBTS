@@ -11,7 +11,7 @@
 #' @param c.intb: the confidence interval to be used in the confint function for the long set of sweeps.
 #' @param col1: color for the symbols and lines for the whole set if only one set of sweeps are used, and for the data from the long set of sweeps.
 #' @param col2: color for the symbols and lines for the data from the short sweeps in case there are two.
-#' @param getICES: Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDATRAS package.
+#' @param getICES: Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.
 #' @param pF: takes out the points and leaves only the lines in the graphs
 #' @details Surveys available in DATRAS: i.e. SWC-IBTS, ROCKALL, NIGFS, IE-IGFS, SP-PORC, FR-CGFS, EVHOE, SP-NORTH, PT-IBTS and SP-ARSA
 #' @return Produces a graph DoorSpread vs. Depth, it also includes information on the ship, the time series used, the models and parameters estimated.
@@ -20,10 +20,14 @@
 gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblue",col2="steelblue2",getICES=T,pF=T) {
   if (getICES) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
 =======
     dumb<-getDatras2("HH",Survey,years,quarter)
 >>>>>>> 265322e23ae60ac2836c70fd4a1edcb96a3ea0ed
+=======
+    dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
+>>>>>>> develop
   }
   if (!getICES) {
     dumb<-Survey

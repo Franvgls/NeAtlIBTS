@@ -8,7 +8,11 @@ gearPlotHHNS.wgdo(Survey = "NS-IBTS", years, quarter, country,
   col1 = "darkblue", col2 = "steelblue2", getICES = T, pF = T)
 }
 \arguments{
+<<<<<<< HEAD
 \item{getICES:}{Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDATRAS package.}
+=======
+\item{getICES:}{Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.}
+>>>>>>> develop
 
 \item{Survey:}{either the Survey to be downloaded from DATRAS (see details), or a data frame with the HH information with  the DATRAS HH format  and the years and quarter selected in years and quarter}
 

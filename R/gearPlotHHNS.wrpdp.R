@@ -10,7 +10,11 @@
 #' @param line: includes a regression line between Warp and depth and the formula of the linear regression. If F the line is omited
 #' @param c.inta: the confidence interval to be used in the predict.lm function 
 #' @param col1: the color of the points, last year fill and previous years empty symbol
+<<<<<<< HEAD
 #' @param getICES: Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDATRAS package.
+=======
+#' @param getICES: Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.
+>>>>>>> develop
 #' @param pF: takes out the points and leaves only the lines in the graphs
 #' @details Surveys available in DATRAS: i.e. SWC-IBTS, ROCKALL, NIGFS, IE-IGFS, SP-PORC, FR-CGFS, EVHOE, SP-NORTH, PT-IBTS and SP-ARSA
 #' @return Produces a graph Warp length vs. Depth for the years selected.
