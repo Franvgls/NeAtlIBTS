@@ -19,15 +19,7 @@
 #' @export
 gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblue",col2="steelblue2",getICES=T,pF=T) {
   if (getICES) {
-<<<<<<< HEAD
-<<<<<<< HEAD
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
-=======
-    dumb<-getDatras2("HH",Survey,years,quarter)
->>>>>>> 265322e23ae60ac2836c70fd4a1edcb96a3ea0ed
-=======
-    dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
->>>>>>> develop
   }
   if (!getICES) {
     dumb<-Survey
