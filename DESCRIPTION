@@ -10,17 +10,16 @@ Lazydata: true
 Imports:
     icesDatras (>= 1.2),
     SSOAP (>= 0.91),
-    icesDatras,
     tidyverse,
     dplyr,
     mapdata,
     maps,
     maptools,
-    rgdal,
+    rgdal
 License: GPL
 Encoding: UTF-8
 LazyData: True
 Suggests:
     knitr
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
