@@ -4,8 +4,9 @@
 \alias{gearPlotHHNS.wrpdp}
 \title{Function gearPlotHHNS.wrpdp plots warp length vs. Depth behaviour}
 \usage{
-gearPlotHHNS.wrpdp(Survey = "NS-IBTS", years, quarter, country, line = T,
-  c.inta = 0.85, col1 = "darkblue", getICES = T, pF = T)
+gearPlotHHNS.wrpdp(Survey = "NS-IBTS", years, quarter, country,
+  line = T, c.inta = 0.85, col1 = "darkblue", getICES = T,
+  pF = T)
 }
 \arguments{
 \item{Survey:}{either the Survey to be downloaded from DATRAS (see details), or a data frame with the HH information with  the DATRAS HH format  and the years and quarter selected in years and quarter}
@@ -22,11 +23,7 @@ gearPlotHHNS.wrpdp(Survey = "NS-IBTS", years, quarter, country, line = T,
 
 \item{col1:}{the color of the points, last year fill and previous years empty symbol}
 
-<<<<<<< HEAD
-\item{getICES:}{Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDATRAS package.}
-=======
 \item{getICES:}{Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.}
->>>>>>> develop
 
 \item{pF:}{takes out the points and leaves only the lines in the graphs}
 }

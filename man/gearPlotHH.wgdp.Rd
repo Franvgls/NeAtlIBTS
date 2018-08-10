@@ -30,7 +30,7 @@ gearPlotHH.wgdp(Survey, years, quarter, c.inta = 0.8, c.intb = 0.3,
 Produces a graph with WingSpread vs. Depth. it also includes information on the ship, the time series used, the models and parameters estimated.
 }
 \description{
-Produces a WingSpread vs. DoorSpread plot and a model with nls R function. Data are taken directly from DATRAS using function getHHdata from library(icesDatras)
+Produces a WingSpread vs. DoorSpread plot and a model with nls R function. Data are taken directly from DATRAS using function getDATRAS from library(icesDatras)
 It only produces plots for surveys with HH files uploaded in DATRAS
 If there are two different sweeps in the data, produces a model for each sweep length.
 }

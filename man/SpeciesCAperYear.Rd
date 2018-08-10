@@ -4,14 +4,21 @@
 \alias{SpeciesCAperYear}
 \title{Function SpeciesCAperYear Takes a CA file for one survey and produces a table with number of biological samples per year and species}
 \usage{
-SpeciesCAperYear(CA)
+SpeciesCAperYear(Survey, years, quarter)
 }
 \arguments{
-\item{CA:}{A data frame with data from CA samples got with getCAdata.ts}
+\item{Survey:}{Surveys available in DATRAS see details}
+
+\item{years:}{years to be downloaded and used, had to be available in DATRAS. The time series will be ploted in grey dots, last year in yellow, it depends on the order of years, not the actual chronological year.}
+
+\item{quarter:}{the quarter of the survey to be ploted}
 }
 \description{
 Function SpeciesCAperYear Takes a CA file for one survey and produces a table with number of biological samples per year and species
 }
+\details{
+Surveys available in DATRAS: i.e. SWC-IBTS, ROCKALL, NIGFS, IE-IGFS, SP-PORC, FR-CGFS, EVHOE, SP-NORTH, PT-IBTS and SP-ARSA
+}
 \examples{
-SpeciesCAperYear(getCAdata.ts("SP-NORTH",c(2011:2012),4))
+SpeciesCAperYear("SP-NORTH",c(2014:2016),4)
 }

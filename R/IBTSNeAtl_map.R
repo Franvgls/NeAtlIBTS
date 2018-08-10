@@ -7,13 +7,15 @@
 #' @param cex.leg = .7 Size of the legend
 #' @param dens = 30 density of the shading lines for all the surveys
 #' @param ICESdiv = TRUE if TRUE plots the IBTS divisions behind the shapefiles
+#' @param ICESrect = FALSE if TRUE plots the lines of the ICES statistic rectangles
 #' @param bathy = TRUE if TRUE plots the isobaths under the behind the shapefiles
 #' @param out = format of the output, can be "def" default device, "pdf", "tiff" or "png"
 #' @param nfile = name for the output file 
 #' @param shpdir = path to the folder with the shapefiles
 #' @param load = T or F to load all the shapes files.
+#' @examples IBTSNeAtl_map(out="def",dens=0,nl=45,leg=F,ICESrect = T);text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
 #' @export
-IBTSNeAtl_map<-function(nl=60.5,sl=36,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30,ICESdiv=TRUE,icesLab=TRUE,bathy=TRUE,out="tiff",nfile="NeAtlIBTS_map",lwdl=.1,shpdir="c:/users/francisco.velasco.ST/documents/fvg/campañas/IBTS/shapes/") {
+IBTSNeAtl_map<-function(nl=60.5,sl=36,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30,ICESdiv=TRUE,ICESrect=FALSE,bathy=TRUE,out="def",nfile="NeAtlIBTS_map",lwdl=.1,shpdir="c:/GitHubRs/shapes/") {
   library(mapdata)
   library(maptools)
   library(maps)
@@ -38,9 +40,10 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30
   Porc_w84<-spTransform(Porc,CRS("+proj=longlat +datum=WGS84")) 
   EVHOE<-readOGR(paste0(shpdir,"EVHOE.dbf"),"EVHOE",verbose = F)
   EVHOE_w84<-spTransform(EVHOE,CRS("+proj=longlat +datum=WGS84"))
-  Sp_North<-readOGR(paste0(shpdir,"Sp_North.dbf"),"Sp_North",verbose = F)
-  Sp_North_w84<-spTransform(Sp_North,CRS("+proj=longlat +datum=WGS84")) 
-  Sp_Cadiz<-readOGR(paste0(shpdir,"Sp_Cadiz.dbf"),"Sp_Cadiz",verbose = F)
+  Sp_North_w84<-rgdal::readOGR(paste0(shpdir,"Sp_North.WGS84.dbf"),verbose = F) #"Sp_North",
+  #Sp_North_w84<-spTransform(Sp_North,CRS("+proj=longlat +datum=WGS84")) 
+  #Sp_North<-sf::st_read(paste0(shpdir,"Sp_North.dbf"))
+  Sp_Cadiz<-readOGR(paste0(shpdir,"Sp_Cadiz.dbf"),verbose = F) #"Sp_Cadiz"
   Sp_Cadiz_w84<-spTransform(Sp_Cadiz,CRS("+proj=longlat +datum=WGS84"))
   PT_IBTS<-readOGR(paste0(shpdir,"PT_IBTS_2015.dbf"),"PT_IBTS_2015",verbose = F)
   switch(out,
@@ -79,6 +82,10 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30
   alt = sapply(degs,function(x) bquote(.(x)*degree ~ N))
   axis(2, at=degs, lab=do.call(expression,alt),font.axis=2,cex.axis=.8,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
   axis(4, at=degs, lab=do.call(expression,alt),font.axis=2,cex.axis=.8,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
+  if (ICESrect) {
+    abline(h=seq(30,65,by=.5),col=gray(.3),lwd=.2)
+    abline(v=seq(-44,68),col=gray(.3),lwd=.2)
+  }
   rug(seq(c(sl+.5),c(nl+.5),by=1),.005,side=2,lwd=lwdl,quiet=TRUE)
   rug(seq(c(xlims[1]+.5),c(xlims[2]+.5),by=1),.005,side=1,lwd=lwdl,quiet=TRUE)
   rug(seq(c(xlims[1]+.5),c(xlims[2]+.5),by=1),.005,side=3,lwd=lwdl,quiet=TRUE)
@@ -97,7 +104,6 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30
   plot(PT_IBTS,add=T,col=3,lwd=.1,dens=dens,angle=0)
   plot(Sp_Cadiz_w84,add=T,col=4,lwd=.1,dens=dens,angle=45)
   map(database = "worldHires",xlim = xlims, ylim = c(sl,nl),fill=T,col="gray",add=T,bg="blue")
-  #  if (icesLab) text(maptools::get.Pcent(ices.div),col="black",as.character(ices.div$att.data$ICESCODE),cex=.5)
   box()
   if (leg) legend("bottomleft",c("UK-SCOSWCGFS","UK-SCOROC","UK-NIGFS","IE-IGFS","SP-PORC","FR-CGFS",
                                  "FR-EVHOE","SP-NORTH","PT-PGFS","SP-GCGFS"),fill=c(gray(.4),2:6),

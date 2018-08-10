@@ -2,10 +2,7 @@
 % Please edit documentation in R/gearPlotsHH.R
 \name{gearPlotsHH}
 \alias{gearPlotsHH}
-\title{Function gearPlotsHH to plot gear parameters and behaviour obtaining plots and models with nls R function
-Data are taken directly from DATRAS getting all the data from DATRAS using function getHHdata from library(icesDatras)
-it only produces plots for surveys with HH files uploaded in DATRAS
-If there are DoorSpread and WingSpread values in HH records produces four graphs, if only DoorSpread values are available produces only two graphs}
+\title{Function gearPlotsHH to plot gear parameters and behaviour}
 \usage{
 gearPlotsHH(Survey, years, quarter, c.inta = 0.5, c.intb = 0.5,
   col1 = "darkblue", col2 = "steelblue2", getICES = T, pF = T)
@@ -30,10 +27,9 @@ gearPlotsHH(Survey, years, quarter, c.inta = 0.5, c.intb = 0.5,
 \item{pF:}{takes out the points and leaves only the lines in the graphs}
 }
 \value{
-Produces a set of 4 or 2 graphs: Warp shot vs. depth, DoorSpread vs. WingSpread, WingSpread vs. Depth, DoorSpread vs. Depth, Vertical Opening vs Depth
+Produces a set of 4 or 2 graphs: Warp shot vs. depth, DoorSpread vs. WingSpread, WingSpread vs. Depth, DoorSpread vs. Depth, Vertical Opening vs Depth  it also includes information on the ship, the time series used (bottom fourth graph), the models and parameters estimated.
 }
 \description{
-Function gearPlotsHH to plot gear parameters and behaviour obtaining plots and models with nls R function
 Data are taken directly from DATRAS getting all the data from DATRAS using function getHHdata from library(icesDatras)
 it only produces plots for surveys with HH files uploaded in DATRAS
 If there are DoorSpread and WingSpread values in HH records produces four graphs, if only DoorSpread values are available produces only two graphs

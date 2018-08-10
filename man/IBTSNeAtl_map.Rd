@@ -5,16 +5,14 @@
 \title{Function IBTSNeAtl_map plots the map with all the surveys **STILL ON DEVELOPMENT**}
 \usage{
 IBTSNeAtl_map(nl = 60.5, sl = 36, xlims = c(-18, 3), leg = TRUE,
-  cex.leg = 0.7, dens = 30, lwdl = 0.1, ICESdiv = TRUE, bathy = TRUE,
-  out = "tiff", nfile = "NeAtlIBTS_map",
-  shpdir = "c:/users/francisco.velasco.ST/documents/fvg/campañas/IBTS/shapes/")
+  cex.leg = 0.7, dens = 30, ICESdiv = TRUE, ICESrect = FALSE,
+  bathy = TRUE, out = "def", nfile = "NeAtlIBTS_map", lwdl = 0.1,
+  shpdir = "c:/GitHubRs/shapes/")
 }
 \arguments{
 \item{nl}{= 61.5 northernmost limit of the map}
 
 \item{sl}{= 35 Southernmost limit of the map}
-
-\item{xlims}{= longitudinal limits of the map by default 18W to 3E (-18,3)}
 
 \item{leg}{= TRUE if TRUE includes the legend with the colors of the surveys}
 
@@ -22,9 +20,9 @@ IBTSNeAtl_map(nl = 60.5, sl = 36, xlims = c(-18, 3), leg = TRUE,
 
 \item{dens}{= 30 density of the shading lines for all the surveys}
 
-\item{lwdl}{= .1 width of the rugs on the axes of the maps}
-
 \item{ICESdiv}{= TRUE if TRUE plots the IBTS divisions behind the shapefiles}
+
+\item{ICESrect}{= FALSE if TRUE plots the lines of the ICES statistic rectangles}
 
 \item{bathy}{= TRUE if TRUE plots the isobaths under the behind the shapefiles}
 
@@ -40,6 +38,5 @@ IBTSNeAtl_map(nl = 60.5, sl = 36, xlims = c(-18, 3), leg = TRUE,
 Produces a map from the shapefiles that define the IBTSNeAtl Surveys from Scotland to Cádiz, Still needs to include the shapefiles within the package, or right references.
 }
 \examples{
-IBTSNeAtl_map(out="def",leg=T,dens=100)
-IBTSNeAtl_map(out="def",leg=F,dens=0)
+IBTSNeAtl_map(out="def",dens=0,nl=45,leg=F,ICESrect = T);text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
 }

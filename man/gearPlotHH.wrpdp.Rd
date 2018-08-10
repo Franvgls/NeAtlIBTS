@@ -28,7 +28,7 @@ gearPlotHH.wrpdp(Survey, years, quarter, line = T, c.inta = 0.85,
 Produces a graph Warp length vs. Depth for the years selected.
 }
 \description{
-Produces a warplength vs. DoorSpread plot and a model with lm unction. Data are taken directly from DATRAS using function getHHdata from library(icesDatras)
+Produces a warplength vs. DoorSpread plot and a model with lm unction. Data are taken directly from DATRAS using function getDATRAS from library(icesDatras)
 It only produces plots for surveys with HH files uploaded in DATRAS
 Since sweeps length does not affect the warp that is decided by the chief scientist, there are no differences depending on sweeps
 }

@@ -32,7 +32,7 @@ gearPlotHH.dodp(Survey, years, quarter, c.inta = 0.8, c.intb = 0.3,
 Produces a graph DoorSpread vs. Depth, it also includes information on the ship, the time series used, the models and parameters estimated.
 }
 \description{
-Produces a DoorSpread vs. Depth plot and model with nls R function. Data are taken directly from DATRAS using function getHHdata from library(icesDatras)
+Produces a DoorSpread vs. Depth plot and model with nls R function. Data are taken directly from DATRAS using function getDATRAS from library(icesDatras)
 it only produces plots for surveys with HH files uploaded in DATRAS
 If there are two different sweeps in the data, produces a model for each sweep length.
 }
