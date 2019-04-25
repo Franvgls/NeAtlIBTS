@@ -48,7 +48,7 @@ getDatras2<-function (record = "HH", survey, years, quarters,listData=FALSE)
   url <- sprintf("https://datras.ices.dk/WebServices/DATRASWebService.asmx/get%sdata?survey=%s&year=%i&quarter=%i", 
                  record, survey, yvec, qvec)
   out <- lapply(url, function(x) {
-    x <- readDatras(x)
+    x <- icesDatras::readDatras(x)
     icesDatras::parseDatras(x)
   })
   out <- do.call(rbind, out)

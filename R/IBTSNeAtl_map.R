@@ -8,6 +8,7 @@
 #' @param dens = 30 density of the shading lines for all the surveys
 #' @param ICESdiv = TRUE if TRUE plots the IBTS divisions behind the shapefiles
 #' @param ICESrect = FALSE if TRUE plots the lines of the ICES statistic rectangles
+#' @param NS = FALSE if TRUE includes the ICES rectangles only for the North Sea area
 #' @param bathy = TRUE if TRUE plots the isobaths under the behind the shapefiles
 #' @param out = format of the output, can be "def" default device, "pdf", "tiff" or "png"
 #' @param nfile = name for the output file 
@@ -15,7 +16,7 @@
 #' @param load = T or F to load all the shapes files.
 #' @examples IBTSNeAtl_map(out="def",dens=0,nl=45,leg=F,ICESrect = T);text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
 #' @export
-IBTSNeAtl_map<-function(nl=60.5,sl=36,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30,ICESdiv=TRUE,ICESrect=FALSE,bathy=TRUE,out="def",nfile="NeAtlIBTS_map",lwdl=.1,shpdir="c:/GitHubRs/shapes/") {
+IBTSNeAtl_map<-function(nl=60.5,sl=36,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30,ICESdiv=TRUE,ICESrect=FALSE,NS=TRUE,bathy=TRUE,out="def",nfile="NeAtlIBTS_map",lwdl=.1,shpdir="c:/GitHubRs/shapes/") {
   library(mapdata)
   library(maptools)
   library(maps)
@@ -82,10 +83,14 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30
   alt = sapply(degs,function(x) bquote(.(x)*degree ~ N))
   axis(2, at=degs, lab=do.call(expression,alt),font.axis=2,cex.axis=.8,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
   axis(4, at=degs, lab=do.call(expression,alt),font.axis=2,cex.axis=.8,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
+  if (NS){
+    for (lat in seq(49,66,by=.5)) {segments(x0=c(-4),y0=lat,x1=12.5,y1=lat,col=1,lwd=.01) }
+    for (long in seq(c(-4),12,by=1)) {segments(x0=long,y0=49,x1=long,y1=65,col=1,lwd=.01) }
+    }
   if (ICESrect) {
     abline(h=seq(30,65,by=.5),col=gray(.3),lwd=.2)
     abline(v=seq(-44,68),col=gray(.3),lwd=.2)
-  }
+    }
   rug(seq(c(sl+.5),c(nl+.5),by=1),.005,side=2,lwd=lwdl,quiet=TRUE)
   rug(seq(c(xlims[1]+.5),c(xlims[2]+.5),by=1),.005,side=1,lwd=lwdl,quiet=TRUE)
   rug(seq(c(xlims[1]+.5),c(xlims[2]+.5),by=1),.005,side=3,lwd=lwdl,quiet=TRUE)

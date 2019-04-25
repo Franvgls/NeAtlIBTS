@@ -6,8 +6,8 @@
 \usage{
 IBTSNeAtl_map(nl = 60.5, sl = 36, xlims = c(-18, 3), leg = TRUE,
   cex.leg = 0.7, dens = 30, ICESdiv = TRUE, ICESrect = FALSE,
-  bathy = TRUE, out = "def", nfile = "NeAtlIBTS_map", lwdl = 0.1,
-  shpdir = "c:/GitHubRs/shapes/")
+  NS = TRUE, bathy = TRUE, out = "def", nfile = "NeAtlIBTS_map",
+  lwdl = 0.1, shpdir = "c:/GitHubRs/shapes/")
 }
 \arguments{
 \item{nl}{= 61.5 northernmost limit of the map}
@@ -23,6 +23,8 @@ IBTSNeAtl_map(nl = 60.5, sl = 36, xlims = c(-18, 3), leg = TRUE,
 \item{ICESdiv}{= TRUE if TRUE plots the IBTS divisions behind the shapefiles}
 
 \item{ICESrect}{= FALSE if TRUE plots the lines of the ICES statistic rectangles}
+
+\item{NS}{= FALSE if TRUE includes the ICES rectangles only for the North Sea area}
 
 \item{bathy}{= TRUE if TRUE plots the isobaths under the behind the shapefiles}
 
