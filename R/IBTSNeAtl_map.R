@@ -86,7 +86,7 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30
   if (NS){
     for (lat in seq(55,66,by=.5)) {segments(x0=c(-4),y0=lat,x1=12,y1=lat,col=1,lwd=.01) }
     for (lat in seq(49.5,55,by=.5)) {segments(x0=c(-2),y0=lat,x1=12,y1=lat,col=1,lwd=.01) }
-    for (long in seq(c(-4),12,by=1)) {segments(x0=long,y0=55,x1=long,y1=65,col="blue",lwd=.01) }
+    for (long in seq(c(-4),12,by=1)) {segments(x0=long,y0=55,x1=long,y1=65,col=1,lwd=.01) }
     for (long in seq(c(-2),12,by=1)) {segments(x0=long,y0=49.5,x1=long,y1=55,col=1,lwd=.01) }
     }
   if (ICESrect) {
