@@ -53,7 +53,7 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30
          "png" = png(filename=paste0(nfile,".png"),bg="transparent",type="cairo",width=round(800*ancho/largo),height=round(800*largo/ancho)))
   par(mar=c(3.5,2,2,2)+0.1)
   #  windows()
-  map(database = "worldHires", xlim = xlims, ylim = c(sl,nl),type="n")
+  maps::map(database = "worldHires", xlim = xlims, ylim = c(sl,nl),type="n")
   if (bathy) {
     plot(bath100,add=T,col=gray(.85),lwd=.1)
     plot(bathy.geb[bathy.geb$DEPTH!=100,],add=T,col=gray(.85),lwd=.1)
@@ -97,9 +97,9 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30
   rug(seq(c(xlims[1]+.5),c(xlims[2]+.5),by=1),.005,side=1,lwd=lwdl,quiet=TRUE)
   rug(seq(c(xlims[1]+.5),c(xlims[2]+.5),by=1),.005,side=3,lwd=lwdl,quiet=TRUE)
   rug(seq(c(sl+.5),c(nl+.5),by=1),.005,side=4,lwd=lwdl,quiet=TRUE)
-  map(SWC_Q1_w84,SWC_Q1_w84$Name,add=T,col=gray(.4),lwd=.1,fill=T,dens=0,angle=0)
-  map(SWC_Q3_w84,SWC_Q3_w84$Name,add=T,col=gray(.4),lwd=.1,fill=T,dens=0,angle=45)
-  map(NIGFS_w84,NIGFS_w84$NAME,add=T,col=gray(.4),lwd=.1,fill=T,dens=0,angle=90)
+  maps::map(SWC_Q1_w84,SWC_Q1_w84$Name,add=T,col=gray(.4),lwd=.1,fill=T,dens=0,angle=0)
+  maps::map(SWC_Q3_w84,SWC_Q3_w84$Name,add=T,col=gray(.4),lwd=.1,fill=T,dens=0,angle=45)
+  maps::map(NIGFS_w84,NIGFS_w84$NAME,add=T,col=gray(.4),lwd=.1,fill=T,dens=0,angle=90)
   plot(SWC_Q1_w84,add=T,col=gray(.4),lwd=.01,dens=dens,angle=0)
   plot(SWC_Q3_w84,add=T,col=2,lwd=.01,dens=dens,angle=45)
   plot(NIGFS_w84,add=T,col=3,lwd=.01,dens=dens,angle=45)
@@ -110,7 +110,7 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30
   plot(Sp_North_w84,add=T,col=2,lwd=.1,dens=dens,angle=315)
   plot(PT_IBTS,add=T,col=3,lwd=.1,dens=dens,angle=0)
   plot(Sp_Cadiz_w84,add=T,col=4,lwd=.1,dens=dens,angle=45)
-  map(database = "worldHires",xlim = xlims, ylim = c(sl,nl),fill=T,col="gray",add=T,bg="blue")
+  maps::map(database = "worldHires",xlim = xlims, ylim = c(sl,nl),fill=T,col="gray",add=T,bg="blue")
   box()
   if (leg) legend("bottomleft",c("UK-SCOSWCGFS","UK-SCOROC","UK-NIGFS","IE-IGFS","SP-PORC","FR-CGFS",
                                  "FR-EVHOE","SP-NORTH","PT-PGFS","SP-GCGFS"),fill=c(gray(.4),2:6),
