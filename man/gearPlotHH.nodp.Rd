@@ -4,8 +4,17 @@
 \alias{gearPlotHH.nodp}
 \title{Function gearPlotHH.nodp to plot net opening vs. depth}
 \usage{
-gearPlotHH.nodp(Survey, years, quarter, c.inta = 0.8, c.intb = 0.3,
-  col1 = "darkblue", col2 = "steelblue2", getICES = T, pF = T)
+gearPlotHH.nodp(
+  Survey,
+  years,
+  quarter,
+  c.inta = 0.8,
+  c.intb = 0.3,
+  col1 = "darkblue",
+  col2 = "steelblue2",
+  getICES = T,
+  pF = T
+)
 }
 \arguments{
 \item{Survey:}{either the Survey to be downloaded from DATRAS (see details), or a data frame with the HH information with  the DATRAS HH format  and the years and quarter selected in years and quarter}

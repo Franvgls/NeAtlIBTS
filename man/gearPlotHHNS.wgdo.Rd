@@ -4,8 +4,16 @@
 \alias{gearPlotHHNS.wgdo}
 \title{gearPlotHH.wgdo Door Spread vs. WingSpread}
 \usage{
-gearPlotHHNS.wgdo(Survey = "NS-IBTS", years, quarter, country,
-  col1 = "darkblue", col2 = "steelblue2", getICES = T, pF = T)
+gearPlotHHNS.wgdo(
+  Survey = "NS-IBTS",
+  years,
+  quarter,
+  country,
+  col1 = "darkblue",
+  col2 = "steelblue2",
+  getICES = T,
+  pF = T
+)
 }
 \arguments{
 \item{getICES:}{Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.}

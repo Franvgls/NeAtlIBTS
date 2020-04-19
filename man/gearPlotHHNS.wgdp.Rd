@@ -4,9 +4,18 @@
 \alias{gearPlotHHNS.wgdp}
 \title{Function gearPlotHHNS.wgdp plots Wing Spread vs. Depth behaviour including the NS}
 \usage{
-gearPlotHHNS.wgdp(Survey = "NS-IBTS", years, quarter, country,
-  c.inta = 0.8, c.intb = 0.3, col1 = "darkblue",
-  col2 = "steelblue2", getICES = T, pF = T)
+gearPlotHHNS.wgdp(
+  Survey = "NS-IBTS",
+  years,
+  quarter,
+  country,
+  c.inta = 0.8,
+  c.intb = 0.3,
+  col1 = "darkblue",
+  col2 = "steelblue2",
+  getICES = T,
+  pF = T
+)
 }
 \arguments{
 \item{Survey:}{either the Survey to be downloaded from DATRAS (see details), or a data frame with the HH information with  the DATRAS HH format  and the years and quarter selected in years and quarter}

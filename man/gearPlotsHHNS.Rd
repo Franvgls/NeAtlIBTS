@@ -4,9 +4,17 @@
 \alias{gearPlotsHHNS}
 \title{Function gearPlotsHHNS to plot gear parameters and behaviour}
 \usage{
-gearPlotsHHNS(Survey = "NS-IBTS", years, quarter, country,
-  c.inta = 0.5, c.intb = 0.5, col1 = "darkblue", getICES = T,
-  pF = T)
+gearPlotsHHNS(
+  Survey = "NS-IBTS",
+  years,
+  quarter,
+  country,
+  c.inta = 0.5,
+  c.intb = 0.5,
+  col1 = "darkblue",
+  getICES = T,
+  pF = T
+)
 }
 \arguments{
 \item{Survey:}{either the Survey to be downloaded from DATRAS (see details), or a data frame with the HH information with  the DATRAS HH format  and the years and quarter selected in years and quarter}

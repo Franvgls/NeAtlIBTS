@@ -4,9 +4,17 @@
 \alias{gearPlotHHNS.wrpdp}
 \title{Function gearPlotHHNS.wrpdp plots warp length vs. Depth behaviour}
 \usage{
-gearPlotHHNS.wrpdp(Survey = "NS-IBTS", years, quarter, country,
-  line = T, c.inta = 0.85, col1 = "darkblue", getICES = T,
-  pF = T)
+gearPlotHHNS.wrpdp(
+  Survey = "NS-IBTS",
+  years,
+  quarter,
+  country,
+  line = T,
+  c.inta = 0.85,
+  col1 = "darkblue",
+  getICES = T,
+  pF = T
+)
 }
 \arguments{
 \item{Survey:}{either the Survey to be downloaded from DATRAS (see details), or a data frame with the HH information with  the DATRAS HH format  and the years and quarter selected in years and quarter}
