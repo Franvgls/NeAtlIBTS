@@ -29,7 +29,7 @@ IBTSNeAtl_map_porc<-function(nl=54.5,sl=50.5,xlims=c(-15.5,-8.5),leg=FALSE,es=FA
   } else ancho<- diff(xlims)*10
   ices.div<-readOGR(paste0(shpdir,"ices_div.dbf"),"ices_div",verbose = F)
   bath100<-readOGR(paste0(shpdir,"100m.dbf"),"100m",verbose = F)
-  bathy.geb<-readOGR(paste0(shpdir,"bathy_geb.dbf"),"bathy_geb",verbose = F)
+  bathy.geb<-readOGR(paste0(shpdir,"bathy_geb.dbf"),"Bathy_geb",verbose = F)
   Porc<-readOGR(paste0(shpdir,"Porcupine.dbf"),"Porcupine",verbose = F)
   Porc_w84<-spTransform(Porc,CRS("+proj=longlat +datum=WGS84")) 
   switch(out,
@@ -40,11 +40,11 @@ IBTSNeAtl_map_porc<-function(nl=54.5,sl=50.5,xlims=c(-15.5,-8.5),leg=FALSE,es=FA
   #  windows()
   maps::map(database = "worldHires", xlim = xlims, ylim = c(sl,nl),type="n")
   if (bathy) {
-    plot(bath100,add=T,col=gray(.85),lwd=.1)
-    plot(bathy.geb[bathy.geb$DEPTH!=100,],add=T,col=gray(.85),lwd=.1)
+    sp::plot(bath100,add=T,col=gray(.85),lwd=.1)
+    sp::plot(bathy.geb[bathy.geb$DEPTH!=100,],add=T,col=gray(.85),lwd=.1)
   }
   grid(col=gray(.8),lwd=.5)
-  if (ICESdiv) plot(ices.div,add=T,col=NA,border="burlywood")
+  if (ICESdiv) sp::plot(ices.div,add=T,col=NA,border="burlywood")
   if (xlims[2] > 0) {
     degs = seq(xlims[1],-1,ifelse(abs(diff(xlims))>10,4,1))
     alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ W))
@@ -76,7 +76,7 @@ IBTSNeAtl_map_porc<-function(nl=54.5,sl=50.5,xlims=c(-15.5,-8.5),leg=FALSE,es=FA
   rug(seq(c(xlims[1]+.5),c(xlims[2]+.5),by=1),.005,side=1,lwd=lwdl,quiet=TRUE)
   rug(seq(c(xlims[1]+.5),c(xlims[2]+.5),by=1),.005,side=3,lwd=lwdl,quiet=TRUE)
   rug(seq(c(sl+.5),c(nl+.5),by=1),.005,side=4,lwd=lwdl,quiet=TRUE)
-  if (load) plot(Porc_w84,add=T,col=5,lwd=.01,dens=dens,angle=180)
+  if (load) sp::plot(Porc_w84,add=T,col=5,lwd=.01,dens=dens,angle=180)
   maps::map(database = "worldHires",xlim = xlims, ylim = c(sl,nl),fill=T,col="gray",add=T,bg="blue")
   if (places) {
     points(-(9+.0303/.6),(53+.1623/.6),pch=16,col=1)

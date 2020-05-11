@@ -15,7 +15,6 @@ IBTSNeAtl_map_porc(
   dens = 30,
   ICESdiv = TRUE,
   ICESrect = FALSE,
-  NS = TRUE,
   bathy = TRUE,
   out = "def",
   nfile = "NeAtlIBTS_map_porc",
@@ -42,8 +41,6 @@ IBTSNeAtl_map_porc(
 \item{ICESdiv}{= TRUE if TRUE plots the IBTS divisions behind the shapefiles}
 
 \item{ICESrect}{= FALSE if TRUE plots the lines of the ICES statistic rectangles}
-
-\item{NS}{= FALSE if TRUE includes the ICES rectangles only for the North Sea area}
 
 \item{bathy}{= TRUE if TRUE plots the isobaths under the behind the shapefiles}
 
