@@ -10,24 +10,29 @@
 #' @param ICESrect = FALSE if TRUE plots the lines of the ICES statistic rectangles
 #' @param NS = FALSE if TRUE includes the ICES rectangles only for the North Sea area
 #' @param bathy = TRUE if TRUE plots the isobaths under the behind the shapefiles
+#' @param bw = True plots the map with land in grey, if F in light brown (burlywood3)
+#' @param bords = TRUE plots the borders o the countries, FALSE leaves dashed lines
+#' @param axlab= .8 decides the size of the axis numbers
 #' @param out = format of the output, can be "def" default device, "pdf", "tiff" or "png"
 #' @param nfile = name for the output file 
 #' @param shpdir = path to the folder with the shapefiles
 #' @param load = T or F to load all the shapes files.
 #' @examples IBTSNeAtl_map(out="def",dens=0,nl=45,leg=F,load=TRUE,ICESrect = T);text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
 #' @export
-IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30,load=TRUE,ICESdiv=TRUE,ICESrect=FALSE,NS=TRUE,bathy=TRUE,out="def",nfile="NeAtlIBTS_map",lwdl=.1,shpdir="c:/GitHubRs/shapes/") {
+IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30,load=TRUE,ICESdiv=TRUE,ICESrect=FALSE,NS=TRUE,bathy=TRUE,bw=FALSE,axlab=.8,bords=TRUE,out="def",nfile="NeAtlIBTS_map",lwdl=.1,shpdir="c:/GitHubRs/shapes/") {
   library(mapdata)
   library(maptools)
   library(maps)
   library(rgdal)
-  largo=(nl-sl)*10
+  if (all(c(sl,nl)<0) | all(c(sl,nl)>0)) {
+    largo=rev(abs(nl-sl))*10
+  } else largo=(nl-sl)
   if (xlims[2] < 0) {
     ancho<- diff(rev(abs(xlims)))*10
   } else ancho<- diff(xlims)*10
   ices.div<-readOGR(paste0(shpdir,"ices_div.dbf"),"ices_div",verbose = F)
   bath100<-readOGR(paste0(shpdir,"100m.dbf"),"100m",verbose = F)
-  bathy.geb<-readOGR(paste0(shpdir,"bathy_geb.dbf"),"Bathy_geb",verbose = F)
+  bathy.geb<-readOGR(paste0(shpdir,"bathy_geb.dbf"),"bathy_geb",verbose = F)
   SWC_Q1<-readOGR(paste0(shpdir,"SWC_Q1.dbf"),"SWC_Q1",verbose = F)
   SWC_Q1_w84<-spTransform(SWC_Q1,CRS("+proj=longlat +datum=WGS84"))
   SWC_Q3<-readOGR(paste0(shpdir,"SWC_Q3.dbf"),"SWC_Q3",verbose = F)
@@ -60,29 +65,58 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=
   }
   grid(col=gray(.8),lwd=.5)
   if (ICESdiv) sp::plot(ices.div,add=T,col=NA,border="burlywood")
-  if (xlims[2] > 0) {
-    degs = seq(xlims[1],-1,ifelse(abs(diff(xlims))>10,4,1))
-    alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ W))
-    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=.8,tick=T,tck=c(-.01),mgp=c(1,.2,0))
-    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=.8,tick=T,tck=c(-.01),mgp=c(1,.2,0))
-    degs = seq(3,xlims[2],ifelse(abs(diff(xlims))>1,4,1))
-    alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ E))
-    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=.8,tick=T,tck=c(-.01),mgp=c(1,.2,0))
-    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=.8,tick=T,tck=c(-.01),mgp=c(1,.2,0))
-    degs = c(0)
-    alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ ""))
-    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=.8,tick=T,tck=c(-.01),mgp=c(1,.2,0))
-    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=.8,tick=T,tck=c(-.01),mgp=c(1,.2,0))
-  } else {
+  if (all(xlims < 0)) {
     degs = seq(xlims[1],xlims[2],ifelse(ancho>10,4,1))
     alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ W))
-    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=.8,tick=T,tck=c(-.01),mgp=c(1,.2,0))
-    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=.8,tick=T,tck=c(-.01),mgp=c(1,.2,0))
+    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
+    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
+    }
+  if (all(xlims > 0)) {
+    degs = seq(xlims[1],xlims[2],ifelse(ancho>10,4,1))
+    alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ E))
+    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
+    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
   }
-  degs = seq(sl,nl,ifelse(abs(diff(c(sl,nl)))>10,5,2))
-  alt = sapply(degs,function(x) bquote(.(x)*degree ~ N))
-  axis(2, at=degs, lab=do.call(expression,alt),font.axis=2,cex.axis=.8,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
-  axis(4, at=degs, lab=do.call(expression,alt),font.axis=2,cex.axis=.8,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
+  if (!all(xlims >0)) {
+    degs = seq(xlims[1],-2,ifelse(abs(diff(xlims))>10,4,1))
+    alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ W))
+    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
+    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
+    degs = seq(5,xlims[2],ifelse(abs(diff(xlims))>1,5,1))
+    alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ E))
+    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
+    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
+    degs = c(0)
+    alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ ""))
+    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
+    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
+  }
+  if (all(c(sl,nl) < 0)) {
+    degs = seq(sl,nl,ifelse(largo>10,4,1))
+    alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ S))
+    axis(2, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.2,0))
+    axis(4, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.2,0))
+  }
+  if (all(c(sl,nl) > 0)) {
+    degs = seq(sl,nl,ifelse(largo>10,4,1))
+    alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ N))
+    axis(2, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.2,0))
+    axis(4, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.2,0))
+  }
+  if (!all(c(sl,nl) >0)) {
+    degs = seq(sl,-5,ifelse(largo>10,4,1))
+    alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ S))
+    axis(2, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
+    axis(4, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
+    degs = seq(5,nl,ifelse(largo>10,4,1))
+    alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ N))
+    axis(2, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
+    axis(4, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
+    degs = c(0)
+    alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ ""))
+    axis(2, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
+    axis(4, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
+  }
   if (NS){
     for (lat in seq(55,66,by=.5)) {segments(x0=c(-4),y0=lat,x1=12,y1=lat,col=gray(.85),lwd=.01) }
     for (lat in seq(49.5,55,by=.5)) {segments(x0=c(-2),y0=lat,x1=12,y1=lat,col=gray(.85),lwd=.01) }
@@ -112,7 +146,8 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=
     sp::plot(PT_IBTS,add=T,col=3,lwd=.1,dens=dens,angle=0)
     sp::plot(Sp_Cadiz_w84,add=T,col=4,lwd=.1,dens=dens,angle=45)
   }
-  maps::map(database = "worldHires",xlim = xlims, ylim = c(sl,nl),fill=T,col="gray",add=T,bg="blue")
+  maps::map(database = "worldHires",xlim = xlims, ylim = c(sl,nl),fill=T,col=ifelse(bw,"gray","burlywood3"),add=T,fg="blue",interior = T,boundary = T,lty=1,lwd=.05)
+  #maps::map(database = "worldHires",xlim = xlims, ylim = c(sl,nl),fill=T,col=ifelse(bw,"gray",add=T,bg="blue",interior=bords)
   box()
   if (leg) legend("bottomleft",c("UK-SCOSWCGFS","UK-SCOROC","UK-NIGFS","IE-IGFS","SP-PORC","FR-CGFS",
                                  "FR-EVHOE","SP-NORTH","PT-PGFS","SP-GCGFS"),fill=c(gray(.4),2:6),

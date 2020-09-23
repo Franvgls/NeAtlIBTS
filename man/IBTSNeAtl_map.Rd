@@ -16,6 +16,9 @@ IBTSNeAtl_map(
   ICESrect = FALSE,
   NS = TRUE,
   bathy = TRUE,
+  bw = FALSE,
+  axlab = 0.8,
+  bords = TRUE,
   out = "def",
   nfile = "NeAtlIBTS_map",
   lwdl = 0.1,
@@ -43,11 +46,17 @@ IBTSNeAtl_map(
 
 \item{bathy}{= TRUE if TRUE plots the isobaths under the behind the shapefiles}
 
+\item{bw}{= True plots the map with land in grey, if F in light brown (burlywood3)}
+
+\item{bords}{= TRUE plots the borders o the countries, FALSE leaves dashed lines}
+
 \item{out}{= format of the output, can be "def" default device, "pdf", "tiff" or "png"}
 
 \item{nfile}{= name for the output file}
 
 \item{shpdir}{= path to the folder with the shapefiles}
+
+\item{axlab=}{.8 decides the size of the axis numbers}
 }
 \description{
 Produces a map from the shapefiles that define the IBTSNeAtl Surveys from Scotland to Cádiz, Still needs to include the shapefiles within the package, or right references.

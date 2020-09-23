@@ -110,3 +110,4 @@ gearPlotHHNS.wgdp<-function(Survey="NS-IBTS",years,quarter,country,c.inta=.8,c.i
    txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
    mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.8)
 }
+
