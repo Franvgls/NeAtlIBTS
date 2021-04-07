@@ -1,6 +1,13 @@
 #' Function IBTSNeAtl_map plots the map with all the surveys **STILL ON DEVELOPMENT**
 #' 
-#' Produces a map from the shapefiles that define the IBTSNeAtl Surveys from Scotland to Cádiz, Still needs to include the shapefiles within the package, or right references.
+#' #' @description
+#  Produces a map from the shapefiles that define the IBTSNeAtl Surveys from Scotland 
+#' to Cádiz, Still needs to include the shapefiles within the package, or right references. 
+#'
+#' @details
+#' The default limits for the IBTS including the North Sea or not, but the script could 
+#' be used to get maps all arround the world playing with nl,sl and xlims
+#'
 #' @param nl = 61.5 northernmost limit of the map
 #' @param sl = 35 Southernmost limit of the map
 #' @param leg = TRUE if TRUE includes the legend with the colors of the surveys
@@ -82,7 +89,7 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=
     alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ W))
     axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
     axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
-    degs = seq(5,xlims[2],ifelse(abs(diff(xlims))>1,5,1))
+    degs = seq(3,xlims[2],ifelse(abs(diff(xlims))>1,4,1))
     alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ E))
     axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
     axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))

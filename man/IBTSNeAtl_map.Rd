@@ -59,7 +59,12 @@ IBTSNeAtl_map(
 \item{axlab=}{.8 decides the size of the axis numbers}
 }
 \description{
-Produces a map from the shapefiles that define the IBTSNeAtl Surveys from Scotland to Cádiz, Still needs to include the shapefiles within the package, or right references.
+#' @description
+to Cádiz, Still needs to include the shapefiles within the package, or right references.
+}
+\details{
+The default limits for the IBTS including the North Sea or not, but the script could 
+be used to get maps all arround the world playing with nl,sl and xlims
 }
 \examples{
 IBTSNeAtl_map(out="def",dens=0,nl=45,leg=F,load=TRUE,ICESrect = T);text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
