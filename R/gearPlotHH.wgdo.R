@@ -48,8 +48,9 @@ gearPlotHH.wgdo<-function(Survey,years,quarter,col1="darkblue",col2="steelblue2"
      wspr<-range(subset(dumb$WingSpread,dumb$WingSpread> c(0)))
      dspr<-range(subset(dumb$DoorSpread,dumb$DoorSpread>c(0)))
      if (length(levels(factor(dumb$sweeplngt)))<2) {
-            lm.WingVsDoor<-lm(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & WingSpread > c(0) & DoorSpread> c(0))
-            #outlierTest(lm.WingVsDoor,data=dumb)
+            if(length(years>1)) lm.WingVsDoor<-lm(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & WingSpread > c(0) & DoorSpread> c(0) & years!=years[length(years)])
+            else lm.WingVsDoor<-lm(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & WingSpread > c(0) & DoorSpread> c(0))
+                        #outlierTest(lm.WingVsDoor,data=dumb)
             ds<-data.frame(DoorSpread=seq(dspr[1],dspr[2],length.out = 10))
             plot(WingSpread~DoorSpread,dumb,type="n",subset=HaulVal=="V" & Year!=years[length(years)],xlim=c(dspr[1]-20,dspr[2]+20),ylim=c(wspr[1]-10,wspr[2]+10),xlab="Door Spread (m)",ylab="Wing Spread (m)",pch=21,col="grey")
             if (pF) {points(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & Year!=years[length(years)])}
@@ -66,8 +67,14 @@ gearPlotHH.wgdo<-function(Survey,years,quarter,col1="darkblue",col2="steelblue2"
             mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
             }
          if (length(levels(factor(dumb$sweeplngt)))==2) {
-            lm.WingVsDoor.short<-lm(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & WingSpread > c(-9) & DoorSpread> c(-9) & sweeplngt==levels(factor(sweeplngt))[1] & c(StNo!="FG1"&Year!=2015) )
-            lm.WingVsDoor.long<-lm(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & WingSpread > c(-9) & DoorSpread> c(-9) & sweeplngt==levels(factor(sweeplngt))[2])
+           if (length(years)>1) {
+            lm.WingVsDoor.short<-lm(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & WingSpread > c(-9) & DoorSpread> c(-9) & sweeplngt==levels(factor(sweeplngt))[1] & c(StNo!="FG1"&Year!=2015) & years!= years[length(years)])
+            lm.WingVsDoor.long<-lm(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & WingSpread > c(-9) & DoorSpread> c(-9) & sweeplngt==levels(factor(sweeplngt))[2] & years!= years[length(years)])
+           }
+           else {
+             lm.WingVsDoor.short<-lm(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & WingSpread > c(-9) & DoorSpread> c(-9) & sweeplngt==levels(factor(sweeplngt))[1] & c(StNo!="FG1"&Year!=2015) )
+             lm.WingVsDoor.long<-lm(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & WingSpread > c(-9) & DoorSpread> c(-9) & sweeplngt==levels(factor(sweeplngt))[2])
+           }
             plot(WingSpread~DoorSpread,dumb,type="n",subset=HaulVal=="V" & Year!=years[length(years)],xlim=c(dspr[1]-20,dspr[2]+20),ylim=c(wspr[1]-10,wspr[2]+10),xlab="Door Spread (m)",ylab="Wing Spread (m)",pch=21,col="grey")
             title(main=paste0("Wing Spread vs. door spread in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
             mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)

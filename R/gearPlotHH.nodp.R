@@ -50,7 +50,8 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
       if (pF) points(Netopening~Depth,dumb,pch=21,col=col1,subset=Year!=years[length(years)] & Netopening> c(-9))    
              if (length(levels(dumb$sweeplngt))<2) {
            dp<-seq(dpthA[1],dpthA[2]+20,length=650)
-           Netopening.log<-nls(Netopening~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(0))
+           if (length(years)>1) {Netopening.log<-nls(Netopening~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(0) & years!= years[length(years)])}
+           else {Netopening.log<-nls(Netopening~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(0))}
            title(main=paste0("Vertical opening vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
            mtext(dumb$Ship[length(dumb$Ship)],line=.4,cex=.9,adj=0)
            a1<-round(coef(Netopening.log)[1],2)
@@ -74,8 +75,14 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
            dpthAlg<-range(dumblong$Depth,na.rm=T)
            dpst<-seq(dpthAst[1],dpthAst[2]+20,length=650)
            dplg<-seq(dpthAlg[1],dpthAlg[2]+20,length=650)
-           Netopeningst.log<-nls(Netopening~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(-9))  # se puede utilizar alg="plinear" para cuando no hay muestra suficiente para calcular los valores iniciales
-           Netopeninglg.log<-nls(Netopening~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(-9))
+           if (length(years)>1) {
+           Netopeningst.log<-nls(Netopening~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(-9) & years!=years[length(years)])  # se puede utilizar alg="plinear" para cuando no hay muestra suficiente para calcular los valores iniciales
+           Netopeninglg.log<-nls(Netopening~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(-9) & years!=years[length(years)])
+           }
+           else {
+             Netopeningst.log<-nls(Netopening~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(-9))  # se puede utilizar alg="plinear" para cuando no hay muestra suficiente para calcular los valores iniciales
+             Netopeninglg.log<-nls(Netopening~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(-9))
+             }
            vrtst<-range(subset(dumbshort$Netopening,dumbshort$Netopening> c(-9)))
            vrtlg<-range(subset(dumblong$Netopening,dumblong$Netopening> c(-9)))
            if (pF) {points(Netopening~Depth,dumbshort,subset=HaulVal=="V",pch=21,col=col2)   

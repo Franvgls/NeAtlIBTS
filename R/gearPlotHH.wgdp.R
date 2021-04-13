@@ -57,7 +57,8 @@ gearPlotHH.wgdp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
          if (length(levels(factor(dumb$sweeplngt)))<2) {
             dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)
             dp<-seq(dpthA[1],dpthA[2]+20,length=650)
-            WingSpread.log<-nls(WingSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9) & WingSpread>0)
+            if (length(years)>1) WingSpread.log<-nls(WingSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9) & WingSpread>0 & years!=years[length(years)])
+            else WingSpread.log<-nls(WingSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9) & WingSpread>0)
             if (pF) {points(WingSpread~Depth,dumb,subset=Year==years[length(years)],pch=21,bg=col1)}
             title(paste0("Wing Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
             mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
@@ -82,8 +83,14 @@ gearPlotHH.wgdp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
             dpthAlg<-range(dumblong$Depth,na.rm=T)
             dpst<-seq(dpthAst[1],dpthAst[2]+20,length=650)
             dplg<-seq(dpthAlg[1],dpthAlg[2]+20,length=650)
-            WingSpreadst.log<-nls(WingSpread~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9))
-            WingSpreadlg.log<-nls(WingSpread~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9))
+            if (length(years)>1) {
+            WingSpreadst.log<-nls(WingSpread~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9) & years!=years[length(years)])
+            WingSpreadlg.log<-nls(WingSpread~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9) & years!=years[length(years)])
+            }
+            else {
+              WingSpreadst.log<-nls(WingSpread~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9))
+              WingSpreadlg.log<-nls(WingSpread~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9))
+            }
             if (pF) {points(WingSpread~Depth,dumbshort,subset=HaulVal=="V",pch=21,col=col2)
             points(WingSpread~Depth,dumblong,subset=HaulVal=="V",pch=21,col=col1)}
             title(paste0("Wing Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)

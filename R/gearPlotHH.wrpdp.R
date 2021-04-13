@@ -44,12 +44,14 @@ gearPlotHH.wrpdp<-function(Survey,years,quarter,line=T,c.inta=.85,col1="darkblue
      dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)
      plot(Warplngt~Depth,dumb,type="n",subset=c(HaulVal!="I" & Year!=years[length(years)]),cex=1,pch=21,col=col1,ylab="Warp length (m)",xlab="Depth (m)",xlim=c(0,max(dumb$Depth,na.rm=T)),ylim=c(0,max(dumb$Warplngt,na.rm=T)*1.1))
      title(main=paste0("Warp shot vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
-     if (pF) {points(Warplngt~Depth,dumb,subset=c(HaulVal!="I" & Year %in% years),pch=21,cex=1,col=col1)
-        points(Warplngt~Depth,dumb,subset=c(HaulVal!="I" & Year==years[length(years)]),pch=21,bg=col1,col=grey(.0))
+     if (pF) {
+       points(Warplngt~Depth,dumb,subset=c(HaulVal!="I" & Year %in% years),pch=21,cex=1,col=col1)
+       points(Warplngt~Depth,dumb,subset=c(HaulVal!="I" & Year==years[length(years)]),pch=21,bg=col1,col=grey(.0))
      }
      mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
      if (line) {
-       lm.WarpVsDepth<-lm(Warplngt~Depth,dumb,subset=HaulVal=="V" & Warplngt > c(0) & Depth> c(0))
+       if (length(years>1)) {lm.WarpVsDepth<-lm(Warplngt~Depth,dumb,subset=HaulVal=="V" & Warplngt > c(0) & Depth> c(0) & years!=years[length(years)])}
+       else lm.WarpVsDepth<-lm(Warplngt~Depth,dumb,subset=HaulVal=="V" & Warplngt > c(0) & Depth> c(0)) 
        dpt<-data.frame(Depth=seq(dpthA[1],dpthA[2],length.out = 100))
        pred.plim<-predict(lm.WarpVsDepth,newdata=dpt,interval="prediction",level=c.inta)
        pred.clim<-predict(lm.WarpVsDepth,newdata=dpt,interval="confidence",level=c.inta)

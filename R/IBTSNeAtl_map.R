@@ -15,6 +15,8 @@
 #' @param dens = 30 density of the shading lines for all the surveys
 #' @param ICESdiv = TRUE if TRUE plots the IBTS divisions behind the shapefiles
 #' @param ICESrect = FALSE if TRUE plots the lines of the ICES statistic rectangles
+#' @param ICESlab = FALSE if TRUE plots labs por ICES rectangles
+#' @param ICESlabcex tamaño del ICESlab en cex, .5 por defecto subirlo si se quiere más grande
 #' @param NS = FALSE if TRUE includes the ICES rectangles only for the North Sea area
 #' @param bathy = TRUE if TRUE plots the isobaths under the behind the shapefiles
 #' @param bw = True plots the map with land in grey, if F in light brown (burlywood3)
@@ -26,7 +28,7 @@
 #' @param load = T or F to load all the shapes files.
 #' @examples IBTSNeAtl_map(out="def",dens=0,nl=45,leg=F,load=TRUE,ICESrect = T);text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
 #' @export
-IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30,load=TRUE,ICESdiv=TRUE,ICESrect=FALSE,NS=TRUE,bathy=TRUE,bw=FALSE,axlab=.8,bords=TRUE,out="def",nfile="NeAtlIBTS_map",lwdl=.1,shpdir="c:/GitHubRs/shapes/") {
+IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30,load=TRUE,ICESdiv=TRUE,ICESrect=FALSE,ICESlab=F,ICESlabcex=.8,NS=TRUE,bathy=TRUE,bw=FALSE,axlab=.8,bords=TRUE,out="def",nfile="NeAtlIBTS_map",lwdl=.1,shpdir="c:/GitHubRs/shapes/") {
   library(mapdata)
   library(maptools)
   library(maps)
@@ -130,6 +132,7 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=
     for (long in seq(c(-4),12,by=1)) {segments(x0=long,y0=55,x1=long,y1=65,col=gray(.85),lwd=.01) }
     for (long in seq(c(-2),12,by=1)) {segments(x0=long,y0=49.5,x1=long,y1=55,col=gray(.85),lwd=.01) }
     }
+  if (ICESlab) text(c(stat_y+.22)~stat_x,Area,label=ICESNAME,cex=ICESlabcex,font=2)
   if (ICESrect) {
     abline(h=seq(30,65,by=.5),col=gray(.3),lwd=.2)
     abline(v=seq(-44,68),col=gray(.3),lwd=.2)

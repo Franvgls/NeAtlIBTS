@@ -14,6 +14,8 @@ IBTSNeAtl_map(
   load = TRUE,
   ICESdiv = TRUE,
   ICESrect = FALSE,
+  ICESlab = F,
+  ICESlabcex = 0.8,
   NS = TRUE,
   bathy = TRUE,
   bw = FALSE,
@@ -41,6 +43,10 @@ IBTSNeAtl_map(
 \item{ICESdiv}{= TRUE if TRUE plots the IBTS divisions behind the shapefiles}
 
 \item{ICESrect}{= FALSE if TRUE plots the lines of the ICES statistic rectangles}
+
+\item{ICESlab}{= FALSE if TRUE plots labs por ICES rectangles}
+
+\item{ICESlabcex}{tamaño del ICESlab en cex, .5 por defecto subirlo si se quiere más grande}
 
 \item{NS}{= FALSE if TRUE includes the ICES rectangles only for the North Sea area}
 

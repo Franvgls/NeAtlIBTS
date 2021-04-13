@@ -36,7 +36,8 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
       if (pF) {points(DoorSpread~Depth,dumb,pch=21,col=col1,subset=c(DoorSpread!=c(-9) & Year!=years[length(years)]))}
       title(main=paste0("Door Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
       if (length(levels(dumb$sweeplngt))<2) {
-         DoorSpread.log<-nls(DoorSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9))
+         if(length(years)>1) DoorSpread.log<-nls(DoorSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9) & years!=years[lengh(years)])
+         else DoorSpread.log<-nls(DoorSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9))
          dspr<-range(subset(dumb,DoorSpread>c(-9))$DoorSpread,na.rm=T)
          if (pF) {points(DoorSpread~Depth,dumb,subset=Year==years[length(years)],pch=21,bg=col1)}
          mtext(paste("Ship:",dumb$Ship[1]),line=.4,cex=.8,adj=0)
@@ -62,8 +63,14 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
             dpthAlg<-range(dumblong$Depth,na.rm=T)
             dpst<-seq(dpthAst[1],dpthAst[2]+20,length=650)
             dplg<-seq(dpthAlg[1],dpthAlg[2]+20,length=650)
-            DoorSpreadst.log<-nls(DoorSpread~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9))
-            DoorSpreadlg.log<-nls(DoorSpread~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9))
+            if (length(years)>1) {
+              DoorSpreadst.log<-nls(DoorSpread~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9) & years!=years[length(years)])
+              DoorSpreadlg.log<-nls(DoorSpread~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9) & years!=years[length(years)])
+            }
+            else {
+              DoorSpreadst.log<-nls(DoorSpread~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9))
+              DoorSpreadlg.log<-nls(DoorSpread~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9))
+            }
             dspr<-range(subset(dumbshort$DoorSpread,dumbshort$DoorSpread>c(-9)))
             if (pF) {
               points(DoorSpread~Depth,dumbshort,subset=HaulVal=="V",pch=21,col=col2)
