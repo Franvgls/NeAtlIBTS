@@ -33,13 +33,21 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
       dpthA<-range(dumb$Depth,na.rm=T)
       dp<-seq(dpthA[1],dpthA[2]+20,length=650)
       plot(DoorSpread~Depth,dumb,type="n",xlim=c(0,dpthA[2]+20),ylim=c(0,dspr[2]+20),pch=21,col=col1,ylab="Door spread (m)",xlab="Depth (m)",subset=DoorSpread!=c(-9)& Year!=years[length(years)])
-      if (pF) {points(DoorSpread~Depth,dumb,pch=21,col=col1,subset=c(DoorSpread!=c(-9) & Year!=years[length(years)]))}
+      if (pF & length(levels(dumb$SweepLngt))==1) {
+        points(DoorSpread~Depth,dumb,pch=21,col=col1,subset=c(DoorSpread!=c(-9) & Year!=years[length(years)]))         
+        points(DoorSpread~Depth,dumb,subset=Year==years[length(years)],pch=21,bg=col1)
+        if (length(years)==1) legend("bottomright",legend=as.character(c(years)),pch=21,col=col1,pt.bg=col1,bty="n",inset=.04)
+        else legend("bottomright",c(paste0(years[1],"-",years[length(years)-1]),years[length(years)]),pch=c(1,21),col=c(col1),pt.bg=c(NA,col1),bty="n",inset=.02)
+        }
       title(main=paste0("Door Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
       if (length(levels(dumb$sweeplngt))<2) {
-         if(length(years)>1) DoorSpread.log<-nls(DoorSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9) & years!=years[lengh(years)])
-         else DoorSpread.log<-nls(DoorSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9))
+         if(length(years)>1) {
+           DoorSpread.log<-nls(DoorSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9) & Year!=years[length(years)])
+           }
+         else {
+           DoorSpread.log<-nls(DoorSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9))
+           }
          dspr<-range(subset(dumb,DoorSpread>c(-9))$DoorSpread,na.rm=T)
-         if (pF) {points(DoorSpread~Depth,dumb,subset=Year==years[length(years)],pch=21,bg=col1)}
          mtext(paste("Ship:",dumb$Ship[1]),line=.4,cex=.8,adj=0)
          a1<-round(coef(DoorSpread.log)[1],2)
          b1<-round(coef(DoorSpread.log)[2],2)
@@ -63,19 +71,30 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
             dpthAlg<-range(dumblong$Depth,na.rm=T)
             dpst<-seq(dpthAst[1],dpthAst[2]+20,length=650)
             dplg<-seq(dpthAlg[1],dpthAlg[2]+20,length=650)
+            #else legend("topright",c(paste0(years[1],"-",years[length(years)-1]),years[length(years)]),pch=c(1,21),col=c(col1),pt.bg=c(NA,col1))
             if (length(years)>1) {
-              DoorSpreadst.log<-nls(DoorSpread~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9) & years!=years[length(years)])
-              DoorSpreadlg.log<-nls(DoorSpread~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9) & years!=years[length(years)])
-            }
+              DoorSpreadst.log<-nls(DoorSpread~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9) & Year!=years[length(years)])
+              DoorSpreadlg.log<-nls(DoorSpread~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9) & Year!=years[length(years)])
+              if (pF) {
+                legend("bottomright",c(paste(c(paste(years[1],years[length(years)-1],sep="-"),years[length(years)]),c("Short sweeps"),sep=" "),paste(c(paste(years[1],years[length(years)-1],sep="-"),years[length(years)]),c("Long sweeps"),sep=" ")),pch=21,col=c(col2,col2,col1,col1),pt.bg=c(NA,col2,NA,col1),bty="n",inset=c(.02),ncol=2)           
+                points(DoorSpread~Depth,dumbshort,subset=HaulVal=="V",pch=21,col=col2)
+                points(DoorSpread~Depth,dumbshort,subset=Year==years[length(years)],pch=21,bg=col2)
+                points(DoorSpread~Depth,dumblong,subset=HaulVal=="V",pch=21,col=col1)
+                points(DoorSpread~Depth,dumblong,subset=Year==years[length(years)],pch=21,bg=col1)
+                }
+             }
             else {
               DoorSpreadst.log<-nls(DoorSpread~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9))
               DoorSpreadlg.log<-nls(DoorSpread~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9))
-            }
+              if (pF) {
+                legend("bottomright",c("Short sweeps","Long sweeps"),pch=21,col=c(col1,col1),pt.bg=c(col2,col1),bty="n",inset=.04)
+                points(DoorSpread~Depth,dumbshort,subset=Year==years[length(years)],pch=21,bg=col2)
+                points(DoorSpread~Depth,dumblong,subset=Year==years[length(years)],pch=21,bg=col1)
+              }
+             }
             dspr<-range(subset(dumbshort$DoorSpread,dumbshort$DoorSpread>c(-9)))
             if (pF) {
-              points(DoorSpread~Depth,dumbshort,subset=HaulVal=="V",pch=21,col=col2)
-              points(DoorSpread~Depth,dumbshort,subset=Year==years[length(years)],pch=21,bg=col2)
-            }
+           }
             title(main=paste0("Door Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
             mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
             a1st<-round(coef(DoorSpreadst.log)[1],2)
@@ -88,10 +107,6 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
             b1Uprst<-confint(DoorSpreadst.log,level=c.intb)[2,2]
             lines(dpst,a1Uprst+b1Uprst*log(dpst),col=col2,lty=2,lwd=1)
             legend("bottomleft",legend=substitute(DSshort == a1st + b1st %*% log(depth),list(a1st=round(coef(DoorSpreadst.log)[1],2),b1st=(round(coef(DoorSpreadst.log)[2],2)))),bty="n",text.font=2,cex=.9,inset=c(.05,.2))
-            if (pF) {
-              points(DoorSpread~Depth,dumblong,subset=HaulVal=="V",pch=21,col=col1)
-              points(DoorSpread~Depth,dumblong,subset=Year==years[length(years)],pch=21,bg=col1)
-            }
             a1lg<-round(coef(DoorSpreadlg.log)[1],2)
             b1lg<-round(coef(DoorSpreadlg.log)[2],2)
             lines(dplg,a1lg+b1lg*log(dplg),col=col1,lwd=2)
@@ -101,14 +116,15 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
             a1Uprlg<-confint(DoorSpreadlg.log,level=c.inta)[1,2]
             b1Uprlg<-confint(DoorSpreadlg.log,level=c.inta)[2,2]
             lines(dplg,a1Uprlg+b1Uprlg*log(dplg),col=col1,lty=2,lwd=1)
-            legend("topright",legend=substitute(DSlong == a1lg + b1lg %*% log(depth),list(a1lg=round(coef(DoorSpreadlg.log)[1],2),b1lg=(round(coef(DoorSpreadlg.log)[2],2)))),bty="n",text.font=2,cex=.9,inset=c(.01,.4))
+            legend("bottomright",legend=substitute(DSlong == a1lg + b1lg %*% log(depth),list(a1lg=round(coef(DoorSpreadlg.log)[1],2),b1lg=(round(coef(DoorSpreadlg.log)[2],2)))),bty="n",text.font=2,cex=.9,inset=c(.01,.4))
 #         text("bottomleft",paste0(c(years[1],"-",years[length(years)])),inset=c(0,.1))
          dumbo<-bquote("Door Spread"== a + b %*% log("Depth"))
          mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
          summary(DoorSpreadst.log)
          summary(DoorSpreadlg.log)
          }
-      txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
-      text(0,0, txt, font=1, cex=.9,pos=4)
+      if (length(years)>1) txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
+      else txt<-paste0("Year: ",as.character(years))
+      mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.9)
    }
   }

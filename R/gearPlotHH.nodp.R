@@ -47,28 +47,32 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
       vrt<-range(subset(dumb$Netopening,dumb$Netopening> c(0)))
       plot(Netopening~Depth,dumb,xlim=c(0,dpthA[2]+20),ylim=c(0,vrt[2]+2),type="n",pch=21,col=col1,
          ylab="Vertical opening (m)",xlab="Depth (m)",subset=Year!=years[length(years)] & Netopening> c(-9))
-      if (pF) points(Netopening~Depth,dumb,pch=21,col=col1,subset=Year!=years[length(years)] & Netopening> c(-9))    
-             if (length(levels(dumb$sweeplngt))<2) {
-           dp<-seq(dpthA[1],dpthA[2]+20,length=650)
-           if (length(years)>1) {Netopening.log<-nls(Netopening~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(0) & years!= years[length(years)])}
-           else {Netopening.log<-nls(Netopening~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(0))}
-           title(main=paste0("Vertical opening vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
-           mtext(dumb$Ship[length(dumb$Ship)],line=.4,cex=.9,adj=0)
-           a1<-round(coef(Netopening.log)[1],2)
-           b1<-round(coef(Netopening.log)[2],2)
-           lines(dp,a1+b1*log(dp),col=col1,lwd=2)
-           a1low<-confint(Netopening.log,level=c.inta)[1,1]
-           b1low<-confint(Netopening.log,level=c.inta)[2,1]
-           lines(dp,a1low+b1low*log(dp),col=col1,lty=2,lwd=1)
-           a1Upr<-confint(Netopening.log,level=c.inta)[1,2]
-           b1Upr<-confint(Netopening.log,level=c.inta)[2,2]
-           lines(dp,a1Upr+b1Upr*log(dp),col=col1,lty=2,lwd=1)
-           if (pF) {points(Netopening~Depth,dumb,subset=Year==years[length(years)],pch=21,bg=col1,lwd=1)}
-           legend("topright",legend=substitute(NetOpening == a1 + b1 %*% log(depth),list(a1=round(coef(Netopening.log)[1],2),b1=(round(coef(Netopening.log)[2],2)))),bty="n",text.font=2,inset=.05)
-           dumbo<-bquote("Net vert. opening"== a + b %*% log("Depth"))
-           summary(Netopening.log)
-           }
-       if (length(levels(dumb$sweeplngt))==2) {
+          if (pF) points(Netopening~Depth,dumb,pch=21,col=col1,subset=Year!=years[length(years)] & Netopening> c(-9))    
+          if (length(levels(dumb$sweeplngt))<2) {
+            dp<-seq(dpthA[1],dpthA[2]+20,length=650)
+            if (length(years)>1) {Netopening.log<-nls(Netopening~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(0) & Year!= years[length(years)])}
+            else {Netopening.log<-nls(Netopening~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(0))}
+            title(main=paste0("Vertical opening vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+            mtext(dumb$Ship[length(dumb$Ship)],line=.4,cex=.9,adj=0)
+            a1<-round(coef(Netopening.log)[1],2)
+            b1<-round(coef(Netopening.log)[2],2)
+            lines(dp,a1+b1*log(dp),col=col1,lwd=2)
+            a1low<-confint(Netopening.log,level=c.inta)[1,1]
+            b1low<-confint(Netopening.log,level=c.inta)[2,1]
+            lines(dp,a1low+b1low*log(dp),col=col1,lty=2,lwd=1)
+            a1Upr<-confint(Netopening.log,level=c.inta)[1,2]
+            b1Upr<-confint(Netopening.log,level=c.inta)[2,2]
+            lines(dp,a1Upr+b1Upr*log(dp),col=col1,lty=2,lwd=1)
+            if (pF) {
+              points(Netopening~Depth,dumb,subset=Year==years[length(years)],pch=21,bg=col1,lwd=1)
+              if (length(years)>1) legend("bottomright",c(paste0(years[1],"-",years[length(years)-1]),years[length(years)]),pch=c(1,21),col=c(col1),pt.bg=c(NA,col1),bty="n",inset=.02)              
+              else legend("bottomright",as.character(years),pch=21,col=col1,pt.bg=col1,bty="n",inset=.02)
+              }
+            legend("topright",legend=substitute(NetOpening == a1 + b1 %*% log(depth),list(a1=round(coef(Netopening.log)[1],2),b1=(round(coef(Netopening.log)[2],2)))),bty="n",text.font=2,inset=.05)
+            dumbo<-bquote("Net vert. opening"== a + b %*% log("Depth"))
+            summary(Netopening.log)
+          }
+          if (length(levels(dumb$sweeplngt))==2) {
            dumbshort<-subset(dumb,SweepLngt==levels(factor(dumb$SweepLngt))[1])
            dumblong<-subset(dumb,SweepLngt==levels(factor(dumb$SweepLngt))[2])
            dpthAst<-range(dumbshort$Depth,na.rm=T)
@@ -76,19 +80,25 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
            dpst<-seq(dpthAst[1],dpthAst[2]+20,length=650)
            dplg<-seq(dpthAlg[1],dpthAlg[2]+20,length=650)
            if (length(years)>1) {
-           Netopeningst.log<-nls(Netopening~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(-9) & years!=years[length(years)])  # se puede utilizar alg="plinear" para cuando no hay muestra suficiente para calcular los valores iniciales
-           Netopeninglg.log<-nls(Netopening~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(-9) & years!=years[length(years)])
+              Netopeningst.log<-nls(Netopening~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(-9) & Year!=years[length(years)])  # se puede utilizar alg="plinear" para cuando no hay muestra suficiente para calcular los valores iniciales
+              Netopeninglg.log<-nls(Netopening~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(-9) & Year!=years[length(years)])
            }
            else {
-             Netopeningst.log<-nls(Netopening~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(-9))  # se puede utilizar alg="plinear" para cuando no hay muestra suficiente para calcular los valores iniciales
-             Netopeninglg.log<-nls(Netopening~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(-9))
-             }
+              Netopeningst.log<-nls(Netopening~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(-9))  # se puede utilizar alg="plinear" para cuando no hay muestra suficiente para calcular los valores iniciales
+              Netopeninglg.log<-nls(Netopening~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(-9))
+              }
            vrtst<-range(subset(dumbshort$Netopening,dumbshort$Netopening> c(-9)))
            vrtlg<-range(subset(dumblong$Netopening,dumblong$Netopening> c(-9)))
-           if (pF) {points(Netopening~Depth,dumbshort,subset=HaulVal=="V",pch=21,col=col2)   
+           if (pF) {
+              points(Netopening~Depth,dumbshort,subset=HaulVal=="V",pch=21,col=col2)   
               points(Netopening~Depth,dumbshort,subset=Year==years[length(years)],pch=21,bg=col2,lwd=1)   
               points(Netopening~Depth,dumblong,subset=HaulVal=="V",pch=21,col=col1)   
               points(Netopening~Depth,dumblong,subset=Year==years[length(years)],pch=21,bg=col1,lwd=1)   
+              if (length(years)>1) legend("bottomright",c(paste(c(paste(years[1],years[length(years)-1],sep="-"),years[length(years)]),c("Short sweeps"),sep=" "),paste(c(paste(years[1],years[length(years)-1],sep="-"),years[length(years)]),c("Long sweeps"),sep=" ")),pch=21,col=c(col2,col2,col1,col1),pt.bg=c(NA,col2,NA,col1),bty="n",inset=c(.02),ncol=2)           
+              else {
+                legend("bottomright",legend=c("Short sweeps","Long sweeps"),pch=21,col=c(col1,col1),pt.bg=c(col2,col1),inset=.04,bty="n")
+                text(0,0, as.character(years),adj=0.01,font=1, cex=.9,pos=4)
+                }
            }
            title(main=paste0("Vertical opening vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
            mtext(dumb$Ship[length(dumb$Ship)],line=.4,cex=.9,adj=0)
@@ -111,14 +121,14 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
            a1Uprlg<-confint(Netopeninglg.log,level=c.intb)[1,2]
            b1Uprlg<-confint(Netopeninglg.log,level=c.intb)[2,2]
            lines(dplg,a1Uprlg+b1Uprlg*log(dplg),col=col1,lty=2,lwd=1)
-           legend("bottomright",legend=substitute(LongVop == a1lg + b1lg %*% log(depth),list(a1lg=round(coef(Netopeninglg.log)[1],2),b1lg=(round(coef(Netopeninglg.log)[2],2)))),bty="n",text.font=2,inset=.1)
+           legend("bottomright",legend=substitute(LongVop == a1lg + b1lg %*% log(depth),list(a1lg=round(coef(Netopeninglg.log)[1],2),b1lg=(round(coef(Netopeninglg.log)[2],2)))),bty="n",text.font=2,inset=.2)
            summary(Netopeningst.log)
            summary(Netopeninglg.log)
            }
            dumbo<-bquote("Net Vert. opening"== a + b %*% log("Depth"))
            mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
          txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
-         text(0,0, txt,adj=0.01,font=1, cex=.9,pos=4)
+         if (length(years)>1) text(0,0, txt,adj=0.01,font=1, cex=.9,pos=4)
       }
       }
             

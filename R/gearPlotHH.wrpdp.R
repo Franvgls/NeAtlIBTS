@@ -50,7 +50,7 @@ gearPlotHH.wrpdp<-function(Survey,years,quarter,line=T,c.inta=.85,col1="darkblue
      }
      mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
      if (line) {
-       if (length(years>1)) {lm.WarpVsDepth<-lm(Warplngt~Depth,dumb,subset=HaulVal=="V" & Warplngt > c(0) & Depth> c(0) & years!=years[length(years)])}
+       if (length(years)>1) {lm.WarpVsDepth<-lm(Warplngt~Depth,dumb,subset=HaulVal=="V" & Warplngt > c(0) & Depth> c(0) & Year!=years[length(years)])}
        else lm.WarpVsDepth<-lm(Warplngt~Depth,dumb,subset=HaulVal=="V" & Warplngt > c(0) & Depth> c(0)) 
        dpt<-data.frame(Depth=seq(dpthA[1],dpthA[2],length.out = 100))
        pred.plim<-predict(lm.WarpVsDepth,newdata=dpt,interval="prediction",level=c.inta)
@@ -68,7 +68,7 @@ gearPlotHH.wrpdp<-function(Survey,years,quarter,line=T,c.inta=.85,col1="darkblue
        mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
      }
      if (pF) {
-        if (length(years)>1) {legend("bottomright",legend=c(paste("Hauls",years[length(years)]),"Previous hauls"),pch=c(21),col=c(1,col1),pt.bg=c(col1,NA),inset=.05,bty="n")}
+      if (length(years)>1) {legend("bottomright",legend=c(paste("Hauls:",years[length(years)]),paste0("Hauls: ",years[1],"-",years[length(years)-1])),pch=c(21),col=c(1,col1),pt.bg=c(col1,NA),inset=.05,bty="n")}
         else legend("bottomright",legend=paste("Hauls",years),pch=21,col=1,pt.bg=col1,inset=.04,bty="n")
       }
      if (length(years)>1) {

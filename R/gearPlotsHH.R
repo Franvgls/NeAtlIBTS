@@ -26,13 +26,13 @@
 #' @examples gearPlotsHH("SP-ARSA",c(2014:2016),4)
 #' @examples gearPlotsHH(damb,c(2014:2016),4,getICES=F)
 #' @export
-gearPlotsHH<-function(Survey,years,quarter,c.inta=.5,c.intb=.5,col1="darkblue",col2="steelblue2",getICES=T,pF=T) {
+gearPlotsHH<-function(Survey,years,quarter=T,c.inta=.5,c.intb=.5,col1="darkblue",col2="steelblue2",getICES=T,pF=T) {
   if (getICES) {
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
   }
   if (!getICES) {
     dumb<-Survey
-    if (!all(unique(years) %in% unique(damb$Year))) stop(paste0("Not all years selected in years are present in the data.frame, check: ",unique(years)[which(!(unique(years) %in% unique(damb$Year)))]))
+    if (!all(unique(years) %in% unique(dumb$Year))) stop(paste0("Not all years selected in years are present in the data.frame, check: ",unique(years)[which(!(unique(years) %in% unique(damb$Year)))]))
     if (unique(dumb$Quarter)!=quarter) stop(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
   }
   opar<-par(no.readonly=T)

@@ -48,18 +48,27 @@ gearPlotHH.wgdp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
          dspr<-range(subset(dumb$DoorSpread,dumb$DoorSpread>c(0)))
          dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)
          if (length(years)>1) {plot(WingSpread~Depth,dumb,xlim=c(0,dpthA[2]+20),ylim=c(0,wspr[2]+10),type="n",subset=WingSpread!=c(-9) & Year!=years[length(years)],pch=21,col=grey(.5),ylab="Wing spread (m)",xlab="Depth (m)")
-           if(pF) {points(WingSpread~Depth,dumb,subset=WingSpread!=c(-9) & Year!=years[length(years)],pch=21,col=grey(.5))}
+           if(pF) {
+             points(WingSpread~Depth,dumb,subset=WingSpread!=c(-9) & Year!=years[length(years)],pch=21,col=col1)
+              }
            }
          if (length(years)==1) {plot(WingSpread~Depth,dumb,xlim=c(0,dpthA[2]+20),ylim=c(0,wspr[2]+10),type="n",subset=WingSpread!=c(-9) & WingSpread>0,pch=21,col=grey(.5),ylab="Wing spread (m)",xlab="Depth (m)")
-           if (pF) {points(WingSpread~Depth,dumb,xlim=c(0,dpthA[2]+20),subset=WingSpread!=c(-9) & WingSpread>0,pch=21,col=grey(.5))} 
+           if (pF) {
+             points(WingSpread~Depth,dumb,xlim=c(0,dpthA[2]+20),subset=WingSpread!=c(-9) & WingSpread>0,pch=21,col=col1)
+             #legend("bottomright",legend=as.character(c(years)),pch=21,col=col1,pt.bg=col1,bty="n",inset=.04)
+           } 
            }
          title(main=paste0("Wing Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
          if (length(levels(factor(dumb$sweeplngt)))<2) {
             dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)
             dp<-seq(dpthA[1],dpthA[2]+20,length=650)
-            if (length(years)>1) WingSpread.log<-nls(WingSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9) & WingSpread>0 & years!=years[length(years)])
+            if (length(years)>1) WingSpread.log<-nls(WingSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9) & WingSpread>0 & Year!=years[length(years)])
             else WingSpread.log<-nls(WingSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9) & WingSpread>0)
-            if (pF) {points(WingSpread~Depth,dumb,subset=Year==years[length(years)],pch=21,bg=col1)}
+            if (pF) {
+              points(WingSpread~Depth,dumb,subset=Year==years[length(years)],pch=21,bg=col1)
+              if (length(years)>1) legend("bottomright",legend=c(paste0(years[1],"-",years[length(years)-1]),as.character(years[length(years)])),pch=21,col=col1,pt.bg=c(NA,col1),bty="n",inset=.02)
+              else legend("bottomright",as.character(years),pch=21,col=col1,pt.bg=col1,bty="n",inset=.04)
+              }
             title(paste0("Wing Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
             mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
             a1<-round(coef(WingSpread.log)[1],2)
@@ -84,15 +93,19 @@ gearPlotHH.wgdp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
             dpst<-seq(dpthAst[1],dpthAst[2]+20,length=650)
             dplg<-seq(dpthAlg[1],dpthAlg[2]+20,length=650)
             if (length(years)>1) {
-            WingSpreadst.log<-nls(WingSpread~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9) & years!=years[length(years)])
-            WingSpreadlg.log<-nls(WingSpread~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9) & years!=years[length(years)])
+            WingSpreadst.log<-nls(WingSpread~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9) & Year!=years[length(years)])
+            WingSpreadlg.log<-nls(WingSpread~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9) & Year!=years[length(years)])
             }
             else {
               WingSpreadst.log<-nls(WingSpread~a1+b1*log(Depth),dumbshort,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9))
               WingSpreadlg.log<-nls(WingSpread~a1+b1*log(Depth),dumblong,start=c(a1=.1,b1=1),subset=WingSpread!=c(-9))
             }
-            if (pF) {points(WingSpread~Depth,dumbshort,subset=HaulVal=="V",pch=21,col=col2)
-            points(WingSpread~Depth,dumblong,subset=HaulVal=="V",pch=21,col=col1)}
+            if (pF) {
+              points(WingSpread~Depth,dumbshort,subset=HaulVal=="V",pch=21,col=col2)
+              points(WingSpread~Depth,dumblong,subset=HaulVal=="V",pch=21,col=col1)            
+              if (length(years)>1) legend("bottomright",c(paste(c(paste(years[1],years[length(years)-1],sep="-"),years[length(years)]),c("Short sweeps"),sep=" "),paste(c(paste(years[1],years[length(years)-1],sep="-"),years[length(years)]),c("Long sweeps"),sep=" ")),pch=21,col=c(col2,col1,col1,col1),pt.bg=c(NA,col2,NA,col1),bty="n",inset=c(.02),ncol=2)           
+              else legend("bottomright",c("Short sweeps","Long sweeps"),pch=21,col=c(col1,col1),pt.bg = c(col2,col1),bty="n",inset=.04)
+              }
             title(paste0("Wing Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
             mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
             a1st<-round(coef(WingSpreadst.log)[1],2)
@@ -104,12 +117,15 @@ gearPlotHH.wgdp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
             a1Uprst<-confint(WingSpreadst.log,level=c.intb)[1,2]
             b1Uprst<-confint(WingSpreadst.log,level=c.intb)[2,2]
             lines(dpst,a1Uprst+b1Uprst*log(dpst),col=col2,lty=2,lwd=1)
-            if (pF) {points(WingSpread~Depth,dumbshort,subset=Year==years[length(years)],pch=21,bg=col2)
-            points(WingSpread~Depth,dumblong,subset=Year==years[length(years)],pch=21,bg=col1)}
-            legend("bottomleft",legend=substitute(WSshort == a1st + b1st %*% log(depth),list(a1st=round(coef(WingSpreadst.log)[1],2),b1st=(round(coef(WingSpreadst.log)[2],2)))),bty="n",text.font=2,inset=c(.05,.1))
-            a1lg<-round(coef(WingSpreadlg.log)[1],2)
-            b1lg<-round(coef(WingSpreadlg.log)[2],2)
-            lines(dplg,a1lg+b1lg*log(dplg),col=col1,lwd=2)
+            if (pF) {
+              points(WingSpread~Depth,dumbshort,subset=Year==years[length(years)],pch=21,bg=col2)
+              points(WingSpread~Depth,dumblong,subset=Year==years[length(years)],pch=21,bg=col1)
+              #legend("bottomright",c("Short sweeps","Long sweeps"),pch=21,col=c(col1,col1),pt.bg=c(col2,col1),bty="n",inset=.04)
+              }
+              legend("bottomleft",legend=substitute(WSshort == a1st + b1st %*% log(depth),list(a1st=round(coef(WingSpreadst.log)[1],2),b1st=(round(coef(WingSpreadst.log)[2],2)))),bty="n",text.font=2,inset=c(.05,.1))
+              a1lg<-round(coef(WingSpreadlg.log)[1],2)
+              b1lg<-round(coef(WingSpreadlg.log)[2],2)
+              lines(dplg,a1lg+b1lg*log(dplg),col=col1,lwd=2)
             a1lowlg<-confint(WingSpreadlg.log,level=c.inta)[1,1]
             b1lowlg<-confint(WingSpreadlg.log,level=c.inta)[2,1]
             lines(dplg,a1lowlg+b1lowlg*log(dplg),col=col1,lty=2,lwd=1)
@@ -123,6 +139,7 @@ gearPlotHH.wgdp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
             print(summary(WingSpreadlg.log))
          }
    }
-   txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
+   if (length(years)>1) txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
+   else txt<-paste0("Year: ",as.character(years))
    mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.9)
 }

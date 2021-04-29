@@ -72,7 +72,7 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=
     sp::plot(bath100,add=T,col=gray(.85),lwd=.1)
     sp::plot(bathy.geb[bathy.geb$DEPTH!=100,],add=T,col=gray(.85),lwd=.1)
   }
-  grid(col=gray(.8),lwd=.5)
+  # if (grid) grid(col=gray(.8),lwd=.5)
   if (ICESdiv) sp::plot(ices.div,add=T,col=NA,border="burlywood")
   if (all(xlims < 0)) {
     degs = seq(xlims[1],xlims[2],ifelse(ancho>10,4,1))
@@ -86,12 +86,12 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=
     axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
     axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
   }
-  if (!all(xlims >0)) {
-    degs = seq(xlims[1],-2,ifelse(abs(diff(xlims))>10,4,1))
+  if (xlims[1]<0 & xlims[2]>0) {
+    degs = seq(xlims[1],-1,ifelse(abs(diff(xlims))>10,4,1))
     alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ W))
     axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
     axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
-    degs = seq(3,xlims[2],ifelse(abs(diff(xlims))>1,4,1))
+    degs = seq(abs(xlims[1]),xlims[2],ifelse(abs(diff(xlims))>1,4,1))
     alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ E))
     axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
     axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
