@@ -7,7 +7,7 @@
 gearPlotsHH(
   Survey,
   years,
-  quarter,
+  quarter = T,
   c.inta = 0.5,
   c.intb = 0.5,
   col1 = "darkblue",

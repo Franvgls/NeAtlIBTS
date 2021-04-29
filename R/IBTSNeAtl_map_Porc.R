@@ -15,7 +15,7 @@
 #' @param load = T or F to load all the shapes files
 #' @param places =T if T incluye letreros de Irlanda y Galway
 #' @param es = F if F letreros en inglés si T en español
-#' @examples IBTSNeAtl_map_porc(out="def",dens=0,nl=45,leg=F,ICESrect = T);text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
+#' @examples IBTSNeAtl_map_porc(out="def",dens=0,leg=F,ICESrect = T);text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
 #' @export
 IBTSNeAtl_map_porc<-function(nl=54.5,sl=50.5,xlims=c(-15.5,-8.5),leg=FALSE,es=FALSE,places=T,cex.leg=.7,dens=30,ICESdiv=TRUE,ICESrect=FALSE,bathy=TRUE,out="def",
                              nfile="NeAtlIBTS_map_porc",lwdl=.1,load=TRUE,shpdir="c:/GitHubRs/shapes/") {
@@ -29,7 +29,7 @@ IBTSNeAtl_map_porc<-function(nl=54.5,sl=50.5,xlims=c(-15.5,-8.5),leg=FALSE,es=FA
   } else ancho<- diff(xlims)*10
   ices.div<-readOGR(paste0(shpdir,"ices_div.dbf"),"ices_div",verbose = F)
   bath100<-readOGR(paste0(shpdir,"100m.dbf"),"100m",verbose = F)
-  bathy.geb<-readOGR(paste0(shpdir,"bathy_geb.dbf"),"Bathy_geb",verbose = F)
+  bathy.geb<-readOGR(paste0(shpdir,"bathy_geb.dbf"),"bathy_geb",verbose = F)
   Porc<-readOGR(paste0(shpdir,"Porcupine.dbf"),"Porcupine",verbose = F)
   Porc_w84<-spTransform(Porc,CRS("+proj=longlat +datum=WGS84")) 
   switch(out,
@@ -39,6 +39,7 @@ IBTSNeAtl_map_porc<-function(nl=54.5,sl=50.5,xlims=c(-15.5,-8.5),leg=FALSE,es=FA
   par(mar=c(3.5,2,2,2)+0.1)
   #  windows()
   maps::map(database = "worldHires", xlim = xlims, ylim = c(sl,nl),type="n")
+#  maps::map(database = "worldHires", xlim = xlims, ylim = c(sl,nl),type="n")
   if (bathy) {
     sp::plot(bath100,add=T,col=gray(.85),lwd=.1)
     sp::plot(bathy.geb[bathy.geb$DEPTH!=100,],add=T,col=gray(.85),lwd=.1)
