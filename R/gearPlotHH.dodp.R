@@ -48,7 +48,7 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
            DoorSpread.log<-nls(DoorSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9))
            }
          dspr<-range(subset(dumb,DoorSpread>c(-9))$DoorSpread,na.rm=T)
-         mtext(paste("Ship:",dumb$Ship[1]),line=.4,cex=.8,adj=0)
+         mtext(paste(dumb$Ship[1]),line=.4,cex=.8,adj=0)
          a1<-round(coef(DoorSpread.log)[1],2)
          b1<-round(coef(DoorSpread.log)[2],2)
          lines(dp,a1+b1*log(dp),col=col1,lwd=2)
