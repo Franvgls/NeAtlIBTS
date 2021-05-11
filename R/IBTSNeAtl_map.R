@@ -91,7 +91,7 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=
     alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ W))
     axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
     axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
-    degs = seq(abs(xlims[1]),xlims[2],ifelse(abs(diff(xlims))>1,4,1))
+    degs = seq(1,xlims[2],ifelse(abs(diff(xlims))>1,4,1))
     alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ E))
     axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
     axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))

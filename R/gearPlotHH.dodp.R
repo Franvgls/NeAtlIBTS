@@ -33,7 +33,7 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
       dpthA<-range(dumb$Depth,na.rm=T)
       dp<-seq(dpthA[1],dpthA[2]+20,length=650)
       plot(DoorSpread~Depth,dumb,type="n",xlim=c(0,dpthA[2]+20),ylim=c(0,dspr[2]+20),pch=21,col=col1,ylab="Door spread (m)",xlab="Depth (m)",subset=DoorSpread!=c(-9)& Year!=years[length(years)])
-      if (pF & length(levels(dumb$SweepLngt))==1) {
+      if (pF & length(levels(dumb$sweeplngt))==1) {
         points(DoorSpread~Depth,dumb,pch=21,col=col1,subset=c(DoorSpread!=c(-9) & Year!=years[length(years)]))         
         points(DoorSpread~Depth,dumb,subset=Year==years[length(years)],pch=21,bg=col1)
         if (length(years)==1) legend("bottomright",legend=as.character(c(years)),pch=21,col=col1,pt.bg=col1,bty="n",inset=.04)
