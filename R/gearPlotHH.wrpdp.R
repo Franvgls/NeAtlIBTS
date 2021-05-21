@@ -11,6 +11,7 @@
 #' @param col1: the color of the points, last year fill and previous years empty symbol
 #' @param getICES: Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.
 #' @param pF: takes out the points and leaves only the lines in the graphs
+#' @param ti: if T includes autmoatically the title, F leaves it blank an can be added later.
 #' @details Surveys available in DATRAS: i.e. SWC-IBTS, ROCKALL, NIGFS, IE-IGFS, SP-PORC, FR-CGFS, EVHOE, SP-NORTH, PT-IBTS and SP-ARSA
 #' @return Produces a graph Warp length vs. Depth for the years selected.
 #, it also includes information on the ship, the time series used the model used and parameters estimated.
@@ -28,7 +29,7 @@
 #' @examples gearPlotHH.wrpdp("SP-ARSA",c(2014:2016),4)
 #' @examples gearPlotHH.wrpdp(damb,c(2014:2016),4,getICES=F,pF=F)
 #' @export
-gearPlotHH.wrpdp<-function(Survey,years,quarter,line=T,c.inta=.85,col1="darkblue",getICES=T,pF=T) {
+gearPlotHH.wrpdp<-function(Survey,years,quarter,line=T,c.inta=.85,col1="darkblue",getICES=TRUE,pF=TRUE,ti=TRUE) {
   if (getICES) {
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
   }
@@ -43,7 +44,7 @@ gearPlotHH.wrpdp<-function(Survey,years,quarter,line=T,c.inta=.85,col1="darkblue
      wrp<-range(subset(dumb$Warplngt,dumb$Warplngt> c(0)),na.rm=T)
      dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)
      plot(Warplngt~Depth,dumb,type="n",subset=c(HaulVal!="I" & Year!=years[length(years)]),cex=1,pch=21,col=col1,ylab="Warp length (m)",xlab="Depth (m)",xlim=c(0,max(dumb$Depth,na.rm=T)),ylim=c(0,max(dumb$Warplngt,na.rm=T)*1.1))
-     title(main=paste0("Warp shot vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+     if (ti) title(main=paste0("Warp shot vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
      if (pF) {
        points(Warplngt~Depth,dumb,subset=c(HaulVal!="I" & Year %in% years),pch=21,cex=1,col=col1)
        points(Warplngt~Depth,dumb,subset=c(HaulVal!="I" & Year==years[length(years)]),pch=21,bg=col1,col=grey(.0))
@@ -76,6 +77,11 @@ gearPlotHH.wrpdp<-function(Survey,years,quarter,line=T,c.inta=.85,col1="darkblue
      mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.9)
      }
    }
+  else {
+    plot(HaulNo~Depth,dumb,type="n",subset=c(HaulVal!="I" & Year!=years[length(years)]),cex=1,pch=21,col=col1,ylab="Warp length (m)",xlab="Depth (m)",xlim=c(0,max(dumb$Depth,na.rm=T)),ylim=c(0,max(dumb$Depth,na.rm=T)*1.1))
+    if (ti) title(main=paste0("Warp shot vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+    mtext("No Data for Warp Length",font=2,cex=.8,line=.2)
+  }
 }
    
    

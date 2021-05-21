@@ -14,11 +14,12 @@
 #' @param col2: color for the symbols and lines for the data from the short sweeps in case there are two.
 #' @param getICES: Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.
 #' @param pF: takes out the points and leaves only the lines in the graphs
+#' @param ti: if T includes autmoatically the title, F leaves it blank an can be added later.
 #' @details Surveys available in DATRAS: i.e. NS-IBTS,SWC-IBTS, ROCKALL, NIGFS, IE-IGFS, SP-PORC, FR-CGFS, EVHOE, SP-NORTH, PT-IBTS and SP-ARSA
 #' @return Produces Net Vertical opening vs. Depth plot it also includes information on the ship, the time series used (bottom fourth graph), the models and parameters estimated.
 #' @examples gearPlotHHNS.nodp(Survey="NS-IBTS",years=c(2014:2016),quarter=3,country="ENG")
 #' @export
-gearPlotHHNS.nodp<-function(Survey="NS-IBTS",years,quarter,country,c.inta=.8,c.intb=.3,col1="darkblue",col2="steelblue2",getICES=T,pF=T) {
+gearPlotHHNS.nodp<-function(Survey="NS-IBTS",years,quarter,country,c.inta=.8,c.intb=.3,col1="darkblue",col2="steelblue2",getICES=TRUE,pF=TRUE,ti=TRUE) {
   if (getICES) {
    dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
    }
@@ -37,7 +38,7 @@ gearPlotHHNS.nodp<-function(Survey="NS-IBTS",years,quarter,country,c.inta=.8,c.i
       vrt<-range(subset(dumb$Netopening,dumb$Netopening> c(0)))
       plot(Netopening~Depth,dumb,xlim=c(0,dpthA[2]+20),ylim=c(0,vrt[2]+2),type="n",pch=21,col=col1,
          ylab="Vertical opening (m)",xlab="Depth (m)",subset=Year!=years[length(years)] & Netopening> c(-9))
-         title(main=paste0("Vertical opening vs. Depth in ",country," ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+         if (ti) title(main=paste0("Vertical opening vs. Depth in ",country," ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
          mtext(paste("Ship: ",paste0(unique(dumb$Ship),collapse=" ")),line=.4,cex=.8,adj=0)
       if (pF) points(Netopening~Depth,dumb,pch=21,col=col1,subset=Year!=years[length(years)] & Netopening> c(-9))    
              if (length(levels(dumb$sweeplngt))<2) {
