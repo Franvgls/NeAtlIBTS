@@ -53,11 +53,11 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
          a1<-round(coef(DoorSpread.log)[1],2)
          b1<-round(coef(DoorSpread.log)[2],2)
          lines(dp,a1+b1*log(dp),col=col1,lwd=2)
-         a1low<-confint(DoorSpread.log,level=c.inta)[1,1]
-         b1low<-confint(DoorSpread.log,level=c.inta)[2,1]
+         a1low<-confint(DoorSpread.log,level=c.int)[1,1]
+         b1low<-confint(DoorSpread.log,level=c.int)[2,1]
          lines(dp,a1low+b1low*log(dp),col=col1,lty=2,lwd=1)
-         a1Upr<-confint(DoorSpread.log,level=c.inta)[1,2]
-         b1Upr<-confint(DoorSpread.log,level=c.inta)[2,2]
+         a1Upr<-confint(DoorSpread.log,level=c.int)[1,2]
+         b1Upr<-confint(DoorSpread.log,level=c.int)[2,2]
          lines(dp,a1Upr+b1Upr*log(dp),col=col1,lty=2,lwd=1)
          legend("bottomright",legend=substitute(DS == a1 + b1 %*% log(depth),list(a1=round(coef(DoorSpread.log)[1],2),b1=(round(coef(DoorSpread.log)[2],2)))),bty="n",text.font=2,inset=.2)
 #         text("bottomleft",paste0(c(years[1],"-",years[length(years)])),inset=c(0,.1))
@@ -101,21 +101,21 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
             a1st<-round(coef(DoorSpreadst.log)[1],2)
             b1st<-round(coef(DoorSpreadst.log)[2],2)
             lines(dpst,a1st+b1st*log(dpst),col=col2,lwd=2)
-            a1lowst<-confint(DoorSpreadst.log,level=c.intb)[1,1]
-            b1lowst<-confint(DoorSpreadst.log,level=c.intb)[2,1]
+            a1lowst<-confint(DoorSpreadst.log,level=c.inta)[1,1]
+            b1lowst<-confint(DoorSpreadst.log,level=c.inta)[2,1]
             lines(dpst,a1lowst+b1lowst*log(dpst),col=col2,lty=2,lwd=1)
-            a1Uprst<-confint(DoorSpreadst.log,level=c.intb)[1,2]
-            b1Uprst<-confint(DoorSpreadst.log,level=c.intb)[2,2]
+            a1Uprst<-confint(DoorSpreadst.log,level=c.inta)[1,2]
+            b1Uprst<-confint(DoorSpreadst.log,level=c.inta)[2,2]
             lines(dpst,a1Uprst+b1Uprst*log(dpst),col=col2,lty=2,lwd=1)
             legend("bottomleft",legend=substitute(DSshort == a1st + b1st %*% log(depth),list(a1st=round(coef(DoorSpreadst.log)[1],2),b1st=(round(coef(DoorSpreadst.log)[2],2)))),bty="n",text.font=2,cex=.9,inset=c(.05,.2))
             a1lg<-round(coef(DoorSpreadlg.log)[1],2)
             b1lg<-round(coef(DoorSpreadlg.log)[2],2)
             lines(dplg,a1lg+b1lg*log(dplg),col=col1,lwd=2)
-            a1lowlg<-confint(DoorSpreadlg.log,level=c.inta)[1,1]
-            b1lowlg<-confint(DoorSpreadlg.log,level=c.inta)[2,1]
+            a1lowlg<-confint(DoorSpreadlg.log,level=c.intb)[1,1]
+            b1lowlg<-confint(DoorSpreadlg.log,level=c.intb)[2,1]
             lines(dplg,a1lowlg+b1lowlg*log(dplg),col=col1,lty=2,lwd=1)
-            a1Uprlg<-confint(DoorSpreadlg.log,level=c.inta)[1,2]
-            b1Uprlg<-confint(DoorSpreadlg.log,level=c.inta)[2,2]
+            a1Uprlg<-confint(DoorSpreadlg.log,level=c.intb)[1,2]
+            b1Uprlg<-confint(DoorSpreadlg.log,level=c.intb)[2,2]
             lines(dplg,a1Uprlg+b1Uprlg*log(dplg),col=col1,lty=2,lwd=1)
             legend("bottomright",legend=substitute(DSlong == a1lg + b1lg %*% log(depth),list(a1lg=round(coef(DoorSpreadlg.log)[1],2),b1lg=(round(coef(DoorSpreadlg.log)[2],2)))),bty="n",text.font=2,cex=.9,inset=c(.01,.4))
 #         text("bottomleft",paste0(c(years[1],"-",years[length(years)])),inset=c(0,.1))

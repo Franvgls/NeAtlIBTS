@@ -122,7 +122,7 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
            a1Uprlg<-confint(Netopeninglg.log,level=c.intb)[1,2]
            b1Uprlg<-confint(Netopeninglg.log,level=c.intb)[2,2]
            lines(dplg,a1Uprlg+b1Uprlg*log(dplg),col=col1,lty=2,lwd=1)
-           legend("bottomright",legend=substitute(LongVop == a1lg + b1lg %*% log(depth),list(a1lg=round(coef(Netopeninglg.log)[1],2),b1lg=(round(coef(Netopeninglg.log)[2],2)))),bty="n",text.font=2,inset=.2)
+           legend("topright",legend=substitute(LongVop == a1lg + b1lg %*% log(depth),list(a1lg=round(coef(Netopeninglg.log)[1],2),b1lg=(round(coef(Netopeninglg.log)[2],2)))),bty="n",text.font=2,inset=.2)
            summary(Netopeningst.log)
            summary(Netopeninglg.log)
            }

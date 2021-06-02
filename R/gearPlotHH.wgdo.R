@@ -41,7 +41,7 @@ gearPlotHH.wgdo<-function(Survey,years,quarter,c.int=.9,c.inta=.8,c.intb=.8,col1
   }
   # if (all(is.na(dumb$SweepLngt))) {stop("All information on sweeplength is NA. No wings used in this survey?")}
   dumb$SweepLngt[is.na(dumb$SweepLngt)]<-0
-  dumb$SweepLngt[dumb$SweepLngt>0]<-factor(as.character(dumb$SweepLngt[dumb$SweepLngt>0]))
+  dumb$SweepLngt[dumb$SweepLngt>0]<-factor(dumb$SweepLngt[dumb$SweepLngt>0],levels=sort(unique(dumb$SweepLngt[dumb$SweepLngt>0])),ordered = T)
    if (length(levels(dumb$SweepLngt))>2) {
      print(tapply(dumb$SweepLngt,dumb[,c("SweepLngt","Year")],"length"))
      stop("This function only works with data sets with two different sweep lengths, check you data")}
@@ -58,7 +58,11 @@ gearPlotHH.wgdo<-function(Survey,years,quarter,c.int=.9,c.inta=.8,c.intb=.8,col1
                         #outlierTest(lm.WingVsDoor,data=dumb)
             ds<-data.frame(DoorSpread=seq(dspr[1],dspr[2],length.out = 10))
             plot(WingSpread~DoorSpread,dumb,type="n",subset=HaulVal=="V" & Year!=years[length(years)],xlim=c(dspr[1]-20,dspr[2]+20),ylim=c(wspr[1]-10,wspr[2]+10),xlab="Door Spread (m)",ylab="Wing Spread (m)",pch=21,col="grey")
-            if (pF) {points(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & Year!=years[length(years)])}
+            if (pF) {
+              points(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & Year!=years[length(years)])
+              if (length(years)>1) legend("bottomright",legend=c(paste0(years[1],"-",years[length(years)-1]),as.character(years[length(years)])),pch=21,col=col1,pt.bg=c(NA,col1),bty="n",inset=.02)
+              else legend("bottomright",as.character(years),pch=21,col=col1,pt.bg=col1,bty="n",inset=.04)
+              }
             if (ti) title(main=paste0("Wing Spread vs. door spread in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
             mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
             if (pF) {points(WingSpread~DoorSpread,dumb,subset=c(HaulVal=="V" & Year==years[length(years)]),pch=21,bg=col1)}
@@ -90,33 +94,35 @@ gearPlotHH.wgdo<-function(Survey,years,quarter,c.int=.9,c.inta=.8,c.intb=.8,col1
             if (ti) title(main=paste0("Wing Spread vs. door spread in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
             mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
             if (pF){
-              points(WingSpread~DoorSpread,dumb,subset=c(HaulVal=="V" & SweepLngt==levels(factor(SweepLngt))[1] & c(StNo!="FG1" & Year!=2015)),pch=21,col=col1)
-              points(WingSpread~DoorSpread,dumb,subset=c(HaulVal=="V" & SweepLngt==levels(factor(SweepLngt))[2]),pch=21,col=col2)
+              points(WingSpread~DoorSpread,dumb,subset=c(HaulVal=="V" & SweepLngt==levels(factor(SweepLngt))[1] & c(StNo!="FG1" & Year!=2015)),pch=21,col=col2)
+              points(WingSpread~DoorSpread,dumb,subset=c(HaulVal=="V" & SweepLngt==levels(factor(SweepLngt))[2]),pch=21,col=col1)
               points(WingSpread~DoorSpread,dumb,
-                subset=c(HaulVal=="V" & Year==years[length(years)]& SweepLngt==levels(factor(SweepLngt))[1]),pch=21,bg=col1)
+                subset=c(HaulVal=="V" & Year==years[length(years)]& SweepLngt==levels(factor(SweepLngt))[1]),pch=21,bg=col2)
               points(WingSpread~DoorSpread,dumb,
-                subset=c(HaulVal=="V" & Year==years[length(years)] & SweepLngt==levels(factor(SweepLngt))[2]),pch=21,bg=col2)
+                subset=c(HaulVal=="V" & Year==years[length(years)] & SweepLngt==levels(factor(SweepLngt))[2]),pch=21,bg=col1)
+              if (length(years)>1) legend("bottomright",c(paste(c(paste(years[1],years[length(years)-1],sep="-"),years[length(years)]),c("Short sweeps"),sep=" "),paste(c(paste(years[1],years[length(years)-1],sep="-"),years[length(years)]),c("Long sweeps"),sep=" ")),pch=21,col=c(col2,col1,col1,col1),pt.bg=c(NA,col2,NA,col1),bty="n",inset=c(.02),ncol=2)           
+              else legend("bottomright",c("Short sweeps","Long sweeps"),pch=21,col=c(col1,col1),pt.bg = c(col2,col1),bty="n",inset=.04)
             }
             dsprsrt<-range(subset(dumb,SweepLngt==levels(factor(SweepLngt))[1] & DoorSpread> c(-9))$DoorSpread)
             dsshort<-data.frame(DoorSpread=seq(dsprsrt[1],dsprsrt[2],length.out = 10))
             predshort <- predict(lm.WingVsDoor.short, newdata = dsshort)
-            lines(predshort~dsshort$DoorSpread,col=col1,lty=1,lwd=2)
+            lines(predshort~dsshort$DoorSpread,col=col2,lty=1,lwd=2)
             dsprlng<-range(subset(dumb,SweepLngt==levels(factor(SweepLngt))[2] & DoorSpread> c(-9))$DoorSpread)
             dslong<-data.frame(DoorSpread=seq(dsprlng[1],dsprlng[2],length.out = 10))
             predlong <- predict(lm.WingVsDoor.long, newdata = dslong)
-            lines(predlong~dslong$DoorSpread,col=col2,lty=1,lwd=2)
+            lines(predlong~dslong$DoorSpread,col=col1,lty=1,lwd=2)
             a1low.s<-confint(lm.WingVsDoor.short,level=c.inta)[1,1]
             b1low.s<-confint(lm.WingVsDoor.short,level=c.inta)[2,1]
-            lines(dsshort$DoorSpread,a1low.s+b1low.s*dsshort$DoorSpread,col= col1, lty=2,lwd=1)
+            lines(dsshort$DoorSpread,a1low.s+b1low.s*dsshort$DoorSpread,col= col2, lty=2,lwd=1)
             a1Upr.s<-confint(lm.WingVsDoor.short,level=c.inta)[1,2]
             b1Upr.s<-confint(lm.WingVsDoor.short,level=c.inta)[2,2]
-            lines(dsshort$DoorSpread,a1Upr.s+b1Upr.s*dsshort$DoorSpread,col=col1,lty=2,lwd=1)
+            lines(dsshort$DoorSpread,a1Upr.s+b1Upr.s*dsshort$DoorSpread,col=col2,lty=2,lwd=1)
             a1low.l<-confint(lm.WingVsDoor.long,level=c.intb)[1,1]
             b1low.l<-confint(lm.WingVsDoor.long,level=c.intb)[2,1]
-            lines(dslong$DoorSpread,a1low.l+b1low.l*dslong$DoorSpread,col= col2, lty=2,lwd=1)
+            lines(dslong$DoorSpread,a1low.l+b1low.l*dslong$DoorSpread,col= col1, lty=2,lwd=1)
             a1Upr.l<-confint(lm.WingVsDoor.long,level=c.intb)[1,2]
             b1Upr.l<-confint(lm.WingVsDoor.long,level=c.intb)[2,2]
-            lines(dslong$DoorSpread,a1Upr.l+b1Upr.l*dslong$DoorSpread,col=col2,lty=2,lwd=1)
+            lines(dslong$DoorSpread,a1Upr.l+b1Upr.l*dslong$DoorSpread,col=col1,lty=2,lwd=1)
             legend("bottomleft",legend=substitute(paste(WSshort == a + b %*% DSshort),list(a=round(coef(lm.WingVsDoor.short)[1],2),b=(round(coef(lm.WingVsDoor.short)[2],2)))),inset=c(.09,.1),bty="n",text.font=2,text.col=col1) 
             legend("bottomleft",legend=substitute(paste(r^2 ==resq),list(resq=round(summary(lm.WingVsDoor.short)$adj.r.squared,2))),inset=c(.17,.04),cex=.9,bty="n",text.col=col1)
             legend("topright",legend=substitute(paste(WSlong == a + b %*% DSlong),list(a=round(coef(lm.WingVsDoor.long)[1],2),b=(round(coef(lm.WingVsDoor.long)[2],2)))),bty="n",text.font=2,inset=.05,text.col=col1)
