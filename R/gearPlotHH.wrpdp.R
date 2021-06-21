@@ -29,14 +29,14 @@
 #' @examples gearPlotHH.wrpdp("SP-ARSA",c(2014:2016),4)
 #' @examples gearPlotHH.wrpdp(damb,c(2014:2016),4,getICES=F,pF=F)
 #' @export
-gearPlotHH.wrpdp<-function(Survey,years,quarter,line=T,c.inta=.85,col1="darkblue",getICES=TRUE,pF=TRUE,ti=TRUE) {
+gearPlotHH.wrpdp<-function(Survey,years,quarter,line=T,c.inta=.95,col1="darkblue",getICES=TRUE,pF=TRUE,ti=TRUE) {
   if (getICES) {
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
   }
   if (!getICES) {
     dumb<-Survey
     if (!all(unique(years) %in% unique(dumb$Year))) stop(paste0("Not all years selected in years are present in the data.frame, check: ",unique(years)[which(!(unique(years) %in% unique(dumb$Year)))]))
-    if (unique(dumb$Quarter)!=quarter) stop(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
+    if (unique(dumb$Quarter)!=quarter) warning(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
   }
   dumb<-dplyr::filter(dumb,HaulVal=="V")
   if (any(!is.na(dumb$Warplngt))) warps=T else warps=F       # Present graphs

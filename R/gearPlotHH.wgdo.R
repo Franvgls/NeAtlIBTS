@@ -132,5 +132,5 @@ gearPlotHH.wgdo<-function(Survey,years,quarter,c.int=.9,c.inta=.8,c.intb=.8,col1
          }
    } else {stop("No records with DoorSpread>0")}
    txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
-   mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.9)
+   if(length(years)>1) mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.9)
 }
