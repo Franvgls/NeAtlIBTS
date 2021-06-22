@@ -18,7 +18,7 @@
 #' @return Produces a graph with WingSpread vs. DoorSpread, it also includes information on the ship, the time series used, the models and parameters estimated.
 #' @examples gearPlotHH.dowg("SCOWCGFS",c(2014:2016),1,col1="darkblue",col2="steelblue3")
 #' @examples gearPlotHH.dowg("SCOWCGFS",c(2013:2016),4)
-#' @examples gearPlotHH.dowg("SCOROC",c(2013:2016),3)
+#' @examples .gearPlotHH.dowg("SCOROC",c(2013:2016),3)
 #' @examples gearPlotHH.dowg("NIGFS",c(2015:2016),1)
 #' @examples gearPlotHH.dowg("NIGFS",c(2006:2007,2009:2016),4)
 #' @examples gearPlotHH.dowg("IE-IGFS",c(2011:2016),4)

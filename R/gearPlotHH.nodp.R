@@ -129,7 +129,7 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
            dumbo<-bquote("Net Vert. opening"== a + b %*% log("Depth"))
            mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
          txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
-         if (length(years)>1) text(0,0, txt,adj=0.01,font=1, cex=.9,pos=4)
+         if (length(years)>1) mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.9)
       }
       }
             

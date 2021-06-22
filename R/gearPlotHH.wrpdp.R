@@ -69,7 +69,7 @@ gearPlotHH.wrpdp<-function(Survey,years,quarter,line=T,c.inta=.95,col1="darkblue
        mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
      }
      if (pF) {
-      if (length(years)>1) {legend("bottomright",legend=c(paste("Hauls:",years[length(years)]),paste0("Hauls: ",years[1],"-",years[length(years)-1])),pch=c(21),col=c(1,col1),pt.bg=c(col1,NA),inset=.05,bty="n")}
+      if (length(years)>1) {legend("bottomright",legend=c(paste(years[length(years)]),paste0(years[1],"-",years[length(years)-1])),pch=c(21),col=c(1,col1),pt.bg=c(col1,NA),inset=.05,bty="n")}
         else legend("bottomright",legend=paste("Hauls",years),pch=21,col=1,pt.bg=col1,inset=.04,bty="n")
       }
      if (length(years)>1) {

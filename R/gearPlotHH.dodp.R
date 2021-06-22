@@ -1,4 +1,4 @@
-#' Function gearPlotHH.dodp Door Spread versus Depth
+#' Function gearPlotHH.dodp Door Spread versus Depth 
 #' 
 #' Produces a DoorSpread vs. Depth plot and model with nls R function. Data are taken directly from DATRAS using function getDATRAS from library(icesDatras)
 #' it only produces plots for surveys with HH files uploaded in DATRAS

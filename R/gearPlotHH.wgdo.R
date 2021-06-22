@@ -1,4 +1,4 @@
-#' gearPlotHH.wgdo Door Spread vs. WingSpread
+#' gearPlotHH.wgdo Wing Spread vs. DoorSpread
 #' 
 #' Plots Door Spread vs. Wing Spread behaviour and produces a model using lm. If there are DoorSpread and WingSpread values.  
 #' If there are two different sweeps in the data, produces a model for each sweep length.

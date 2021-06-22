@@ -1,4 +1,4 @@
-#' Function gearPlotHH.wgdp plots Wing Spread vs. Depth behaviour 
+#' Function gearPlotHH.wgdp plots Wing Spread vs. Depth 
 #' 
 #' Produces a WingSpread vs. DoorSpread plot and a model with nls R function. Data are taken directly from DATRAS using function getDATRAS from library(icesDatras)
 #' It only produces plots for surveys with HH files uploaded in DATRAS
