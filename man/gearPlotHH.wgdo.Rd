@@ -2,16 +2,20 @@
 % Please edit documentation in R/gearPlotHH.wgdo.R
 \name{gearPlotHH.wgdo}
 \alias{gearPlotHH.wgdo}
-\title{gearPlotHH.wgdo Door Spread vs. WingSpread}
+\title{gearPlotHH.wgdo Wing Spread vs. DoorSpread}
 \usage{
 gearPlotHH.wgdo(
   Survey,
   years,
   quarter,
+  c.int = 0.9,
+  c.inta = 0.8,
+  c.intb = 0.8,
   col1 = "darkblue",
   col2 = "steelblue2",
   getICES = T,
-  pF = T
+  pF = T,
+  ti = T
 )
 }
 \arguments{
@@ -25,11 +29,19 @@ gearPlotHH.wgdo(
 
 \item{datHH:}{an HH data object with Survey, Year and Quarter columns, overrides Survey, Years, Quarters}
 
+\item{c.int:}{the confidenc interval to be used in the confint function}
+
+\item{c.inta:}{the confidence interval to be used in the confint function for all data if only one sweep length, and for the short sweeps in case there are two}
+
+\item{c.intb:}{the confidence interval to be used in the confint function for the long set of sweeps.}
+
 \item{col1:}{color for the symbols and lines for the whole set if only one set of sweeps are used, and for the data from the long set of sweeps.}
 
 \item{col2:}{color for the symbols and lines for the data from the short sweeps in case there are two.}
 
 \item{pF:}{takes out the points and leaves only the lines in the graphs}
+
+\item{ti:}{if F title will not be included automatically and can be addedd later}
 }
 \value{
 Produces a graph with DoorSpread vs. WingSpread, it also includes information on the ship, the time series used, the models and parameters estimated.
@@ -42,14 +54,14 @@ If there are two different sweeps in the data, produces a model for each sweep l
 Surveys available in DATRAS: i.e. SWC-IBTS, ROCKALL, NIGFS, IE-IGFS, SP-PORC, FR-CGFS, EVHOE, SP-NORTH, PT-IBTS and SP-ARSA
 }
 \examples{
-gearPlotHH.wgdo("SWC-IBTS",c(2014:2016),1,col1="darkblue",col2="steelblue3")
-gearPlotHH.wgdo("SWC-IBTS",c(2013:2016),4)
-gearPlotHH.wgdo("ROCKALL",c(2013:2016),3)
-gearPlotHH.wgdo("NIGFS",c(2005:2016),1)
+gearPlotHH.wgdo("SCOWCGFS",c(2014:2016),1,col1="darkblue",col2="steelblue3")
+gearPlotHH.wgdo("SCOWCGFS",c(2013:2016),4)
+gearPlotHH.wgdo("SCOROC",c(2013:2016),3)
+gearPlotHH.wgdo("NIGFS",c(2015:2016),1)
 gearPlotHH.wgdo("NIGFS",c(2006:2007,2009:2016),4)
 gearPlotHH.wgdo("IE-IGFS",c(2011:2016),4)
-gearPlotHH.wgdo("SP-PORC",c(2003:2016),3)
-gearPlotHH.wgdo("FR-CGFS",c(1998:2016),4)
+gearPlotHH.wgdo("SP-PORC",c(2003:2015),3,c.int=.2)
+gearPlotHH.wgdo("FR-CGFS",c(2016:2018),4)
 gearPlotHH.wgdo("EVHOE",c(1997:2016),4)
 gearPlotHH.wgdo("SP-NORTH",c(2014:2016),4,col1="darkblue")
 gearPlotHH.wgdo("SP-ARSA",c(2014:2016),1,col1="darkblue",col2="steelblue2")

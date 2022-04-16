@@ -9,10 +9,11 @@ gearPlotHH.wrpdp(
   years,
   quarter,
   line = T,
-  c.inta = 0.85,
+  c.inta = 0.95,
   col1 = "darkblue",
-  getICES = T,
-  pF = T
+  getICES = TRUE,
+  pF = TRUE,
+  ti = TRUE
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ gearPlotHH.wrpdp(
 \item{getICES:}{Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.}
 
 \item{pF:}{takes out the points and leaves only the lines in the graphs}
+
+\item{ti:}{if T includes autmoatically the title, F leaves it blank an can be added later.}
 }
 \value{
 Produces a graph Warp length vs. Depth for the years selected.

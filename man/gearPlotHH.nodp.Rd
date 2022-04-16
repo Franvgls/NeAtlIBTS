@@ -12,8 +12,9 @@ gearPlotHH.nodp(
   c.intb = 0.3,
   col1 = "darkblue",
   col2 = "steelblue2",
-  getICES = T,
-  pF = T
+  getICES = TRUE,
+  pF = TRUE,
+  ti = TRUE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ gearPlotHH.nodp(
 \item{getICES:}{Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.}
 
 \item{pF:}{takes out the points and leaves only the lines in the graphs}
+
+\item{ti:}{if F title will not be included automatically and can be addedd later}
 }
 \value{
 Produces Net Vertical opening vs. Depth plot it also includes information on the ship, the time series used (bottom fourth graph), the models and parameters estimated.

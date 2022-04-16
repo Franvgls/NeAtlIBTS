@@ -29,7 +29,7 @@
 #' @examples gearPlotHH.wrpdp("SP-ARSA",c(2014:2016),4)
 #' @examples gearPlotHH.wrpdp(damb,c(2014:2016),4,getICES=F,pF=F)
 #' @export
-gearPlotHH.wrpdp<-function(Survey,years,quarter,incl2=TRUE,line=TRUE,c.inta=.95,col1="darkblue",getICES=TRUE,pF=TRUE,ti=TRUE) {
+gearPlotHHN21.wrpdp<-function(Survey="SP-NORTH",years=2021,quarter=4,incl2=TRUE,line=TRUE,c.inta=.95,col1="darkblue",col2="red",getICES=TRUE,pF=TRUE,ti=TRUE) {
   if (getICES) {
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
   }
@@ -39,38 +39,49 @@ gearPlotHH.wrpdp<-function(Survey,years,quarter,incl2=TRUE,line=TRUE,c.inta=.95,
     if (unique(dumb$Quarter)!=quarter) warning(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
   }
   dumb<-if(incl2) dplyr::filter(dumb,HaulVal!="I") else dplyr::filter(dumb,HaulVal=="V")
+  dumbmol<-dplyr::filter(dumb,Ship=="29MO")
+  dumbvde<-dplyr::filter(dumb,Ship=="29VE")
   if (any(!is.na(dumb$Warplngt))) warps=T else warps=F       # Present graphs
    if (warps) {
-     wrp<-range(subset(dumb$Warplngt,dumb$Warplngt> c(0)),na.rm=T)
-     dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)
-     plot(Warplngt~Depth,dumb,type="n",subset=c(Year!=years[length(years)]),cex=1,pch=21,col=col1,ylab="Warp length (m)",xlab="Depth (m)",xlim=c(0,max(dumb$Depth,na.rm=T)),ylim=c(0,max(dumb$Warplngt,na.rm=T)*1.1))
+     wrpmol<-range(subset(dumbmol$Warplngt,dumbmol$Warplngt> c(0)),na.rm=T)
+     wrpvde<-range(subset(dumbvde$Warplngt,dumbvde$Warplngt> c(0)),na.rm=T)
+     dpthmol<-range(dumbmol$Depth[dumbmol$Depth>0],na.rm=T)
+     dpthvde<-range(dumbvde$Depth[dumbvde$Depth>0],na.rm=T)
+     plot(Warplngt~Depth,dumb,type="n",subset=c(HaulVal!="I" & Year!=years[length(years)]),cex=1,pch=21,col=col1,ylab="Warp length (m)",xlab="Depth (m)",xlim=c(0,max(dumb$Depth,na.rm=T)),ylim=c(0,max(dumb$Warplngt,na.rm=T)*1.1))
      if (ti) title(main=paste0("Warp shot vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
      if (pF) {
-       points(Warplngt~Depth,dumb,subset=c(Year %in% years),pch=21,cex=1,col=col1)
-       points(Warplngt~Depth,dumb,subset=c(Year==years[length(years)]),pch=21,bg=col1,col=grey(.0))
+       points(Warplngt~Depth,dumbmol,pch=21,cex=1,col="black",bg=col1)
+       points(Warplngt~Depth,dumbvde,pch=21,cex=1,col="black",bg=col2)
      }
-     mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
+     #mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
      if (line) {
-       if (length(years)>1) {lm.WarpVsDepth<-lm(Warplngt~Depth,dumb,subset=HaulVal=="V" & Warplngt > c(0) & Depth> c(0) & Year!=years[length(years)])}
-       else lm.WarpVsDepth<-lm(Warplngt~Depth,dumb,subset=Warplngt > c(0) & Depth> c(0)) 
-       dpt<-data.frame(Depth=seq(dpthA[1],dpthA[2],length.out = 100))
-       pred.plim<-predict(lm.WarpVsDepth,newdata=dpt,interval="prediction",level=c.inta)
-       pred.clim<-predict(lm.WarpVsDepth,newdata=dpt,interval="confidence",level=c.inta)
-       matlines(dpt$Depth,cbind(pred.clim,pred.plim[,-1]),lty=c(1,2,2,2,2),lwd=c(2,1,1,1,1),col=col1)
+       lm.WarpVsDepth.mol<-lm(Warplngt~Depth,dumbmol,subset=c(Warplngt > c(0) & Depth> c(0))) 
+       lm.WarpVsDepth.vde<-lm(Warplngt~Depth,dumbvde,subset=c(Warplngt > c(0) & Depth> c(0))) 
+       dptmol<-data.frame(Depth=seq(dpthmol[1],dpthmol[2],length.out = 100))
+       dptvde<-data.frame(Depth=seq(dpthvde[1],dpthvde[2],length.out = 100))
+       pred.plimmo<-predict(lm.WarpVsDepth.mol,newdata=dptmol,interval="prediction",level=c.inta)
+       pred.climmo<-predict(lm.WarpVsDepth.mol,newdata=dptmol,interval="confidence",level=c.inta)
+       matlines(dptmol$Depth,cbind(pred.climmo,pred.plimmo[,-1]),lty=c(1,2,2,2,2),lwd=c(2,1,1,1,1),col=col1)
+       pred.plimve<-predict(lm.WarpVsDepth.vde,newdata=dptvde,interval="prediction",level=c.inta)
+       pred.climve<-predict(lm.WarpVsDepth.vde,newdata=dptvde,interval="confidence",level=c.inta)
+       matlines(dptvde$Depth,cbind(pred.climve,pred.plimve[,-1]),lty=c(1,2,2,2,2),lwd=c(2,1,1,1,1),col=col2)
        # lines(dpt$Depth,predCI$fit[,"upr"],col="red",lwd=2,lty=2)
        # lines(dpt$Depth,predCI.2[,"upr"],col="green",lwd=2,lty=2)
        # lines(dpt$Depth,predCI.3[,"upr"],col="yellow",lwd=2,lty=2)
        # lines(pred~dpt$Depth,col=col1,lty=1,lwd=2)
        # lines(dpt$Depth,predCI[,"upr"],col=col1,lwd=1,lty=2)
        # lines(dpt$Depth,predCI[,"lwr"],col=col1,lwd=1,lty=2)
-       legend("topleft",legend=substitute(paste(Wrp == a + b %*% Dpth),list(a=round(coef(lm.WarpVsDepth)[1],2),b=(round(coef(lm.WarpVsDepth)[2],2)))),bty="n",text.font=2,inset=.05,xjust=0)
-       legend("topleft",legend=substitute(paste(r^2 ==resq),list(resq=round(summary(lm.WarpVsDepth)$adj.r.squared,2))),inset=c(.2,.1),xjust=0.5,cex=.9,bty="n")
+       legend("topleft",legend=substitute(paste(Wrp.29MO == a + b %*% Dpth),list(a=round(coef(lm.WarpVsDepth.mol)[1],2),b=(round(coef(lm.WarpVsDepth.mol)[2],2)))),bty="n",text.font=2,inset=c(.01,.05),xjust=0)
+       legend("topleft",legend=substitute(paste(r^2 ==resq),list(resq=round(summary(lm.WarpVsDepth.mol)$adj.r.squared,2))),inset=c(.18,.05),xjust=0,cex=1,bty="n")
        dumbo<-bquote("Warp"== a + b %*% Depth)
        mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
+       legend("topleft",legend=substitute(paste(Wrp.29VE == a + b %*% Dpth),list(a=round(coef(lm.WarpVsDepth.vde)[1],2),b=(round(coef(lm.WarpVsDepth.vde)[2],2)))),bty="n",text.font=2,inset=c(.01,.09),xjust=0)
+       legend("topleft",legend=substitute(paste(r^2 ==resq),list(resq=round(summary(lm.WarpVsDepth.vde)$adj.r.squared,2))),inset=c(.18,.09),xjust=0,cex=1,bty="n",col="red")
      }
      if (pF) {
-      if (length(years)>1) {legend("bottomright",legend=c(paste(years[length(years)]),paste0(years[1],"-",years[length(years)-1])),pch=c(21),col=c(1,col1),pt.bg=c(col1,NA),inset=.05,bty="n")}
-        else legend("bottomright",legend=paste("Hauls",years),pch=21,col=1,pt.bg=col1,inset=.04,bty="n")
+       legend("bottomright",c("29MO","29VE"),pch=21,lty=2,col=c(col1,col2),pt.bg=c(col1,col2),inset=.03)
+#      if (length(years)>1) {legend("bottomright",legend=c(paste(years[length(years)]),paste0(years[1],"-",years[length(years)-1])),pch=c(21),col=c(1,col1),pt.bg=c(col1,NA),inset=.05,bty="n")}
+#        else legend("bottomright",legend=paste("Hauls",years),pch=21,col=1,pt.bg=col1,inset=.04,bty="n")
       }
      if (length(years)>1) {
      txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=""),collapse="")
@@ -78,7 +89,7 @@ gearPlotHH.wrpdp<-function(Survey,years,quarter,incl2=TRUE,line=TRUE,c.inta=.95,
      }
    }
   else {
-    plot(HaulNo~Depth,dumb,type="n",subset=c(HaulVal!="I" & Year!=years[length(years)]),cex=1,pch=21,col=col1,ylab="Warp length (m)",xlab="Depth (m)",xlim=c(0,max(dumb$Depth,na.rm=T)),ylim=c(0,max(dumb$Depth,na.rm=T)*1.1))
+    plot(HaulNo~Depth,dumb,type="n",subset=c(Year!=years[length(years)]),cex=1,pch=21,col=col1,ylab="Warp length (m)",xlab="Depth (m)",xlim=c(0,max(dumb$Depth,na.rm=T)),ylim=c(0,max(dumb$Depth,na.rm=T)*1.1))
     if (ti) title(main=paste0("Warp shot vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
     mtext("No Data for Warp Length",font=2,cex=.8,line=.2)
   }
