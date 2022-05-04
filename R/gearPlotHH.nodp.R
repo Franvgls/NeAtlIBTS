@@ -39,9 +39,9 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
   if (!getICES) {
     dumb<-Survey
     if (!all(unique(years) %in% unique(dumb$Year))) stop(paste0("Not all years selected in years are present in the data.frame, check: ",unique(years)[which(!(unique(years) %in% unique(dumb$Year)))]))
-    if (unique(dumb$Quarter)!=quarter) warning(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
+    if (!all(unique(dumb$Quarter) %in% unique(quarter))) warning(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
     }
-  dumb<-dplyr::filter(dumb,HaulVal=="V")
+  dumb<-dplyr::filter(dumb,HaulVal!="I")
   dumb$sweeplngt<-factor(dumb$SweepLngt)
    if (length(subset(dumb$Netopening,dumb$Netopening> c(-9)))>0){
       dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)

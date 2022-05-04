@@ -44,7 +44,7 @@ gearPlotsHH<-function(Survey,years,quarter=T,c.inta=.5,c.intb=.5,col1="darkblue"
       mtext("b)",line=2.5,font=2,adj=0)
    } else par(mfrow=c(1,2))
     if (length(subset(dumb$DoorSpread,dumb$DoorSpread> c(-9)))>0){
-      gearPlotHH.dodp(Survey,years,quarter,c.inta,c.intb,col1,col2,getICES=getICES,pF=pF)
+      gearPlotHH.dodp(Survey=Survey,years=years,quarter=quarter,c.inta=c.inta,c.intb=c.intb,col1=col1,col2=col2,getICES=getICES,pF=pF)
       mtext("c)",line=2.5,font=2,adj=0)
       gearPlotHH.nodp(Survey,years,quarter,c.inta,c.intb,col1,col2,getICES=getICES,pF=pF)
       mtext("d)",line=2.5,font=2,adj=0)

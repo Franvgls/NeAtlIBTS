@@ -35,9 +35,9 @@ gearPlotHH.wgdp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
   if (!getICES) {
     dumb<-Survey
     if (!all(unique(years) %in% unique(dumb$Year))) stop(paste0("Not all years selected in years are present in the data.frame, check: ",unique(years)[which(!(unique(years) %in% unique(dumb$Year)))]))
-    if (unique(dumb$Quarter)!=quarter) stop(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
+    if (!all(unique(dumb$Quarter) %in% quarter)) stop(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
   }
-  dumb<-dplyr::filter(dumb,HaulVal=="V")
+  dumb<-dplyr::filter(dumb,HaulVal!="I")
   #if (all(is.na(dumb$SweepLngt))) {stop("No valid Sweep Length data, this graph can not be produced")}
   dumb$SweepLngt[is.na(dumb$SweepLngt)]<-0
   dumb$sweeplngt[dumb$SweepLngt>0]<-factor(dumb$SweepLngt[dumb$SweepLngt>0])
@@ -139,8 +139,9 @@ gearPlotHH.wgdp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
             print(summary(WingSpreadst.log))
             print(summary(WingSpreadlg.log))
          }
-   }
-   if (length(years)>1) txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
+      }
+   yearsb<-unique(dplyr::filter(dumb,!is.na(WingSpread) & WingSpread>0)$Year)
+   if (length(years)>1) txt<-paste0("Years: ",paste0(c(yearsb),collapse=" "))
    else txt<-paste0("Year: ",as.character(years))
-   mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.9)
+   mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.8)
 }

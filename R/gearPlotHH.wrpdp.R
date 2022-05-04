@@ -35,8 +35,8 @@ gearPlotHH.wrpdp<-function(Survey,years,quarter,incl2=TRUE,line=TRUE,c.inta=.95,
   }
   if (!getICES) {
     dumb<-Survey
-    if (!all(unique(years) %i n% unique(dumb$Year))) stop(paste0("Not all years selected in years are present in the data.frame, check: ",unique(years)[which(!(unique(years) %in% unique(dumb$Year)))]))
-    if (unique(dumb$Quarter)!=quarter) warning(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
+    if (!all(unique(years) %in% unique(dumb$Year))) stop(paste0("Not all years selected in years are present in the data.frame, check: ",unique(years)[which(!(unique(years) %in% unique(dumb$Year)))]))
+    if (!all(unique(dumb$Quarter) %in% quarter)) warning(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
   }
   dumb<-if(incl2) dplyr::filter(dumb,HaulVal!="I") else dplyr::filter(dumb,HaulVal=="V")
   if (any(!is.na(dumb$Warplngt))) warps=T else warps=F       # Present graphs

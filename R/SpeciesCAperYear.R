@@ -6,21 +6,16 @@
 #' @examples SpeciesCAperYear("SP-NORTH",c(2014:2016),4)
 #' @export
 SpeciesCAperYear<-function(Survey,years,quarter){
-  library(SSOAP)
-  listSurveys<-c("SWC-IBTS","ROCKALL","NIGFS","IE-IGFS","SP-PORC","FR-CGFS","EVHOE","SP-NORTH","PT-IBTS","SP-ARSA")
+#  library(SSOAP)
+  listSurveys<-c("EVHOE","FR-CGFS","IE-IAMS","IE-IGFS","NIGFS","NS-IBTS","PT-IBTS","ROCKALL","SCOROC",
+  "SCOWCGFS","SP-ARSA","SP-NORTH","SP-PORC","SWC-IBTS")
   if (!Survey %in% listSurveys) { stop(paste("Survey",Survey,"does not exist")) }       
-  CA<-getDATRAS("CA",Survey,years,quarter)
-  w= SSOAP::processWSDL("http://www.marinespecies.org/aphia.php?p=soap&wsdl=1",verbose = FALSE)
-  iface = genSOAPClientInterface(, w)
-  species<-iface@functions$getAphiaNameByID(CA$Valid_Aphia[1],('http://www.marinespecies.org/aphia.php?p=soap'))
-  aphias<-unique(CA$Valid_Aphia)
-  daphias<-data.frame(aphias=aphias,species=NA)
-  for (i in c(1:length(aphias))) {
-    daphias$species[i]<-iface@functions$getAphiaNameByID(daphias$aphias[i],('http://www.marinespecies.org/aphia.php?p=soap'))
-  }
+  CA<-icesDatras::getDATRAS("CA",Survey,years,quarter)
+  species<-data.frame(Aphia=unique(CA$Valid_Aphia),SpecName=worms::wormsbyid(unique(CA$Valid_Aphia))$valid_name)
+  species$SpecName<-as.character(species$SpecName)
   CA$SpecName<-NA
   for (i in 1:nrow(CA)) {
-  CA$SpecName[i]<-daphias[daphias$aphias==CA$Valid_Aphia[i],"species"]
+  CA$SpecName[i]<-species[species$Aphia==CA$Valid_Aphia[i],"SpecName"]
   }
-  tapply(CA$Sex,CA[,c("SpecName","Year")],"length")
-}
+  tapply(CA$Sex,CA[,c("SpecName","Sex")],"length")
+  }
