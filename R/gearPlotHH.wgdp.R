@@ -141,7 +141,8 @@ gearPlotHH.wgdp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
          }
       }
    yearsb<-unique(dplyr::filter(dumb,!is.na(WingSpread) & WingSpread>0)$Year)
-   if (length(years)>1) txt<-paste0("Years: ",paste0(c(yearsb),collapse=" "))
-   else txt<-paste0("Year: ",as.character(years))
+   if (length(years)>1 & !all(years %in% yearsb)) txt<-paste("Years:",paste0(c(yearsb[yearsb %in% years]),collapse=" "))
+   if (length(years)>1 & all(years %in% yearsb)) txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
+   if (length(years)==1) txt<-paste0("Year: ",as.character(years))
    mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.8)
 }

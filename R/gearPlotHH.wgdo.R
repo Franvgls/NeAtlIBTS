@@ -37,7 +37,7 @@ gearPlotHH.wgdo<-function(Survey,years,quarter,c.int=.9,c.inta=.8,c.intb=.8,col1
   if (!getICES) {
     dumb<-Survey
     if (!all(unique(years) %in% unique(dumb$Year))) stop(paste0("Not all years selected in years are present in the data.frame, check: ",unique(years)[which(!(unique(years) %in% unique(dumb$Year)))]))
-    if (!all(unique(dumb$Quarter) %in% unique(quarter))) stop(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
+    if (!all(unique(quarter) %in% unique(dumb$Quarter))) stop(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
   }
   # if (all(is.na(dumb$SweepLngt))) {stop("All information on sweeplength is NA. No wings used in this survey?")}
   dumb$SweepLngt[is.na(dumb$SweepLngt)]<-0
@@ -131,9 +131,10 @@ gearPlotHH.wgdo<-function(Survey,years,quarter,c.int=.9,c.inta=.8,c.intb=.8,col1
             mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
          }
    } else {stop("No records with DoorSpread>0")}
-  yearsb<-unique(dplyr::filter(dumb,!is.na(WingSpread) & WingSpread>0 & !is.na(DoorSpread) & DoorSpread>0)$Year)
-  if (length(years)>1) txt<-paste0("Years: ",paste0(c(yearsb),collapse=" "))
-  else txt<-paste0("Year: ",as.character(years))
+  yearsb<-unique(dplyr::filter(dumb,!is.na(WingSpread) & WingSpread>0)$Year)
+  if (length(years)>1 & !all(years %in% yearsb)) txt<-paste("Years:",paste0(c(yearsb[yearsb %in% years]),collapse=" "))
+  if (length(years)>1 & all(years %in% yearsb)) txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
+  if (length(years)==1) txt<-paste0("Year: ",as.character(years))
   mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.8)
   # txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
    # if(length(years)>1) mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.9)

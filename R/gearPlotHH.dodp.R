@@ -12,19 +12,20 @@
 #' @param col1: color for the symbols and lines for the whole set if only one set of sweeps are used, and for the data from the long set of sweeps.
 #' @param col2: color for the symbols and lines for the data from the short sweeps in case there are two.
 #' @param getICES: Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.
+#' @param ti: if F title will not be included automatically and can be addedd later
 #' @param pF: takes out the points and leaves only the lines in the graphs
 #' @details Surveys available in DATRAS: i.e. SWC-IBTS, ROCKALL, NIGFS, IE-IGFS, SP-PORC, FR-CGFS, EVHOE, SP-NORTH, PT-IBTS and SP-ARSA
 #' @return Produces a graph DoorSpread vs. Depth, it also includes information on the ship, the time series used, the models and parameters estimated.
 #' @examples gearPlotHHNS.dodp("NS-IBTS",c(2014:2017),3,"SCO",.8,.3,col1="darkblue",col2="darkgreen")
 #' @export
-gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblue",col2="steelblue2",getICES=T,pF=T) {
+gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblue",col2="steelblue2",getICES=T,ti=T,pF=T) {
   if (getICES) {
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
   }
   if (!getICES) {
     dumb<-Survey
     if (!all(unique(years) %in% unique(dumb$Year))) stop(paste0("Not all years selected in years are present in the data.frame, check: ",unique(years)[which(!(unique(years) %in% unique(dumb$Year)))]))
-    if (unique(dumb$Quarter)!=quarter) stop(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
+    if (!all(unique(quarter) %in% unique(dumb$Quarter))) stop(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
   }
   dumb<-dplyr::filter(dumb,HaulVal=="V")
   dumb$sweeplngt<-factor(dumb$SweepLngt)
@@ -34,12 +35,12 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
       dp<-seq(dpthA[1],dpthA[2]+20,length=650)
       plot(DoorSpread~Depth,dumb,type="n",xlim=c(0,dpthA[2]+20),ylim=c(0,dspr[2]+20),pch=21,col=col1,ylab="Door spread (m)",xlab="Depth (m)",subset=DoorSpread!=c(-9)& Year!=years[length(years)])
       if (pF) {points(DoorSpread~Depth,dumb,pch=21,col=col1,subset=c(DoorSpread!=c(-9) & Year!=years[length(years)]))}
-      title(main=paste0("Door Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+      if (ti) title(main=paste0("Door Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
       if (length(levels(dumb$sweeplngt))<2) {
          DoorSpread.log<-nls(DoorSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9))
          dspr<-range(subset(dumb,DoorSpread>c(-9))$DoorSpread,na.rm=T)
          if (pF) {points(DoorSpread~Depth,dumb,subset=Year==years[length(years)],pch=21,bg=col1)}
-         mtext(paste("Ship:",dumb$Ship[1]),line=.4,cex=.8,adj=0)
+         mtext(paste(dumb$Ship[1]),line=.4,cex=.8,adj=0)
          a1<-round(coef(DoorSpread.log)[1],2)
          b1<-round(coef(DoorSpread.log)[2],2)
          lines(dp,a1+b1*log(dp),col=col1,lwd=2)
@@ -69,7 +70,7 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
               points(DoorSpread~Depth,dumbshort,subset=HaulVal=="V",pch=21,col=col2)
               points(DoorSpread~Depth,dumbshort,subset=Year==years[length(years)],pch=21,bg=col2)
             }
-            title(main=paste0("Door Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+            if (ti) title(main=paste0("Door Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
             mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
             a1st<-round(coef(DoorSpreadst.log)[1],2)
             b1st<-round(coef(DoorSpreadst.log)[2],2)
@@ -101,7 +102,10 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
          summary(DoorSpreadst.log)
          summary(DoorSpreadlg.log)
          }
-      txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
-      text(0,0, txt, font=1, cex=.9,pos=4)
+      yearsb<-unique(dplyr::filter(dumb,!is.na(WingSpread) & WingSpread>0)$Year)
+      if (length(years)>1 & !all(years %in% yearsb)) txt<-paste("Years:",paste0(c(yearsb[yearsb %in% years]),collapse=" "))
+      if (length(years)>1 & all(years %in% yearsb)) txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
+      if (length(years)==1) txt<-paste0("Year: ",as.character(years))
+      mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.8)
    }
   }

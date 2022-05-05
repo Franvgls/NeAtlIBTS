@@ -8,14 +8,12 @@ gearPlotHH.dodp(
   Survey,
   years,
   quarter,
-  c.int = 0.95,
-  c.inta = 0.95,
-  c.intb = 0.95,
+  c.inta = 0.8,
+  c.intb = 0.3,
   col1 = "darkblue",
   col2 = "steelblue2",
-  getICES = TRUE,
-  pF = TRUE,
-  ti = TRUE
+  getICES = T,
+  pF = T
 )
 }
 \arguments{
@@ -38,8 +36,6 @@ gearPlotHH.dodp(
 \item{getICES:}{Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.}
 
 \item{pF:}{takes out the points and leaves only the lines in the graphs}
-
-\item{ti:}{if F title will not be included automatically and can be addedd later}
 }
 \value{
 Produces a graph DoorSpread vs. Depth, it also includes information on the ship, the time series used, the models and parameters estimated.
