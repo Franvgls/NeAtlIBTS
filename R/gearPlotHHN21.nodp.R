@@ -49,7 +49,7 @@ gearPlotHHN21.nodp<-function(Survey="SP-NORTH",years=2021,quarter=4,c.inta=.8,c.
       dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)
       vrt<-range(subset(dumb$Netopening,dumb$Netopening> c(0)))
       plot(Netopening~Depth,dumb,xlim=c(0,dpthA[2]+20),ylim=c(0,vrt[2]+2),type="n",pch=21,col=col1,
-         ylab=ifelse(es,"Apertura vertical (m)","Vertical opening (m)"),xlab=ifelse(es,"Profundidad (m)","Depth (m)"),subset=Year!=years[length(years)] & Netopening> c(-9))
+         ylab=ifelse(es,"Abertura vertical (m)","Vertical opening (m)"),xlab=ifelse(es,"Profundidad (m)","Depth (m)"),subset=Year!=years[length(years)] & Netopening> c(-9))
           if (pF) points(Netopening~Depth,dumb,pch=21,col=col1,subset=Year!=years[length(years)] & Netopening> c(-9))    
           # if (length(levels(dumb$sweeplngt))<2) {
           #   dp<-seq(dpthA[1],dpthA[2]+20,length=650)
@@ -102,7 +102,7 @@ gearPlotHHN21.nodp<-function(Survey="SP-NORTH",years=2021,quarter=4,c.inta=.8,c.
                 legend("bottomright",legend=c("28MO","29VE"),pch=21,col=c(col1,col1),pt.bg=c(col1,col2),inset=.04,bty="n")
                 }
            }
-           if (ti) title(main=paste0(ifelse(es,"Apertura vertical vs. profundidad en ","Vertical opening vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
+           if (ti) title(main=paste0(ifelse(es,"Abertura vertical vs. profundidad en ","Vertical opening vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
            mtext(dumb$Ship[length(dumb$Ship)],line=.4,cex=.9,adj=0)
            a1mol<-round(coef(Netopeningmol.log)[1],2)
            b1mol<-round(coef(Netopeningmol.log)[2],2)
@@ -127,7 +127,7 @@ gearPlotHHN21.nodp<-function(Survey="SP-NORTH",years=2021,quarter=4,c.inta=.8,c.
            summary(Netopeningmol.log)
            summary(Netopeningvde.log)
            }
-           if (es) dumbo<-bquote("Apertura vertical red"== a + b %*% log("Prof"))
+           if (es) dumbo<-bquote("Abertura vertical red"== a + b %*% log("Prof"))
            else bquote("Net vert. opening"== a + b %*% log("Depth"))
            mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
          # if (length(years)>1) mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.9)

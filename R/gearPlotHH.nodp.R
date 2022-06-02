@@ -48,13 +48,13 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=FALSE,col1
       dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)
       vrt<-range(subset(dumb$Netopening,dumb$Netopening> c(0)))
       plot(Netopening~Depth,dumb,xlim=c(0,dpthA[2]+20),ylim=c(0,vrt[2]+2),type="n",pch=21,col=col1,
-         ylab=ifelse(es,"Apertura vertical","Vertical opening (m)"),xlab=ifelse(es,"Profundidad (m)","Depth (m)"),subset=Year!=years[length(years)] & Netopening> c(-9))
+         ylab=ifelse(es,"Abertura vertical","Vertical opening (m)"),xlab=ifelse(es,"Profundidad (m)","Depth (m)"),subset=Year!=years[length(years)] & Netopening> c(-9))
           if (pF) points(Netopening~Depth,dumb,pch=21,col=col1,subset=Year!=years[length(years)] & Netopening> c(-9))    
           if (length(levels(dumb$sweeplngt))<2) {
             dp<-seq(dpthA[1],dpthA[2]+20,length=650)
             if (length(years)>1) {Netopening.log<-nls(Netopening~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(0) & Year!= years[length(years)])}
             else {Netopening.log<-nls(Netopening~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(0))}
-            if (ti) title(main=paste0(ifelse(es,"Apertura vertical vs. profundidad en ","Vertical opening vs. Depth in "),dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+            if (ti) title(main=paste0(ifelse(es,"Abertura vertical vs. profundidad en ","Vertical opening vs. Depth in "),dumb$Survey[1],".Q",quarter," survey"),line=2.5)
             mtext(dumb$Ship[length(dumb$Ship)],line=.4,cex=.9,adj=0)
             a1<-round(coef(Netopening.log)[1],2)
             b1<-round(coef(Netopening.log)[2],2)
@@ -71,7 +71,7 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=FALSE,col1
               else legend("bottomright",as.character(years),pch=21,col=col1,pt.bg=col1,bty="n",inset=.02)
               }
             legend("topright",legend=substitute(NetOpening == a1 + b1 %*% log(depth),list(a1=round(coef(Netopening.log)[1],2),b1=(round(coef(Netopening.log)[2],2)))),bty="n",text.font=2,inset=.05)
-            if (es) dumbo<-bquote("Apertura vertial red"== a + b %*% log("Prof"))
+            if (es) dumbo<-bquote("Abertura vertial red"== a + b %*% log("Prof"))
             else dumb<-bquote("Net vert. opening"== a + b %*% log())
             summary(Netopening.log)
           }
@@ -104,7 +104,7 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=FALSE,col1
                 text(0,0, as.character(years),adj=0.01,font=1, cex=.9,pos=4)
                 }
            }
-           if (ti) title(main=paste0(ifelse(es,"Apertura vertical vs. profujndidad en ","Vertical opening vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
+           if (ti) title(main=paste0(ifelse(es,"Abertura vertical vs. profujndidad en ","Vertical opening vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
            mtext(dumb$Ship[length(dumb$Ship)],line=.4,cex=.9,adj=0)
            a1st<-round(coef(Netopeningst.log)[1],2)
            b1st<-round(coef(Netopeningst.log)[2],2)
@@ -130,7 +130,7 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=FALSE,col1
            summary(Netopeninglg.log)
            }
            if (es) dumbo<-bquote("Net Vert. opening"== a + b %*% log("Depth"))
-           else dumbo<-bquote("Apertura vertical red"== a + b %*% log("Prof"))
+           else dumbo<-bquote("Abertura vertical red"== a + b %*% log("Prof"))
            mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
       }
   yearsb<-unique(dplyr::filter(dumb,!is.na(WingSpread) & WingSpread>0)$Year)

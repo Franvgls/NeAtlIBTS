@@ -92,7 +92,7 @@ gearPlotHHN21.dowg<-function(Survey="SP-NORTH",years="2021",quarter=4,c.int=.9,c
           lm.DoorVsWing.mol<-lm(DoorSpread~WingSpread,dumbmol,subset=WingSpread > c(-9) & DoorSpread> c(-9))
           lm.DoorVsWing.vde<-lm(DoorSpread~WingSpread,dumbvde,subset=WingSpread > c(-9) & DoorSpread> c(-9))
         }
-        plot(DoorSpread~WingSpread,dumb,type="n",subset=HaulVal!="I" & Year!=years[length(years)],xlim=c(wspr[1]-10,wspr[2]+10),ylim=c(dspr[1]-20,dspr[2]+20),xlab=ifelse(es,"Apertura calones (m)","Wing Spread (m)"),ylab=ifelse(es,"Apertura puertas (m)","Door Spread (m)"),pch=21,col="grey")
+        plot(DoorSpread~WingSpread,dumb,type="n",subset=HaulVal!="I" & Year!=years[length(years)],xlim=c(wspr[1]-10,wspr[2]+10),ylim=c(dspr[1]-20,dspr[2]+20),xlab=ifelse(es,"Abertura calones (m)","Wing Spread (m)"),ylab=ifelse(es,"Abertura puertas (m)","Door Spread (m)"),pch=21,col="grey")
         if (ti) title(main=paste0("Door spread vs. wing spread in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
         #mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
         if (pF){

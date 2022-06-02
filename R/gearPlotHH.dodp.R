@@ -34,9 +34,9 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=F,col1="da
       dspr<-range(subset(dumb$DoorSpread,dumb$DoorSpread>c(-9)))
       dpthA<-range(dumb$Depth,na.rm=T)
       dp<-seq(dpthA[1],dpthA[2]+20,length=650)
-      plot(DoorSpread~Depth,dumb,type="n",xlim=c(0,dpthA[2]+20),ylim=c(0,dspr[2]+20),pch=21,col=col1,ylab=ifelse(es,"Apertura de puertas (m)","Door spread (m)"),xlab=ifelse(es,"Profundidad (m)","Depth (m)"),subset=DoorSpread!=c(-9)& Year!=years[length(years)])
+      plot(DoorSpread~Depth,dumb,type="n",xlim=c(0,dpthA[2]+20),ylim=c(0,dspr[2]+20),pch=21,col=col1,ylab=ifelse(es,"Abertura de puertas (m)","Door spread (m)"),xlab=ifelse(es,"Profundidad (m)","Depth (m)"),subset=DoorSpread!=c(-9)& Year!=years[length(years)])
       if (pF) {points(DoorSpread~Depth,dumb,pch=21,col=col1,subset=c(DoorSpread!=c(-9) & Year!=years[length(years)]))}
-      if (ti) title(main=paste0(ifelse(es,"Apertura de puertas vs. profundidad en ","Door Spread vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
+      if (ti) title(main=paste0(ifelse(es,"Abertura de puertas vs. profundidad en ","Door Spread vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
       if (length(levels(dumb$sweeplngt))<2) {
          DoorSpread.log<-nls(DoorSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9))
          dspr<-range(subset(dumb,DoorSpread>c(-9))$DoorSpread,na.rm=T)
@@ -54,7 +54,7 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=F,col1="da
          legend("bottomright",legend=substitute(DS == a1 + b1 %*% log(depth),list(a1=round(coef(DoorSpread.log)[1],2),b1=(round(coef(DoorSpread.log)[2],2)))),bty="n",text.font=2,inset=.2)
          #         text("bottomleft",paste0(c(years[1],"-",years[length(years)])),inset=c(0,.1))
          if (es){
-           dumbo<-bquote("Apertura puertas"== a + b %*% log("prof"))
+           dumbo<-bquote("Abertura puertas"== a + b %*% log("prof"))
          }
          else dumbo<-bquote("Door Spread"== a + b %*% log("Depth"))
          mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
@@ -74,7 +74,7 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=F,col1="da
               points(DoorSpread~Depth,dumbshort,subset=HaulVal=="V",pch=21,col=col2)
               points(DoorSpread~Depth,dumbshort,subset=Year==years[length(years)],pch=21,bg=col2)
             }
-            if (ti) title(main=paste0(ifelse(es,"Apertura de puertas vs. profunfidad en ","Door Spread vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
+            if (ti) title(main=paste0(ifelse(es,"Abertura de puertas vs. profunfidad en ","Door Spread vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
             mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
             a1st<-round(coef(DoorSpreadst.log)[1],2)
             b1st<-round(coef(DoorSpreadst.log)[2],2)
@@ -103,7 +103,7 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=F,col1="da
 #         text("bottomleft",paste0(c(years[1],"-",years[length(years)])),inset=c(0,.1))
          if (!es) {dumbo<-bquote("Door Spread"== a + b %*% log("Depth"))
          }
-         else dumbo<-bquote("Apertura puertas"== a + b %*% log("prof"))
+         else dumbo<-bquote("Abertura puertas"== a + b %*% log("prof"))
          mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
          summary(DoorSpreadst.log)
          summary(DoorSpreadlg.log)

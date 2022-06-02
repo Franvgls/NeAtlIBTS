@@ -72,15 +72,16 @@ gearPlotHHN21.wrpdp<-function(Survey="SP-NORTH",years=2021,quarter=4,incl2=TRUE,
        # lines(pred~dpt$Depth,col=col1,lty=1,lwd=2)
        # lines(dpt$Depth,predCI[,"upr"],col=col1,lwd=1,lty=2)
        # lines(dpt$Depth,predCI[,"lwr"],col=col1,lwd=1,lty=2)
-       legend("topleft",legend=substitute(paste(Wrp.29MO == a + b %*% Dpth),list(a=round(coef(lm.WarpVsDepth.mol)[1],2),b=(round(coef(lm.WarpVsDepth.mol)[2],2)))),bty="n",text.font=2,inset=c(.01,.05),xjust=0)
-       legend("topleft",legend=substitute(paste(r^2 ==resq),list(resq=round(summary(lm.WarpVsDepth.mol)$adj.r.squared,2))),inset=c(.18,.05),xjust=0,cex=1,bty="n")
-       dumbo<-bquote("Warp"== a + b %*% Depth)
+       legend("topleft",legend=substitute(paste(Wrp.29MO == a + b %*% Dpth),list(a=round(coef(lm.WarpVsDepth.mol)[1],2),b=(round(coef(lm.WarpVsDepth.mol)[2],2)))),bty="n",text.font=2,inset=c(.01,.02),xjust=0)
+       legend("topleft",legend=substitute(paste(r^2 ==resq),list(resq=round(summary(lm.WarpVsDepth.mol)$adj.r.squared,2))),inset=c(.3,.02),xjust=0,cex=1,bty="n")
+       if (es) dumbo<-bquote("Cable largado"== a + b %*% Prof)
+       else dumbo<-bquote("Warp"== a + b %*% Depth)
        mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
        legend("topleft",legend=substitute(paste(Wrp.29VE == a + b %*% Dpth),list(a=round(coef(lm.WarpVsDepth.vde)[1],2),b=(round(coef(lm.WarpVsDepth.vde)[2],2)))),bty="n",text.font=2,inset=c(.01,.09),xjust=0)
-       legend("topleft",legend=substitute(paste(r^2 ==resq),list(resq=round(summary(lm.WarpVsDepth.vde)$adj.r.squared,2))),inset=c(.18,.09),xjust=0,cex=1,bty="n",col="red")
+       legend("topleft",legend=substitute(paste(r^2 ==resq),list(resq=round(summary(lm.WarpVsDepth.vde)$adj.r.squared,2))),inset=c(.3,.09),xjust=0,cex=1,bty="n",col="red")
      }
      if (pF) {
-       legend("bottomright",c("29MO","29VE"),pch=21,lty=2,col=c(col1,col2),pt.bg=c(col1,col2),inset=.03)
+       legend("bottomright",c("29MO","29VE"),pch=21,lty=2,col=c(col1,col2),pt.bg=c(col1,col2),inset=.03,bty="n")
 #      if (length(years)>1) {legend("bottomright",legend=c(paste(years[length(years)]),paste0(years[1],"-",years[length(years)-1])),pch=c(21),col=c(1,col1),pt.bg=c(col1,NA),inset=.05,bty="n")}
 #        else legend("bottomright",legend=paste("Hauls",years),pch=21,col=1,pt.bg=col1,inset=.04,bty="n")
       }
@@ -90,8 +91,8 @@ gearPlotHHN21.wrpdp<-function(Survey="SP-NORTH",years=2021,quarter=4,incl2=TRUE,
      }
    }
   else {
-    plot(HaulNo~Depth,dumb,type="n",subset=c(Year!=years[length(years)]),cex=1,pch=21,col=col1,ylab="Warp length (m)",xlab="Depth (m)",xlim=c(0,max(dumb$Depth,na.rm=T)),ylim=c(0,max(dumb$Depth,na.rm=T)*1.1))
-    if (ti) title(main=paste0("Warp shot vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+    plot(HaulNo~Depth,dumb,type="n",subset=c(Year!=years[length(years)]),cex=1,pch=21,col=col1,ylab=ifelse(es,"Cable largado (m)","Warp length (m)"),xlab=ifelse(es,"Profundidad (m)","Depth (m)"),xlim=c(0,max(dumb$Depth,na.rm=T)),ylim=c(0,max(dumb$Depth,na.rm=T)*1.1))
+    if (ti) title(main=paste0(ifelse(es,"Cable largado vs. profundidad en ","Warp shot vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
     mtext("No Data for Warp Length",font=2,cex=.8,line=.2)
   }
 }
