@@ -9,6 +9,7 @@
 #' @param c.int: the confidenc interval to be used in the confint function
 #' @param c.inta: the confidence interval to be used in the confint function for all data if only one sweep length, and for the short sweeps in case there are two
 #' @param c.intb: the confidence interval to be used in the confint function for the long set of sweeps.
+#' @param es: si T titulos y leyendas salen en español, si no en inglés.
 #' @param col1: color for the symbols and lines for the whole set if only one set of sweeps are used, and for the data from the long set of sweeps.
 #' @param col2: color for the symbols and lines for the data from the short sweeps in case there are two.
 #' @param getICES: Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.
@@ -18,7 +19,7 @@
 #' @return Produces a graph DoorSpread vs. Depth, it also includes information on the ship, the time series used, the models and parameters estimated.
 #' @examples gearPlotHHNS.dodp("NS-IBTS",c(2014:2017),3,"SCO",.8,.3,col1="darkblue",col2="darkgreen")
 #' @export
-gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblue",col2="steelblue2",getICES=T,ti=T,pF=T) {
+gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=F,col1="darkblue",col2="steelblue2",getICES=T,ti=T,pF=T) {
   if (getICES) {
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
   }
@@ -33,9 +34,9 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
       dspr<-range(subset(dumb$DoorSpread,dumb$DoorSpread>c(-9)))
       dpthA<-range(dumb$Depth,na.rm=T)
       dp<-seq(dpthA[1],dpthA[2]+20,length=650)
-      plot(DoorSpread~Depth,dumb,type="n",xlim=c(0,dpthA[2]+20),ylim=c(0,dspr[2]+20),pch=21,col=col1,ylab="Door spread (m)",xlab="Depth (m)",subset=DoorSpread!=c(-9)& Year!=years[length(years)])
+      plot(DoorSpread~Depth,dumb,type="n",xlim=c(0,dpthA[2]+20),ylim=c(0,dspr[2]+20),pch=21,col=col1,ylab=ifelse(es,"Apertura de puertas (m)","Door spread (m)"),xlab=ifelse(es,"Profundidad (m)","Depth (m)"),subset=DoorSpread!=c(-9)& Year!=years[length(years)])
       if (pF) {points(DoorSpread~Depth,dumb,pch=21,col=col1,subset=c(DoorSpread!=c(-9) & Year!=years[length(years)]))}
-      if (ti) title(main=paste0("Door Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+      if (ti) title(main=paste0(ifelse(es,"Apertura de puertas vs. profundidad en ","Door Spread vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
       if (length(levels(dumb$sweeplngt))<2) {
          DoorSpread.log<-nls(DoorSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9))
          dspr<-range(subset(dumb,DoorSpread>c(-9))$DoorSpread,na.rm=T)
@@ -51,8 +52,11 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
          b1Upr<-confint(DoorSpread.log,level=c.inta)[2,2]
          lines(dp,a1Upr+b1Upr*log(dp),col=col1,lty=2,lwd=1)
          legend("bottomright",legend=substitute(DS == a1 + b1 %*% log(depth),list(a1=round(coef(DoorSpread.log)[1],2),b1=(round(coef(DoorSpread.log)[2],2)))),bty="n",text.font=2,inset=.2)
-#         text("bottomleft",paste0(c(years[1],"-",years[length(years)])),inset=c(0,.1))
-         dumbo<-bquote("Door Spread"== a + b %*% log("Depth"))
+         #         text("bottomleft",paste0(c(years[1],"-",years[length(years)])),inset=c(0,.1))
+         if (es){
+           dumbo<-bquote("Apertura puertas"== a + b %*% log("prof"))
+         }
+         else dumbo<-bquote("Door Spread"== a + b %*% log("Depth"))
          mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
          summary(DoorSpread.log)
          }
@@ -70,7 +74,7 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
               points(DoorSpread~Depth,dumbshort,subset=HaulVal=="V",pch=21,col=col2)
               points(DoorSpread~Depth,dumbshort,subset=Year==years[length(years)],pch=21,bg=col2)
             }
-            if (ti) title(main=paste0("Door Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+            if (ti) title(main=paste0(ifelse(es,"Apertura de puertas vs. profunfidad en ","Door Spread vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
             mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
             a1st<-round(coef(DoorSpreadst.log)[1],2)
             b1st<-round(coef(DoorSpreadst.log)[2],2)
@@ -97,15 +101,17 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
             lines(dplg,a1Uprlg+b1Uprlg*log(dplg),col=col1,lty=2,lwd=1)
             legend("topright",legend=substitute(DSlong == a1lg + b1lg %*% log(depth),list(a1lg=round(coef(DoorSpreadlg.log)[1],2),b1lg=(round(coef(DoorSpreadlg.log)[2],2)))),bty="n",text.font=2,cex=.9,inset=c(.01,.4))
 #         text("bottomleft",paste0(c(years[1],"-",years[length(years)])),inset=c(0,.1))
-         dumbo<-bquote("Door Spread"== a + b %*% log("Depth"))
+         if (!es) {dumbo<-bquote("Door Spread"== a + b %*% log("Depth"))
+         }
+         else dumbo<-bquote("Apertura puertas"== a + b %*% log("prof"))
          mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
          summary(DoorSpreadst.log)
          summary(DoorSpreadlg.log)
          }
       yearsb<-unique(dplyr::filter(dumb,!is.na(WingSpread) & WingSpread>0)$Year)
-      if (length(years)>1 & !all(years %in% yearsb)) txt<-paste("Years:",paste0(c(yearsb[yearsb %in% years]),collapse=" "))
-      if (length(years)>1 & all(years %in% yearsb)) txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
-      if (length(years)==1) txt<-paste0("Year: ",as.character(years))
+      if (length(years)>1 & !all(years %in% yearsb)) txt<-paste(ifelse(es,"Años:","Years:"),paste0(c(yearsb[yearsb %in% years]),collapse=" "))
+      if (length(years)>1 & all(years %in% yearsb)) txt<-paste0(ifelse(es,"Años:","Years:"),paste0(c(years[1],"-",years[length(years)]),collapse=" "))
+      if (length(years)==1) txt<-paste0(ifelse(es,"Año: ","Year: "),as.character(years))
       mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.8)
    }
   }

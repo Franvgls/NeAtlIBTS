@@ -13,6 +13,7 @@ gearPlotHH.dodp(
   col1 = "darkblue",
   col2 = "steelblue2",
   getICES = T,
+  ti = T,
   pF = T
 )
 }
@@ -34,6 +35,8 @@ gearPlotHH.dodp(
 \item{col2:}{color for the symbols and lines for the data from the short sweeps in case there are two.}
 
 \item{getICES:}{Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.}
+
+\item{ti:}{if F title will not be included automatically and can be addedd later}
 
 \item{pF:}{takes out the points and leaves only the lines in the graphs}
 }

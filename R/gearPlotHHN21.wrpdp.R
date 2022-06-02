@@ -8,6 +8,7 @@
 #' @param quarter: the quarter of the survey to be ploted
 #' @param line: includes a regression line between Warp and depth and the formula of the linear regression. If F the line is omited
 #' @param c.inta: the confidence interval to be used in the predict.lm function 
+#' @param es: if TRUE labels and axes labels, titles legends in Spanish, if FALSE in English
 #' @param col1: the color of the points, last year fill and previous years empty symbol
 #' @param getICES: Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.
 #' @param pF: takes out the points and leaves only the lines in the graphs
@@ -29,7 +30,7 @@
 #' @examples gearPlotHH.wrpdp("SP-ARSA",c(2014:2016),4)
 #' @examples gearPlotHH.wrpdp(damb,c(2014:2016),4,getICES=F,pF=F)
 #' @export
-gearPlotHHN21.wrpdp<-function(Survey="SP-NORTH",years=2021,quarter=4,incl2=TRUE,line=TRUE,c.inta=.95,col1="darkblue",col2="red",getICES=TRUE,pF=TRUE,ti=TRUE) {
+gearPlotHHN21.wrpdp<-function(Survey="SP-NORTH",years=2021,quarter=4,incl2=TRUE,line=TRUE,c.inta=.95,es=FALSE,col1="darkblue",col2="red",getICES=TRUE,pF=TRUE,ti=TRUE) {
   if (getICES) {
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
   }
@@ -47,8 +48,8 @@ gearPlotHHN21.wrpdp<-function(Survey="SP-NORTH",years=2021,quarter=4,incl2=TRUE,
      wrpvde<-range(subset(dumbvde$Warplngt,dumbvde$Warplngt> c(0)),na.rm=T)
      dpthmol<-range(dumbmol$Depth[dumbmol$Depth>0],na.rm=T)
      dpthvde<-range(dumbvde$Depth[dumbvde$Depth>0],na.rm=T)
-     plot(Warplngt~Depth,dumb,type="n",subset=c(HaulVal!="I" & Year!=years[length(years)]),cex=1,pch=21,col=col1,ylab="Warp length (m)",xlab="Depth (m)",xlim=c(0,max(dumb$Depth,na.rm=T)),ylim=c(0,max(dumb$Warplngt,na.rm=T)*1.1))
-     if (ti) title(main=paste0("Warp shot vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+     plot(Warplngt~Depth,dumb,type="n",subset=c(HaulVal!="I" & Year!=years[length(years)]),cex=1,pch=21,col=col1,ylab=ifelse(es,"Cable largado (m)","Warp length (m)"),xlab=ifelse(es,"Profundidad (m)","Depth (m)"),xlim=c(0,max(dumb$Depth,na.rm=T)),ylim=c(0,max(dumb$Warplngt,na.rm=T)*1.1))
+     if (ti) title(main=paste0(ifelse(es,"Cable largado vs. profundidad en ","Warp shot vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
      if (pF) {
        points(Warplngt~Depth,dumbmol,pch=21,cex=1,col="black",bg=col1)
        points(Warplngt~Depth,dumbvde,pch=21,cex=1,col="black",bg=col2)

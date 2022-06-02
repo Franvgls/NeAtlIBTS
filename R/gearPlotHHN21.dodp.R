@@ -18,7 +18,7 @@
 #' @return Produces a graph DoorSpread vs. Depth, it also includes information on the ship, the time series used, the models and parameters estimated.
 #' @examples gearPlotHHN21.dodp("SP-NORTH",c(2021),3,.8,.3,col1="darkblue",col2="red")
 #' @export
-gearPlotHHN21.dodp<-function(Survey="SP-NORTH",years=2021,quarter=4,c.int=.95,c.inta=.95,c.intb=.95,col1="darkblue",col2="red",getICES=TRUE,pF=TRUE,ti=TRUE) {
+gearPlotHHN21.dodp<-function(Survey="SP-NORTH",years=2021,quarter=4,c.int=.95,c.inta=.95,c.intb=.95,es=FALSE,col1="darkblue",col2="red",getICES=TRUE,pF=TRUE,ti=TRUE) {
   if (getICES) {
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
   }
@@ -33,14 +33,14 @@ gearPlotHHN21.dodp<-function(Survey="SP-NORTH",years=2021,quarter=4,c.int=.95,c.
     dspr<-range(subset(dumb$DoorSpread,dumb$DoorSpread>c(-9)))
     dpthA<-range(dumb$Depth,na.rm=T)
     dp<-seq(dpthA[1],dpthA[2]+20,length=650)
-    plot(DoorSpread~Depth,dumb,type="n",xlim=c(0,dpthA[2]+20),ylim=c(0,dspr[2]+40),pch=21,col=col1,ylab="Door spread (m)",xlab="Depth (m)",subset=DoorSpread!=c(-9)& Year!=years[length(years)])
+    plot(DoorSpread~Depth,dumb,type="n",xlim=c(0,dpthA[2]+20),ylim=c(0,dspr[2]+40),pch=21,col=col1,ylab=ifelse(es,"Apertura puertas (m)","Door spread (m)"),xlab=ifelse(es,"Profundidad (m)","Depth (m)"),subset=DoorSpread!=c(-9)& Year!=years[length(years)])
     if (pF & length(levels(dumb$sweeplngt))==1) {
       points(DoorSpread~Depth,dumb,pch=21,bg=col1,subset=c(Ship=="29MO"))         
       points(DoorSpread~Depth,dumb,subset=c(Ship=="29VE"),pch=21,bg=col2)
       if (length(years)==1) legend("bottomright",legend=as.character(c(years)),pch=21,col=col1,pt.bg=col1,bty="n",inset=.04)
       else legend("bottomright",c(paste0(years[1],"-",years[length(years)-1]),years[length(years)]),pch=c(1,21),col=c(col1),pt.bg=c(NA,col1),bty="n",inset=.02)
     }
-    if (ti) title(main=paste0("Door Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+    #if (ti) title(main=paste0(ifelse(es,"Apertura puertas vs. profundidad en","Door Spread vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
     #       if (length(levels(dumb$sweeplngt))<2) {
     #          if(length(years)>1) {
     #            DoorSpread.log<-nls(DoorSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9) & Year!=years[length(years)])
@@ -83,7 +83,7 @@ gearPlotHHN21.dodp<-function(Survey="SP-NORTH",years=2021,quarter=4,c.int=.95,c.
   dspr<-range(subset(dumbmol$DoorSpread,dumbmol$DoorSpread>c(-9)))
   if (pF) {
   }
-  if (ti) title(main=paste0("Door Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+  if (ti) title(main=paste0(ifelse(es,"Apertura de puertas vs. profundidad en ","Door Spread vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
   mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
   a1mol<-round(coef(DoorSpreadmol.log)[1],2)
   b1mol<-round(coef(DoorSpreadmol.log)[2],2)

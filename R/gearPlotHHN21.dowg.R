@@ -10,6 +10,7 @@
 #' @param c.int: the confidenc interval to be used in the confint function
 #' @param c.inta: the confidence interval to be used in the confint function for all data if only one sweep length, and for the short sweeps in case there are two
 #' @param c.intb: the confidence interval to be used in the confint function for the long set of sweeps.
+#' @param es: if TRUE all axes, labels and titles are in Spanish, if FALSE in English
 #' @param col1: color for the symbols and lines for the whole set if only one set of sweeps are used, and for the data from the long set of sweeps.
 #' @param col2: color for the symbols and lines for the data from the short sweeps in case there are two.
 #' @param pF: takes out the points and leaves only the lines in the graphs
@@ -30,7 +31,7 @@
 #' @examples gearPlotHH.dowg("SP-ARSA",c(2014:2016),4)
 #' @examples gearPlotHH.dowg(damb,c(2014:2016),4,getICES=F,pF=F)
 #' @export
-gearPlotHHN21.dowg<-function(Survey="SP-NORTH",years="2021",quarter=4,c.int=.9,c.inta=.8,c.intb=.8,col1="darkblue",col2="red",getICES=T,pF=T,ti=T) {
+gearPlotHHN21.dowg<-function(Survey="SP-NORTH",years="2021",quarter=4,c.int=.9,c.inta=.8,c.intb=.8,es=TRUE,col1="darkblue",col2="red",getICES=T,pF=T,ti=T) {
   if (getICES) {
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
   }
@@ -91,7 +92,7 @@ gearPlotHHN21.dowg<-function(Survey="SP-NORTH",years="2021",quarter=4,c.int=.9,c
           lm.DoorVsWing.mol<-lm(DoorSpread~WingSpread,dumbmol,subset=WingSpread > c(-9) & DoorSpread> c(-9))
           lm.DoorVsWing.vde<-lm(DoorSpread~WingSpread,dumbvde,subset=WingSpread > c(-9) & DoorSpread> c(-9))
         }
-        plot(DoorSpread~WingSpread,dumb,type="n",subset=HaulVal!="I" & Year!=years[length(years)],xlim=c(wspr[1]-10,wspr[2]+10),ylim=c(dspr[1]-20,dspr[2]+20),xlab="Wing Spread (m)",ylab="Door Spread (m)",pch=21,col="grey")
+        plot(DoorSpread~WingSpread,dumb,type="n",subset=HaulVal!="I" & Year!=years[length(years)],xlim=c(wspr[1]-10,wspr[2]+10),ylim=c(dspr[1]-20,dspr[2]+20),xlab=ifelse(es,"Apertura calones (m)","Wing Spread (m)"),ylab=ifelse(es,"Apertura puertas (m)","Door Spread (m)"),pch=21,col="grey")
         if (ti) title(main=paste0("Door spread vs. wing spread in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
         #mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
         if (pF){
@@ -121,16 +122,16 @@ gearPlotHHN21.dowg<-function(Survey="SP-NORTH",years="2021",quarter=4,c.int=.9,c
         lines(wsshort$WingSpread,a1low.v+b1low.v*wsshort$WingSpread,col= col2, lty=2,lwd=1)
         a1Upr.v<-confint(lm.DoorVsWing.vde,level=c.intb)[1,2]
         b1Upr.v<-confint(lm.DoorVsWing.vde,level=c.intb)[2,2]
-        lines(wsshort$WingSpread,a1Upr.v+b1Upr.v*wsshort$WingSpread,col=col2,lty=2,lwd=1)
+        lines(wsshort$WingSpread,a1Upr.v+b1Upr.v*wsshort$WingSpread,col=col2,lty=2,lwd=1)               #lm.DoorVsWing.long
         legend("bottomleft",legend=substitute(paste(DS.29MO == a + b %*% WS.29MO),list(a=round(coef(lm.DoorVsWing.mol)[1],2),b=(round(coef(lm.DoorVsWing.mol)[2],2)))),inset=c(.09,.1),bty="n",text.font=2,text.col=col1) 
         legend("bottomleft",legend=substitute(paste(r^2 ==resq),list(resq=round(summary(lm.DoorVsWing.mol)$adj.r.squared,2))),inset=c(.17,.04),cex=.9,bty="n",text.col=col1)
-        legend("topright",legend=substitute(paste(DS.29VE == a + b %*% WS.VDE),list(a=round(coef(lm.DoorVsWing.long)[1],2),b=(round(coef(lm.DoorVsWing.long)[2],2)))),bty="n",text.font=2,inset=.05,text.col=col1)
-        legend("topright",legend=substitute(paste(r^2 ==resq),list(resq=round(summary(lm.DoorVsWing.long)$adj.r.squared,2))),inset=c(.15,.12),cex=.9,bty="n",text.col=col1)
+        legend("topright",legend=substitute(paste(DS.29VE == a + b %*% WS.VDE),list(a=round(coef(lm.DoorVsWing.vde)[1],2),b=(round(coef(lm.DoorVsWing.vde)[2],2)))),bty="n",text.font=2,inset=.05,text.col=col1)
+        legend("topright",legend=substitute(paste(r^2 ==resq),list(resq=round(summary(lm.DoorVsWing.vde)$adj.r.squared,2))),inset=c(.15,.12),cex=.9,bty="n",text.col=col1)
         dumbo<-bquote("WS"== a + b %*% DS)
         mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
       }
     } else {stop("No records with DoorSpread>0")}
-    txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
+    txt<-paste0(ifelse(es,"Años: ","Years: "),paste0(c(years[1],"-",years[length(years)]),collapse=" "))
     if (length(years)>1) mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.9)
   }
 }  

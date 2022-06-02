@@ -8,6 +8,7 @@
 #' @param quarter: the quarter of the survey to be ploted
 #' @param line: includes a regression line between Warp and depth and the formula of the linear regression. If F the line is omited
 #' @param c.inta: the confidence interval to be used in the predict.lm function 
+#' @param es: if TRUE all labels axes and legends are in Spanish, if FALSE in English
 #' @param col1: the color of the points, last year fill and previous years empty symbol
 #' @param getICES: Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.
 #' @param pF: takes out the points and leaves only the lines in the graphs
@@ -29,7 +30,7 @@
 #' @examples gearPlotHH.wrpdp("SP-ARSA",c(2014:2016),4)
 #' @examples gearPlotHH.wrpdp(damb,c(2014:2016),4,getICES=F,pF=F)
 #' @export
-gearPlotHH.wrpdp<-function(Survey,years,quarter,incl2=TRUE,line=TRUE,c.inta=.95,col1="darkblue",getICES=TRUE,pF=TRUE,ti=TRUE) {
+gearPlotHH.wrpdp<-function(Survey,years,quarter,incl2=TRUE,line=TRUE,c.inta=.95,es=FALSE,col1="darkblue",getICES=TRUE,pF=TRUE,ti=TRUE) {
   if (getICES) {
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
   }
@@ -43,8 +44,8 @@ gearPlotHH.wrpdp<-function(Survey,years,quarter,incl2=TRUE,line=TRUE,c.inta=.95,
    if (warps) {
      wrp<-range(subset(dumb$Warplngt,dumb$Warplngt> c(0)),na.rm=T)
      dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)
-     plot(Warplngt~Depth,dumb,type="n",subset=c(Year!=years[length(years)]),cex=1,pch=21,col=col1,ylab="Warp length (m)",xlab="Depth (m)",xlim=c(0,max(dumb$Depth,na.rm=T)),ylim=c(0,max(dumb$Warplngt,na.rm=T)*1.1))
-     if (ti) title(main=paste0("Warp shot vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+     plot(Warplngt~Depth,dumb,type="n",subset=c(Year!=years[length(years)]),cex=1,pch=21,col=col1,ylab=ifelse(es,"Cable largado (m)","Warp length (m)"),xlab=ifelse(es,"Profundidad (m)","Depth (m)"),xlim=c(0,max(dumb$Depth,na.rm=T)),ylim=c(0,max(dumb$Warplngt,na.rm=T)*1.1))
+     if (ti) title(main=paste0(ifelse(es,"Cable largado vs. profundidad en ","Warp shot vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
      if (pF) {
        points(Warplngt~Depth,dumb,subset=c(Year %in% years),pch=21,cex=1,col=col1)
        points(Warplngt~Depth,dumb,subset=c(Year==years[length(years)]),pch=21,bg=col1,col=grey(.0))
@@ -65,7 +66,8 @@ gearPlotHH.wrpdp<-function(Survey,years,quarter,incl2=TRUE,line=TRUE,c.inta=.95,
        # lines(dpt$Depth,predCI[,"lwr"],col=col1,lwd=1,lty=2)
        legend("topleft",legend=substitute(paste(Wrp == a + b %*% Dpth),list(a=round(coef(lm.WarpVsDepth)[1],2),b=(round(coef(lm.WarpVsDepth)[2],2)))),bty="n",text.font=2,inset=.05,xjust=0)
        legend("topleft",legend=substitute(paste(r^2 ==resq),list(resq=round(summary(lm.WarpVsDepth)$adj.r.squared,2))),inset=c(.2,.1),xjust=0.5,cex=.9,bty="n")
-       dumbo<-bquote("Warp"== a + b %*% Depth)
+       if (es) dumbo<-bquote("Cable"== a + b %*% Prof)
+       else dumbo<-bquote("Warp"== a + b %*% Depth)
        mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
      }
      if (pF) {
@@ -73,14 +75,14 @@ gearPlotHH.wrpdp<-function(Survey,years,quarter,incl2=TRUE,line=TRUE,c.inta=.95,
         else legend("bottomright",legend=paste("Hauls",years),pch=21,col=1,pt.bg=col1,inset=.04,bty="n")
       }
      if (length(years)>1) {
-     txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=""),collapse="")
+     txt<-paste0(ifelse(es,"Años: ","Years: "),paste0(c(years[1],"-",years[length(years)]),collapse=""),collapse="")
      mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.9)
      }
    }
   else {
-    plot(HaulNo~Depth,dumb,type="n",subset=c(HaulVal!="I" & Year!=years[length(years)]),cex=1,pch=21,col=col1,ylab="Warp length (m)",xlab="Depth (m)",xlim=c(0,max(dumb$Depth,na.rm=T)),ylim=c(0,max(dumb$Depth,na.rm=T)*1.1))
+    plot(HaulNo~Depth,dumb,type="n",subset=c(HaulVal!="I" & Year!=years[length(years)]),cex=1,pch=21,col=col1,ylab=ifelse(es,"Cable largado (m)","Warp length (m)"),xlab=ifelse(es,"Profundidad (m)","Depth (m)"),xlim=c(0,max(dumb$Depth,na.rm=T)),ylim=c(0,max(dumb$Depth,na.rm=T)*1.1))
     if (ti) title(main=paste0("Warp shot vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
-    mtext("No Data for Warp Length",font=2,cex=.8,line=.2)
+    mtext(ifelse(es,"Sin datos de cable","No Data for Warp Length"),font=2,cex=.8,line=.2)
   }
 }
    

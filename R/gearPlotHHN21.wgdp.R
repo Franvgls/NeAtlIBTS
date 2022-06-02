@@ -1,4 +1,4 @@
-#' Function gearPlotHH.wgdp plots Wing Spread vs. Depth 
+#' Function gearPlotHHN21.wgdp plots Wing Spread vs. Depth for N21
 #' 
 #' Produces a WingSpread vs. DoorSpread plot and a model with nls R function. Data are taken directly from DATRAS using function getDATRAS from library(icesDatras)
 #' It only produces plots for surveys with HH files uploaded in DATRAS
@@ -8,6 +8,7 @@
 #' @param quarter: the quarter of the survey to be ploted
 #' @param c.inta: the confidence interval to be used in the confint function for long sweeps and for sweeps if there is only one length
 #' @param c.intb: the confidence interval to be used in the confint function for short sweeps if there are two
+#' @param es: If TRUE all labels and legends are in Spanish, if FALSE in English
 #' @param col1: color for the symbols and lines for the whole set if only one set of sweeps are used, and for the data from the long set of sweeps.
 #' @param col2: color for the symbols and lines for the data from the short sweeps in case there are two.
 #' @param getICES: Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.
@@ -28,7 +29,7 @@
 #' @examples gearPlotHH.wgdp("SP-ARSA",c(2014:2016),4,.5)
 #' @examples gearPlotHH.wgdp(damb,c(2014:2016),4,pF=F,getICES=F)
 #' @export
-gearPlotHHN21.wgdp<-function(Survey="SP-NORTH",years=2021,quarter=4,incl2=T,c.inta=.8,c.intb=.3,col1="darkblue",col2="red",getICES=TRUE,pF=TRUE,ti=TRUE) {
+gearPlotHHN21.wgdp<-function(Survey="SP-NORTH",years=2021,quarter=4,incl2=T,c.inta=.8,c.intb=.3,es=FALSE,col1="darkblue",col2="red",getICES=TRUE,pF=TRUE,ti=TRUE) {
   if (getICES) {
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
   }
@@ -46,18 +47,18 @@ gearPlotHHN21.wgdp<-function(Survey="SP-NORTH",years=2021,quarter=4,incl2=T,c.in
     wspr<-range(subset(dumb$WingSpread,dumb$WingSpread> c(0)))
     dspr<-range(subset(dumb$DoorSpread,dumb$DoorSpread>c(0)))
     dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)
-    if (length(years)>1) {plot(WingSpread~Depth,dumb,xlim=c(0,dpthA[2]+20),ylim=c(0,wspr[2]+10),type="n",subset=WingSpread!=c(-9) & Year!=years[length(years)],pch=21,col=grey(.5),ylab="Wing spread (m)",xlab="Depth (m)")
+    if (length(years)>1) {plot(WingSpread~Depth,dumb,xlim=c(0,dpthA[2]+20),ylim=c(0,wspr[2]+10),type="n",subset=WingSpread!=c(-9) & Year!=years[length(years)],pch=21,col=grey(.5),ylab=ifelse(es,"Apertura de calones (m)","Wing spread (m)"),xlab=ifelse(es,"Profundidad (m)","Depth (m)"))
       if(pF) {
         points(WingSpread~Depth,dumb,subset=WingSpread!=c(-9) & Year!=years[length(years)],pch=21,col=col1)
       }
     }
-    if (length(years)==1) {plot(WingSpread~Depth,dumb,xlim=c(0,dpthA[2]+20),ylim=c(0,wspr[2]+10),type="n",subset=WingSpread!=c(-9) & WingSpread>0,pch=21,col=grey(.5),ylab="Wing spread (m)",xlab="Depth (m)")
+    if (length(years)==1) {plot(WingSpread~Depth,dumb,xlim=c(0,dpthA[2]+20),ylim=c(0,wspr[2]+10),type="n",subset=WingSpread!=c(-9) & WingSpread>0,pch=21,col=grey(.5),ylab=ifelse(es,"Apertura calones (m)","Wing spread (m)"),xlab=ifelse(es,"Profundidad (m)","Depth (m)"))
       if (pF) {
         points(WingSpread~Depth,dumb,xlim=c(0,dpthA[2]+20),subset=WingSpread!=c(-9) & WingSpread>0,pch=21,col=col1)
         #legend("bottomright",legend=as.character(c(years)),pch=21,col=col1,pt.bg=col1,bty="n",inset=.04)
       } 
     }
-    if (ti) title(main=paste0("Wing Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+    if (ti) title(main=paste0(ifelse(es,"Apertura calones vs. profundidad en ","Wing Spread vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
     # if (length(levels(factor(dumb$sweeplngt)))<2) {
     #   dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)
     #   dp<-seq(dpthA[1],dpthA[2]+20,length=650)
@@ -105,7 +106,7 @@ gearPlotHHN21.wgdp<-function(Survey="SP-NORTH",years=2021,quarter=4,incl2=T,c.in
         if (length(years)>1) legend("bottomright",c(paste(c(paste(years[1],years[length(years)-1],sep="-"),years[length(years)]),c("mol sweeps"),sep=" "),paste(c(paste(years[1],years[length(years)-1],sep="-"),years[length(years)]),c("29VE"),sep=" ")),pch=21,col=c(col2,col1,col1,col1),pt.bg=c(NA,col2,NA,col1),bty="n",inset=c(.02),ncol=2)           
         else legend("bottomright",c("28MO","29VE"),pch=21,col=c(col1,col1),pt.bg = c(col2,col1),bty="n",inset=.04)
       }
-      if (ti) title(paste0("Wing Spread vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+      if (ti) title(main=paste0(ifelse(es,"Apertura calones vs. profundidad en ","Wing Spread vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
       mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
       a1mol<-round(coef(WingSpreadmol.log)[1],2)
       b1mol<-round(coef(WingSpreadmol.log)[2],2)
@@ -132,13 +133,14 @@ gearPlotHHN21.wgdp<-function(Survey="SP-NORTH",years=2021,quarter=4,incl2=T,c.in
       b1Uprvde<-confint(WingSpreadvde.log,level=c.inta)[2,2]
       lines(dpvde,a1Uprvde+b1Uprvde*log(dpvde),col=col1,lty=2,lwd=1)
       legend("topright",legend=substitute(WSvde == a1vde + b1vde %*% log(depth),list(a1vde=round(coef(WingSpreadvde.log)[1],2),b1vde=(round(coef(WingSpreadvde.log)[2],2)))),bty="n",text.font=2,inset=.1)
-      dumbo<-bquote("Wing Spread"== a + b %*% log("Depth"))
+      if (es) dumbo<-bquote("Apertura calones"== a + b %*% log("Prof"))
+      else dumbo<-bquote("Wing Spread"== a + b %*% log("Depth"))
       mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
       print(summary(WingSpreadmol.log))
       print(summary(WingSpreadvde.log))
     }
   }
-  if (length(years)>1) txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
-  else txt<-paste0("Year: ",as.character(years))
+  if (length(years)>1) txt<-paste0(ifelse(es,"Años: ","Years: "),paste0(c(years[1],"-",years[length(years)]),collapse=" "))
+  else txt<-paste0(ifelse(es,"Año: ","Year: "),as.character(years))
   mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.9)
 }

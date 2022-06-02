@@ -9,6 +9,7 @@
 #' @param quarter: the quarter of the survey to be ploted
 #' @param c.inta: the confidence interval to be used in the confint function for all data if only one sweep length, and for the short sweeps in case there are two
 #' @param c.intb: the confidence interval to be used in the confint function for the long set of sweeps.
+#' @param es: If T titles and labels are in Spanish, if FALSE in English
 #' @param col1: color for the symbols and lines for the whole set if only one set of sweeps are used, and for the data from the long set of sweeps.
 #' @param col2: color for the symbols and lines for the data from the short sweeps in case there are two.
 #' @param getICES: Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.
@@ -32,7 +33,7 @@
 #' @examples gearPlotHH.nodp(getICES=F,damb,c(2014:2016),4,pF=F)
 #' @examples gearPlotHH.nodp(getICES=F,Survey=damb,years=c(2014:2016),quarter=4,pF=F)
 #' @export
-gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblue",col2="steelblue2",getICES=TRUE,pF=TRUE,ti=TRUE) {
+gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=FALSE,col1="darkblue",col2="steelblue2",getICES=TRUE,pF=TRUE,ti=TRUE) {
   if (getICES) {
    dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
    }
@@ -47,13 +48,13 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
       dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)
       vrt<-range(subset(dumb$Netopening,dumb$Netopening> c(0)))
       plot(Netopening~Depth,dumb,xlim=c(0,dpthA[2]+20),ylim=c(0,vrt[2]+2),type="n",pch=21,col=col1,
-         ylab="Vertical opening (m)",xlab="Depth (m)",subset=Year!=years[length(years)] & Netopening> c(-9))
+         ylab=ifelse(es,"Apertura vertical","Vertical opening (m)"),xlab=ifelse(es,"Profundidad (m)","Depth (m)"),subset=Year!=years[length(years)] & Netopening> c(-9))
           if (pF) points(Netopening~Depth,dumb,pch=21,col=col1,subset=Year!=years[length(years)] & Netopening> c(-9))    
           if (length(levels(dumb$sweeplngt))<2) {
             dp<-seq(dpthA[1],dpthA[2]+20,length=650)
             if (length(years)>1) {Netopening.log<-nls(Netopening~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(0) & Year!= years[length(years)])}
             else {Netopening.log<-nls(Netopening~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & Netopening> c(0))}
-            if (ti) title(main=paste0("Vertical opening vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+            if (ti) title(main=paste0(ifelse(es,"Apertura vertical vs. profundidad en ","Vertical opening vs. Depth in "),dumb$Survey[1],".Q",quarter," survey"),line=2.5)
             mtext(dumb$Ship[length(dumb$Ship)],line=.4,cex=.9,adj=0)
             a1<-round(coef(Netopening.log)[1],2)
             b1<-round(coef(Netopening.log)[2],2)
@@ -70,7 +71,8 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
               else legend("bottomright",as.character(years),pch=21,col=col1,pt.bg=col1,bty="n",inset=.02)
               }
             legend("topright",legend=substitute(NetOpening == a1 + b1 %*% log(depth),list(a1=round(coef(Netopening.log)[1],2),b1=(round(coef(Netopening.log)[2],2)))),bty="n",text.font=2,inset=.05)
-            dumbo<-bquote("Net vert. opening"== a + b %*% log("Depth"))
+            if (es) dumbo<-bquote("Apertura vertial red"== a + b %*% log("Prof"))
+            else dumb<-bquote("Net vert. opening"== a + b %*% log())
             summary(Netopening.log)
           }
           if (length(levels(dumb$sweeplngt))==2) {
@@ -95,13 +97,14 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
               points(Netopening~Depth,dumbshort,subset=Year==years[length(years)],pch=21,bg=col2,lwd=1)   
               points(Netopening~Depth,dumblong,subset=HaulVal=="V",pch=21,col=col1)   
               points(Netopening~Depth,dumblong,subset=Year==years[length(years)],pch=21,bg=col1,lwd=1)   
-              if (length(years)>1) legend("bottomright",c(paste(c(paste(years[1],years[length(years)-1],sep="-"),years[length(years)]),c("Short sweeps"),sep=" "),paste(c(paste(years[1],years[length(years)-1],sep="-"),years[length(years)]),c("Long sweeps"),sep=" ")),pch=21,col=c(col2,col2,col1,col1),pt.bg=c(NA,col2,NA,col1),bty="n",inset=c(.02),ncol=2)           
+              if (length(years)>1) legend("bottomright",c(paste(c(paste(years[1],years[length(years)-1],sep="-"),years[length(years)]),c(ifelse(es,"Malletas cortas","Short sweeps")),sep=" "),paste(c(paste(years[1],years[length(years)-1],sep="-"),years[length(years)]),c(ifelse(es,"Malletas largas","Long sweeps")),sep=" ")),pch=21,col=c(col2,col2,col1,col1),pt.bg=c(NA,col2,NA,col1),bty="n",inset=c(.02),ncol=2)           
               else {
-                legend("bottomright",legend=c("Short sweeps","Long sweeps"),pch=21,col=c(col1,col1),pt.bg=c(col2,col1),inset=.04,bty="n")
+                if (es) legend("bottomright",legend=c("Malletas cortas","Malletas largas"),pch=21,col=c(col1,col1),pt.bg=c(col2,col1),inset=.04,bty="n")
+                else legend("bottomright",legend=c("Short sweeps","Long sweeps"),pch=21,col=c(col1,col1),pt.bg=c(col2,col1),inset=.04,bty="n")
                 text(0,0, as.character(years),adj=0.01,font=1, cex=.9,pos=4)
                 }
            }
-           if (ti) title(main=paste0("Vertical opening vs. Depth in ",dumb$Survey[1],".Q",quarter," survey"),line=2.5)
+           if (ti) title(main=paste0(ifelse(es,"Apertura vertical vs. profujndidad en ","Vertical opening vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
            mtext(dumb$Ship[length(dumb$Ship)],line=.4,cex=.9,adj=0)
            a1st<-round(coef(Netopeningst.log)[1],2)
            b1st<-round(coef(Netopeningst.log)[2],2)
@@ -126,13 +129,14 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,col1="darkblu
            summary(Netopeningst.log)
            summary(Netopeninglg.log)
            }
-           dumbo<-bquote("Net Vert. opening"== a + b %*% log("Depth"))
+           if (es) dumbo<-bquote("Net Vert. opening"== a + b %*% log("Depth"))
+           else dumbo<-bquote("Apertura vertical red"== a + b %*% log("Prof"))
            mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
       }
   yearsb<-unique(dplyr::filter(dumb,!is.na(WingSpread) & WingSpread>0)$Year)
-  if (length(years)>1 & !all(years %in% yearsb)) txt<-paste("Years:",paste0(c(yearsb[yearsb %in% years]),collapse=" "))
-  if (length(years)>1 & all(years %in% yearsb)) txt<-paste0("Years: ",paste0(c(years[1],"-",years[length(years)]),collapse=" "))
-  if (length(years)==1) txt<-paste0("Year: ",as.character(years))
+  if (length(years)>1 & !all(years %in% yearsb)) txt<-paste(ifelse(es,"Años:","Years:"),paste0(c(yearsb[yearsb %in% years]),collapse=" "))
+  if (length(years)>1 & all(years %in% yearsb)) txt<-paste0(ifelse(es,"Años:","Years:"),paste0(c(years[1],"-",years[length(years)]),collapse=" "))
+  if (length(years)==1) txt<-paste0(ifelse(es,"Año:","Year:"),as.character(years))
   mtext(txt,1,line=-1.1,adj=0.01, font=1, cex=.8)
 }
             
