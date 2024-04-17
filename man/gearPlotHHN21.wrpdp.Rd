@@ -11,6 +11,7 @@ gearPlotHHN21.wrpdp(
   incl2 = TRUE,
   line = TRUE,
   c.inta = 0.95,
+  es = FALSE,
   col1 = "darkblue",
   col2 = "red",
   getICES = TRUE,
@@ -28,6 +29,8 @@ gearPlotHHN21.wrpdp(
 \item{line:}{includes a regression line between Warp and depth and the formula of the linear regression. If F the line is omited}
 
 \item{c.inta:}{the confidence interval to be used in the predict.lm function}
+
+\item{es:}{if TRUE labels and axes labels, titles legends in Spanish, if FALSE in English}
 
 \item{col1:}{the color of the points, last year fill and previous years empty symbol}
 

@@ -1,4 +1,8 @@
 .Rproj.user
 .Rhistory
 .RData
+*.png
+*.csv
+*.bak
+*.jpg
 inst/doc

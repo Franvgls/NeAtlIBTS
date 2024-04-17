@@ -11,6 +11,7 @@ gearPlotHH.dowg(
   c.int = 0.9,
   c.inta = 0.8,
   c.intb = 0.8,
+  es = FALSE,
   col1 = "darkblue",
   col2 = "steelblue2",
   getICES = T,
@@ -19,6 +20,8 @@ gearPlotHH.dowg(
 )
 }
 \arguments{
+\item{es}{if TRUE all legends and axis labels are in Spanish, if F in English}
+
 \item{getICES:}{Should the data be downloaded from DATRAS? If T, default, the data are taken from DATRAS through the icesDatras package.}
 
 \item{Survey:}{either the Survey to be downloaded from DATRAS (see details), or a data frame with the HH information with  the DATRAS HH format  and the years and quarter selected in years and quarter}

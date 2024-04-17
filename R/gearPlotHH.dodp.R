@@ -40,7 +40,11 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=F,col1="da
       if (length(levels(dumb$sweeplngt))<2) {
          DoorSpread.log<-nls(DoorSpread~a1+b1*log(Depth),dumb,start=c(a1=.1,b1=1),subset=HaulVal=="V" & DoorSpread> c(-9))
          dspr<-range(subset(dumb,DoorSpread>c(-9))$DoorSpread,na.rm=T)
-         if (pF) {points(DoorSpread~Depth,dumb,subset=Year==years[length(years)],pch=21,bg=col1)}
+         if (pF) {
+           points(DoorSpread~Depth,dumb,subset=Year==years[length(years)],pch=21,bg=col1)
+           if (length(years)>1) legend("bottomright",c(paste0(years[1],"-",years[length(years)-1]),years[length(years)]),pch=c(1,21),col=c(col1),pt.bg=c(NA,col1),bty="n",inset=.02)              
+           else legend("bottomright",as.character(years),pch=21,col=col1,pt.bg=col1,bty="n",inset=.02)
+          }
          mtext(paste(dumb$Ship[1]),line=.4,cex=.8,adj=0)
          a1<-round(coef(DoorSpread.log)[1],2)
          b1<-round(coef(DoorSpread.log)[2],2)
@@ -108,7 +112,7 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=F,col1="da
          summary(DoorSpreadst.log)
          summary(DoorSpreadlg.log)
          }
-      yearsb<-unique(dplyr::filter(dumb,!is.na(WingSpread) & WingSpread>0)$Year)
+      yearsb<-unique(dplyr::filter(dumb,!is.na(DoorSpread) & DoorSpread>0)$Year)
       if (length(years)>1 & !all(years %in% yearsb)) txt<-paste(ifelse(es,"Años:","Years:"),paste0(c(yearsb[yearsb %in% years]),collapse=" "))
       if (length(years)>1 & all(years %in% yearsb)) txt<-paste0(ifelse(es,"Años:","Years:"),paste0(c(years[1],"-",years[length(years)]),collapse=" "))
       if (length(years)==1) txt<-paste0(ifelse(es,"Año: ","Year: "),as.character(years))

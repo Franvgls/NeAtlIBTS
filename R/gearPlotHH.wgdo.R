@@ -92,7 +92,7 @@ gearPlotHH.wgdo<-function(Survey,years,quarter,c.int=.9,c.inta=.8,c.intb=.8,es=F
              lm.WingVsDoor.long<-lm(WingSpread~DoorSpread,dumb,subset=HaulVal=="V" & WingSpread > c(-9) & DoorSpread> c(-9) & SweepLngt==levels(factor(SweepLngt))[2])
            }
             plot(WingSpread~DoorSpread,dumb,type="n",subset=HaulVal=="V" & Year!=years[length(years)],xlim=c(dspr[1]-20,dspr[2]+20),ylim=c(wspr[1]-10,wspr[2]+10),xlab=ifelse(es,"Abertura puertas (m)","Door Spread (m)"),ylab=ifelse(es,"Abertura calones (m)","Wing Spread (m)"),pch=21,col="grey")
-            title(main=paste0(ifelse(es,"Abertura de calones vs. Abertura de puertas","Wing Spread vs. door spread in "),dumb$Survey[1],".Q",quarter),line=2.5)
+            #title(main=paste0(ifelse(es,"Abertura de calones vs. Abertura de puertas","Wing Spread vs. door spread in "),dumb$Survey[1],".Q",quarter),line=2.5)
             if (ti) title(main=paste0(ifelse(es,"Abertura de calones vs. Abertura de puertas","Wing Spread vs. door spread in "),dumb$Survey[1],".Q",quarter),line=2.5)
             mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
             if (pF){

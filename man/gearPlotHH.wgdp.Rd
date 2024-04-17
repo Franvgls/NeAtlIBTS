@@ -10,6 +10,7 @@ gearPlotHH.wgdp(
   quarter,
   c.inta = 0.8,
   c.intb = 0.3,
+  es = FALSE,
   col1 = "darkblue",
   col2 = "steelblue2",
   getICES = TRUE,
@@ -27,6 +28,8 @@ gearPlotHH.wgdp(
 \item{c.inta:}{the confidence interval to be used in the confint function for long sweeps and for sweeps if there is only one length}
 
 \item{c.intb:}{the confidence interval to be used in the confint function for short sweeps if there are two}
+
+\item{es:}{if TRUE all titles legends... are in Spanish, if FALSE in English}
 
 \item{col1:}{color for the symbols and lines for the whole set if only one set of sweeps are used, and for the data from the long set of sweeps.}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/gearPlotHHN21.nodp.R
 \name{gearPlotHHN21.nodp}
 \alias{gearPlotHHN21.nodp}
-\title{Function gearPlotHH.nodp to plot net opening vs. depth}
+\title{Function gearPlotHH.nodp to plot net opening vs. depth for the Spanish N21 Survey}
 \usage{
 gearPlotHHN21.nodp(
   Survey = "SP-NORTH",
@@ -10,6 +10,7 @@ gearPlotHHN21.nodp(
   quarter = 4,
   c.inta = 0.8,
   c.intb = 0.3,
+  es = FALSE,
   col1 = "darkblue",
   col2 = "red",
   incl2 = TRUE,
@@ -28,6 +29,8 @@ gearPlotHHN21.nodp(
 \item{c.inta:}{the confidence interval to be used in the confint function for all data if only one sweep length, and for the short sweeps in case there are two}
 
 \item{c.intb:}{the confidence interval to be used in the confint function for the long set of sweeps.}
+
+\item{es:}{If TRUE all labels and legends are in Spanish, if FALSE in English}
 
 \item{col1:}{color for the symbols and lines for the whole set if only one set of sweeps are used, and for the data from the long set of sweeps.}
 

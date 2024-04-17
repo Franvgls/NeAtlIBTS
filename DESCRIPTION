@@ -1,7 +1,7 @@
 Package: NeAtlIBTS
 Title: R Library for the Northeastern Atlantic & NS IBTS Surveys
 Description: Produces graphs and gear parameters for the Northeastern Atlantic Manual and Surveys
-Version: 0.3.7
+Version: 0.4.0
 Author: FVG <franvgls@gmail.com>
 Maintainer: FVG <franvgls@gmail.com>
 Depends:
@@ -14,6 +14,7 @@ Imports:
     mapdata,
     maps,
     maptools,
+    hablar,
     rgdal
 License: GPL
 Encoding: UTF-8
@@ -21,4 +22,4 @@ LazyData: True
 Suggests:
     knitr
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3

@@ -11,6 +11,7 @@ gearPlotHHN21.dodp(
   c.int = 0.95,
   c.inta = 0.95,
   c.intb = 0.95,
+  es = FALSE,
   col1 = "darkblue",
   col2 = "red",
   getICES = TRUE,

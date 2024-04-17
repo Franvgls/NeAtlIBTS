@@ -34,14 +34,15 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=
   library(maps)
   library(rgdal)
   if (all(c(sl,nl)<0) | all(c(sl,nl)>0)) {
-    largo=rev(abs(nl-sl))*10
+    largo=rev(abs(nl-sl))*1
   } else largo=(nl-sl)
   if (xlims[2] < 0) {
-    ancho<- diff(rev(abs(xlims)))*10
-  } else ancho<- diff(xlims)*10
+    ancho<- diff(rev(abs(xlims)))*1
+  } else ancho<- diff(xlims)*1
   ices.div<-readOGR(paste0(shpdir,"ices_div.dbf"),"ices_div",verbose = F)
   bath100<-readOGR(paste0(shpdir,"100m.dbf"),"100m",verbose = F)
   bathy.geb<-readOGR(paste0(shpdir,"bathy_geb.dbf"),"bathy_geb",verbose = F)
+  if (load) {
   SWC_Q1<-readOGR(paste0(shpdir,"SWC_Q1.dbf"),"SWC_Q1",verbose = F)
   SWC_Q1_w84<-spTransform(SWC_Q1,CRS("+proj=longlat +datum=WGS84"))
   SWC_Q3<-readOGR(paste0(shpdir,"SWC_Q3.dbf"),"SWC_Q3",verbose = F)
@@ -61,59 +62,61 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=
   Sp_Cadiz<-readOGR(paste0(shpdir,"Sp_Cadiz.dbf"),verbose = F) #"Sp_Cadiz"
   Sp_Cadiz_w84<-spTransform(Sp_Cadiz,CRS("+proj=longlat +datum=WGS84"))
   PT_IBTS<-readOGR(paste0(shpdir,"PT_IBTS_2015.dbf"),"PT_IBTS_2015",verbose = F)
+  }
   switch(out,
          "pdf" = pdf(file = paste0(nfile,".pdf")),
          "tiff" = tiff(filename=paste0(nfile,".tiff"),width=660*ancho/largo,height=800*largo/ancho),
          "png" = png(filename=paste0(nfile,".png"),bg="transparent",type="cairo",width=round(800*ancho/largo),height=round(800*largo/ancho)))
+  #windows()
   par(mar=c(3.5,2,2,2)+0.1)
-  #  windows()
   maps::map(database = "worldHires", xlim = xlims, ylim = c(sl,nl),type="n")
+  if (!bw) rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col=ifelse(bw,"white","lightblue1"))
   if (bathy) {
-    sp::plot(bath100,add=T,col=gray(.85),lwd=.1)
-    sp::plot(bathy.geb[bathy.geb$DEPTH!=100,],add=T,col=gray(.85),lwd=.1)
+    sp::plot(bath100,add=T,col=ifelse(bw,gray(.85),gray(.50)),lwd=.1)
+    sp::plot(bathy.geb[bathy.geb$DEPTH!=100,],add=T,col=ifelse(bw,gray(.85),gray(.50)),lwd=.1)
   }
   # if (grid) grid(col=gray(.8),lwd=.5)
   if (ICESdiv) sp::plot(ices.div,add=T,col=NA,border="burlywood")
   if (all(xlims < 0)) {
-    degs = seq(xlims[1],xlims[2],ifelse(ancho>10,4,1))
+    degs = seq(round(xlims[1],0),round(xlims[2],0),ifelse(ancho>10,4,1))
     alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ W))
-    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
-    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
+    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.4,0))
+    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.4,0))
     }
   if (all(xlims > 0)) {
-    degs = seq(xlims[1],xlims[2],ifelse(ancho>10,4,1))
+    degs = seq(round(xlims[1],0),round(xlims[2],0),ifelse(ancho>10,4,1))
     alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ E))
-    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
-    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
+    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.4,0))
+    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.4,0))
   }
   if (xlims[1]<0 & xlims[2]>0) {
-    degs = seq(xlims[1],-1,ifelse(abs(diff(xlims))>10,4,1))
+    degs = seq(round(xlims[1],0),-1,ifelse(abs(diff(xlims))>10,4,1))
     alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ W))
-    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
-    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
-    degs = seq(1,xlims[2],ifelse(abs(diff(xlims))>1,4,1))
+    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.4,0))
+    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.4,0))
+    degs = seq(1,round(xlims[2],0),ifelse(abs(diff(xlims))>1,4,1))
     alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ E))
-    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
-    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
+    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.4,0))
+    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.4,0))
     degs = c(0)
     alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ ""))
-    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
-    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.2,0))
+    axis(1, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.4,0))
+    axis(3, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),mgp=c(1,.4,0))
   }
   if (all(c(sl,nl) < 0)) {
-    degs = seq(sl,nl,ifelse(largo>10,4,1))
+    degs = seq(round(sl,0),round(nl,0),ifelse(largo>10,4,1))
     alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ S))
-    axis(2, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.2,0))
-    axis(4, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.2,0))
+    axis(2, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
+    axis(4, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
   }
   if (all(c(sl,nl) > 0)) {
-    degs = seq(sl,nl,ifelse(largo>10,4,1))
+    degs = seq(round(sl,0),round(nl,0),ifelse(largo>10,4,1))
     alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ N))
-    axis(2, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.2,0))
-    axis(4, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.2,0))
+    axis(2, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
+    axis(4, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
   }
   if (!all(c(sl,nl) >0)) {
-    degs = seq(sl,-5,ifelse(largo>10,4,1))
+    degs = seq(round(sl,0),-5,ifelse(largo>10,4,1))
     alg = sapply(degs,function(x) bquote(.(abs(x))*degree ~ S))
     axis(2, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
     axis(4, at=degs, lab=do.call(expression,alg),font.axis=2,cex.axis=axlab,tick=T,tck=c(-.01),las=2,mgp=c(1,.5,0))
@@ -134,13 +137,12 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=
     }
   if (ICESlab) text(c(stat_y+.22)~stat_x,Area,label=ICESNAME,cex=ICESlabcex,font=2)
   if (ICESrect) {
-    abline(h=seq(30,65,by=.5),col=gray(.3),lwd=.2)
-    abline(v=seq(-44,68),col=gray(.3),lwd=.2)
+    abline(h=seq(30,65,by=.5),v=seq(-44,68),col=gray(.8),lwd=.2)
     }
-  rug(seq(c(sl+.5),c(nl+.5),by=1),.005,side=2,lwd=lwdl,quiet=TRUE)
-  rug(seq(c(xlims[1]+.5),c(xlims[2]+.5),by=1),.005,side=1,lwd=lwdl,quiet=TRUE)
-  rug(seq(c(xlims[1]+.5),c(xlims[2]+.5),by=1),.005,side=3,lwd=lwdl,quiet=TRUE)
-  rug(seq(c(sl+.5),c(nl+.5),by=1),.005,side=4,lwd=lwdl,quiet=TRUE)
+  rug(seq(c(round(sl,0)+.5),c(round(nl,0)+.5),by=1),.005,side=2,lwd=lwdl,quiet=TRUE)
+  rug(seq(c(round(xlims[1],0)+.5),c(round(xlims[2],0)+.5),by=1),.005,side=1,lwd=lwdl,quiet=TRUE)
+  rug(seq(c(round(xlims[1],0)+.5),c(round(xlims[2],0)+.5),by=1),.005,side=3,lwd=lwdl,quiet=TRUE)
+  rug(seq(c(round(sl,0)+.5),c(round(nl,0)+.5),by=1),.005,side=4,lwd=lwdl,quiet=TRUE)
   if (load){
     maps::map(SWC_Q1_w84,SWC_Q1_w84$Name,add=T,col=gray(.4),lwd=.1,fill=T,dens=0,angle=0)
     maps::map(SWC_Q3_w84,SWC_Q3_w84$Name,add=T,col=gray(.4),lwd=.1,fill=T,dens=0,angle=45)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/gearPlotHHN21.wgdp.R
 \name{gearPlotHHN21.wgdp}
 \alias{gearPlotHHN21.wgdp}
-\title{Function gearPlotHH.wgdp plots Wing Spread vs. Depth}
+\title{Function gearPlotHHN21.wgdp plots Wing Spread vs. Depth for N21}
 \usage{
 gearPlotHHN21.wgdp(
   Survey = "SP-NORTH",
@@ -11,6 +11,7 @@ gearPlotHHN21.wgdp(
   incl2 = T,
   c.inta = 0.8,
   c.intb = 0.3,
+  es = FALSE,
   col1 = "darkblue",
   col2 = "red",
   getICES = TRUE,
@@ -28,6 +29,8 @@ gearPlotHHN21.wgdp(
 \item{c.inta:}{the confidence interval to be used in the confint function for long sweeps and for sweeps if there is only one length}
 
 \item{c.intb:}{the confidence interval to be used in the confint function for short sweeps if there are two}
+
+\item{es:}{If TRUE all labels and legends are in Spanish, if FALSE in English}
 
 \item{col1:}{color for the symbols and lines for the whole set if only one set of sweeps are used, and for the data from the long set of sweeps.}
 

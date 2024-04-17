@@ -42,7 +42,7 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=FALSE,col1
     if (!all(unique(years) %in% unique(dumb$Year))) stop(paste0("Not all years selected in years are present in the data.frame, check: ",unique(years)[which(!(unique(years) %in% unique(dumb$Year)))]))
     if (!all(unique(dumb$Quarter) %in% unique(quarter))) warning(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
     }
-  dumb<-dplyr::filter(dumb,HaulVal!="I")
+  dumb<-dumb[dumb$HaulVal!="I",]
   dumb$sweeplngt<-factor(dumb$SweepLngt)
    if (length(subset(dumb$Netopening,dumb$Netopening> c(-9)))>0){
       dpthA<-range(dumb$Depth[dumb$Depth>0],na.rm=T)
@@ -72,7 +72,7 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=FALSE,col1
               }
             legend("topright",legend=substitute(NetOpening == a1 + b1 %*% log(depth),list(a1=round(coef(Netopening.log)[1],2),b1=(round(coef(Netopening.log)[2],2)))),bty="n",text.font=2,inset=.05)
             if (es) dumbo<-bquote("Abertura vertial red"== a + b %*% log("Prof"))
-            else dumb<-bquote("Net vert. opening"== a + b %*% log())
+            else dumbo<-bquote("Net vert. opening"== a + b %*% log())
             summary(Netopening.log)
           }
           if (length(levels(dumb$sweeplngt))==2) {
@@ -105,7 +105,7 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=FALSE,col1
                 }
            }
            if (ti) title(main=paste0(ifelse(es,"Abertura vertical vs. profujndidad en ","Vertical opening vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
-           mtext(dumb$Ship[length(dumb$Ship)],line=.4,cex=.9,adj=0)
+           mtext(dumb$Ship[1],line=.4,cex=.9,adj=0)
            a1st<-round(coef(Netopeningst.log)[1],2)
            b1st<-round(coef(Netopeningst.log)[2],2)
            lines(dpst,a1st+b1st*log(dpst),col=col2,lwd=2)
@@ -133,7 +133,7 @@ gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=FALSE,col1
            else dumbo<-bquote("Abertura vertical red"== a + b %*% log("Prof"))
            mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
       }
-  yearsb<-unique(dplyr::filter(dumb,!is.na(WingSpread) & WingSpread>0)$Year)
+  yearsb<-unique(dumb[c(!is.na(dumb$DoorSpread) & dumb$DoorSpread>0),]$Year)
   if (length(years)>1 & !all(years %in% yearsb)) txt<-paste(ifelse(es,"Años:","Years:"),paste0(c(yearsb[yearsb %in% years]),collapse=" "))
   if (length(years)>1 & all(years %in% yearsb)) txt<-paste0(ifelse(es,"Años:","Years:"),paste0(c(years[1],"-",years[length(years)]),collapse=" "))
   if (length(years)==1) txt<-paste0(ifelse(es,"Año:","Year:"),as.character(years))

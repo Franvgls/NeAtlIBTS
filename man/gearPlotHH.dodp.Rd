@@ -10,6 +10,7 @@ gearPlotHH.dodp(
   quarter,
   c.inta = 0.8,
   c.intb = 0.3,
+  es = F,
   col1 = "darkblue",
   col2 = "steelblue2",
   getICES = T,
@@ -29,6 +30,8 @@ gearPlotHH.dodp(
 \item{c.inta:}{the confidence interval to be used in the confint function for all data if only one sweep length, and for the short sweeps in case there are two}
 
 \item{c.intb:}{the confidence interval to be used in the confint function for the long set of sweeps.}
+
+\item{es:}{si T titulos y leyendas salen en español, si no en inglés.}
 
 \item{col1:}{color for the symbols and lines for the whole set if only one set of sweeps are used, and for the data from the long set of sweeps.}
 

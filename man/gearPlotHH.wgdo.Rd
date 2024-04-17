@@ -11,6 +11,7 @@ gearPlotHH.wgdo(
   c.int = 0.9,
   c.inta = 0.8,
   c.intb = 0.8,
+  es = FALSE,
   col1 = "darkblue",
   col2 = "steelblue2",
   getICES = T,
@@ -34,6 +35,8 @@ gearPlotHH.wgdo(
 \item{c.inta:}{the confidence interval to be used in the confint function for all data if only one sweep length, and for the short sweeps in case there are two}
 
 \item{c.intb:}{the confidence interval to be used in the confint function for the long set of sweeps.}
+
+\item{es:}{If TRUE all labels and titles are in Spanish, if FALSE in English}
 
 \item{col1:}{color for the symbols and lines for the whole set if only one set of sweeps are used, and for the data from the long set of sweeps.}
 
