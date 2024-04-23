@@ -4,7 +4,16 @@
 \alias{SurveyMap.IBTS}
 \title{Map of hauls (stations) from an IBTS survey taken directly from DATRAS}
 \usage{
-SurveyMap.IBTS(Survey, Year, Quarter, ti = TRUE, leg = TRUE)
+SurveyMap.IBTS(
+  Survey,
+  Year,
+  Quarter,
+  ti = TRUE,
+  leg = TRUE,
+  ICESrect = FALSE,
+  ICESlab = FALSE,
+  ICESlabcex = 0.7
+)
 }
 \arguments{
 \item{Survey}{Code to plot. Has to be one of those available from DATRAS survey list, and from a year and quarter avalable}
@@ -25,5 +34,6 @@ Uses the DATRAS HH data of a survey, year and quarter to plot stations in a map
 }
 \examples{
 SurveyMap.IBTS("NS-IBTS",2021,3)
+SurveyMap.ibts("FR-WCGFS",2303,3,ICESrect = T,ICESlab = T,ICESlabcex = .6)
 }
 \concept{maps}

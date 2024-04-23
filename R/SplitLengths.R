@@ -19,38 +19,37 @@ SplitLengths<-function(datSurvey,dtyear,dtq,esp="HKE",plot=TRUE,ti=TRUE,save.dat
   dat.HH<-icesDatras::getHHdata(datSurvey,dtyear,dtq)
   dat.HL<-icesDatras::getHLdata(datSurvey,dtyear,dtq)
   print(unique(dat.HH$DataType)) # if only "C" it would already be CPUE, with "R" or "P" has to be weighted to hour: subfactor*60/hauldur already in the code.
-  species<-read.csv("SpeciesCodes.csv",as.is=T)
-  species$LengthSplitMM<-species$LengthSplit*10
-  dat.HL<-subset(dat.HL,Valid_Aphia %in% species$WoRMScode)
+  SpeciesCodes$LengthSplitMM<-SpeciesCodes$LengthSplit*10
+  dat.HL<-subset(dat.HL,Valid_Aphia %in% SpeciesCodes$WoRMScode)
   dat.HL$HaulVal<-dat.HH$HaulVal[match(dat.HL$StNo,dat.HH$StNo)]
   dat.HL$HaulDur<-dat.HH$HaulDur[match(dat.HL$StNo,dat.HH$StNo)]
   dat.HL$DataType<-dat.HH$DataType[match(dat.HL$StNo,dat.HH$StNo)]
   if (nrow(dplyr::filter(dat.HL,LngtCode=="1"))>0) {dat.HL[dat.HL$LngtCode=="1","LngtClass"]<-dat.HL[dat.HL$LngtCode=="1","LngtClass"]*10}
 # str(dat.HH)
 # str(dat.HL)
-  datexch23<-dat.HL[dat.HL$Valid_Aphia %in% species$WoRMScode & dat.HL$HaulVal=="V",]
-  print(filter(datexch23,is.na(SubFactor)))
+  datexch23<-dat.HL[dat.HL$Valid_Aphia %in% SpeciesCodes$WoRMScode & dat.HL$HaulVal=="V",]
+  print(dplyr::filter(datexch23,is.na(SubFactor)))
   datexch23$CPUE<-NA
   for (i in 1:nrow(datexch23)) {
     if (datexch23$DataType[i]=="C") datexch23$CPUE[i]<-datexch23$HLNoAtLngt[i]*datexch23$SubFactor[i]
     else datexch23$CPUE[i]<-datexch23$HLNoAtLngt[i]*datexch23$SubFactor[i]*60/datexch23$HaulDur[i]
   }
-  datexch23$Species <- species[match(datexch23[,"Valid_Aphia"],species$WoRMScode),"Code"]
+  datexch23$Species <- SpeciesCodes[match(datexch23[,"Valid_Aphia"],SpeciesCodes$WoRMScode),"Code"]
   # datexch23$Species<-as.factor(as.character(datexch23$Species))
-  datexch23$SizeRange <- species[match(datexch23[,"Valid_Aphia"],species$WoRMScode),"LengthSplitMM"]
+  datexch23$SizeRange <- SpeciesCodes[match(datexch23[,"Valid_Aphia"],SpeciesCodes$WoRMScode),"LengthSplitMM"]
   str(datexch23)
   datexch23$Size<-NULL
   print(sort(unique(as.character(datexch23$Species))))
   print(tapply(datexch23$Species,datexch23[,c("Species")],length))
   i<-sort(unique(as.character(datexch23$Species)))[1]
-  #if (nrow(datexch23[datexch23$Species==i,])>0) i<-levels(as.factor(as.character(species$Code)))[1]
-  #else i<-levels(as.factor(as.character(species$Code)))[2]
+  #if (nrow(datexch23[datexch23$Species==i,])>0) i<-levels(as.factor(as.character(SpeciesCodes$Code)))[1]
+  #else i<-levels(as.factor(as.character(SpeciesCodes$Code)))[2]
   dumb<-datexch23[datexch23$Species==i,]
   dumbtot<-aggregate(CPUE~Year+Survey+Ship+HaulNo,dumb,sum)
   colnames(dumbtot)[match("CPUE",colnames(dumbtot))]<-c("Total")
-  if (is.na(species[match(i,species$Code),"LengthSplitMM"])) dattot<-data.frame(dumbtot[,1:4],SpeciesCode=i,Small=NA,Large=NA,Total=dumbtot[,5])
-  if (!is.na(species[match(i,species$Code),"LengthSplitMM"])) {
-  dumbsm<-dumb[dumb$LngtClass<species[match(i,species$Code),"LengthSplitMM"],]
+  if (is.na(SpeciesCodes[match(i,SpeciesCodes$Code),"LengthSplitMM"])) dattot<-data.frame(dumbtot[,1:4],SpeciesCode=i,Small=NA,Large=NA,Total=dumbtot[,5])
+  if (!is.na(SpeciesCodes[match(i,SpeciesCodes$Code),"LengthSplitMM"])) {
+  dumbsm<-dumb[dumb$LngtClass<SpeciesCodes[match(i,SpeciesCodes$Code),"LengthSplitMM"],]
   if (nrow(dumbsm)>0) {
      dumbsm<-aggregate(CPUE~Year+Survey+Ship+HaulNo,dumbsm,sum)
      colnames(dumbsm)[match("CPUE",colnames(dumbsm))]<-c("Small")
@@ -58,7 +57,7 @@ SplitLengths<-function(datSurvey,dtyear,dtq,esp="HKE",plot=TRUE,ti=TRUE,save.dat
   else {
     dumbsm<-data.frame(Year=dtyear,Survey=datSurvey,Ship=dumb$Ship,HaulNo=levels(as.factor(dumb$HaulNo)),Small=0)
     }
-  dumblg<-dumb[dumb$LngtClas>=species[match(i,species$Code),"LengthSplitMM"],]
+  dumblg<-dumb[dumb$LngtClas>=SpeciesCodes[match(i,SpeciesCodes$Code),"LengthSplitMM"],]
   if (nrow(dumblg)>0) {
      dumblg<-aggregate(CPUE~Year+Survey+Ship+HaulNo,dumblg,sum,na.rm=T)
      colnames(dumblg)[match("CPUE",colnames(dumblg))]<-c("Large")
@@ -70,7 +69,7 @@ SplitLengths<-function(datSurvey,dtyear,dtq,esp="HKE",plot=TRUE,ti=TRUE,save.dat
   dattot<-merge(datsize,dumbtot,all.x=T,all.y=T)
   dattot<-data.frame(dattot[,1:4],SpeciesCode=i,dattot[5:7])
   }
-#ifelse (is.na(species[match(i,species$Code),"LengthSplitMM"])) dattot<-data.frame(dumbtot[,1:6],Small=0,Large=0,dumbtot[,7])
+#ifelse (is.na(SpeciesCodes[match(i,SpeciesCodes$Code),"LengthSplitMM"])) dattot<-data.frame(dumbtot[,1:6],Small=0,Large=0,dumbtot[,7])
   dataIBTS.dat<-dattot
   nbsps<-length(sort(unique(as.character(datexch23$Species))))
   for (i in levels(as.factor(as.character(datexch23$Species)))[2:nbsps]) {
@@ -78,11 +77,11 @@ SplitLengths<-function(datSurvey,dtyear,dtq,esp="HKE",plot=TRUE,ti=TRUE,save.dat
     if (nrow(dumb)==0)  next
     dumbtot<-aggregate(CPUE~Year+Survey+Ship+HaulNo,dumb,sum)
     colnames(dumbtot)[match("CPUE",colnames(dumbtot))]<-c("Total")
-    if (is.na(species[match(i,species$Code),"LengthSplitMM"])) {
+    if (is.na(SpeciesCodes[match(i,SpeciesCodes$Code),"LengthSplitMM"])) {
       dattot<-data.frame(dumbtot[,1:4],SpeciesCode=i,Small=NA,Large=NA,Total=dumbtot[,5])
     }
     else {
-      dumbsm<-dumb[dumb$LngtClass<species[match(i,species$Code),"LengthSplitMM"],]
+      dumbsm<-dumb[dumb$LngtClass<SpeciesCodes[match(i,SpeciesCodes$Code),"LengthSplitMM"],]
       if (nrow(dumbsm)>0) {
         dumbsm<-aggregate(CPUE~Year+Survey+Ship+HaulNo,dumbsm,sum,na.rm=T)
         colnames(dumbsm)[match("CPUE",colnames(dumbsm))]<-c("Small")
@@ -90,7 +89,7 @@ SplitLengths<-function(datSurvey,dtyear,dtq,esp="HKE",plot=TRUE,ti=TRUE,save.dat
     else {
       dumbsm<-data.frame(Year=dtyear,Survey=datSurvey,Ship=unique(dumb$Ship),HaulNo=levels(as.factor(dumb$HaulNo)),Small=0)
       }
-      dumblg<-dumb[dumb$LngtClas>=species[match(i,species$Code),"LengthSplitMM"],]
+      dumblg<-dumb[dumb$LngtClas>=SpeciesCodes[match(i,SpeciesCodes$Code),"LengthSplitMM"],]
     if (nrow(dumblg)>0) {dumblg<-aggregate(CPUE~Year+Survey+Ship+HaulNo,dumblg,sum,na.rm=T)
       colnames(dumblg)[match("CPUE",colnames(dumblg))]<-c("Large")
       }
@@ -102,8 +101,8 @@ SplitLengths<-function(datSurvey,dtyear,dtq,esp="HKE",plot=TRUE,ti=TRUE,save.dat
     dataIBTS.dat<-rbind(dataIBTS.dat,dattot)
     }
     dataIBTS.dat<-merge(dataIBTS.dat,dat.HH[,c("HaulNo","ShootLat","ShootLong")],by="HaulNo")
-    dataIBTS.dat$Common_Name <- species[match(dataIBTS.dat[,"SpeciesCode"],species$Code),"Common"]
-    dataIBTS.dat$Length_Split <- species[match(dataIBTS.dat[,"SpeciesCode"],species$Code),"LengthSplitMM"]
+    dataIBTS.dat$Common_Name <- SpeciesCodes[match(dataIBTS.dat[,"SpeciesCode"],SpeciesCodes$Code),"Common"]
+    dataIBTS.dat$Length_Split <- SpeciesCodes[match(dataIBTS.dat[,"SpeciesCode"],SpeciesCodes$Code),"LengthSplitMM"]
     dataIBTS.dat$time <- NA
     print(tapply(dataIBTS.dat$SpeciesCode,dataIBTS.dat$SpeciesCode,length))
     dataIBTS.dat<-dataIBTS.dat[,c(3,10:9,13,2,1,4,5,11:12,8,6:7)]
@@ -112,9 +111,9 @@ SplitLengths<-function(datSurvey,dtyear,dtq,esp="HKE",plot=TRUE,ti=TRUE,save.dat
     #windows()
     if (plot) {
     NeAtlIBTS::IBTSNeAtl_map(out="def",load=F,leg=F,dens=0,nl=max(dataIBTS.dat$ShootLat)+.5,sl=min(dataIBTS.dat$ShootLat)-.5,xlims=c(min(dataIBTS.dat$ShootLong)-1,1+ifelse(max(dataIBTS.dat$ShootLong)>-8,max(dataIBTS.dat$ShootLong),-8)))
-    if (ti) title(main=species[match(esp,species$Code),"Scientific"],font.main=4,line=1.5)
+    if (ti) title(main=SpeciesCodes[match(esp,SpeciesCodes$Code),"Scientific"],font.main=4,line=1.5)
     if (zeros)  points(ShootLat~ShootLong,dat.HH,pch=20,cex=.8,col="black")  
-    if (!is.na(species[match(esp,species$Code),"LengthSplit"])) {
+    if (!is.na(SpeciesCodes[match(esp,SpeciesCodes$Code),"LengthSplit"])) {
 	     points(ShootLat~ShootLong,dataIBTS.dat,cex=sqrt(dataIBTS.dat[,"Small"]/(.1*hablar::max_(dataIBTS.dat[dataIBTS.dat$SpeciesCode==esp,"Small"]))),subset=SpeciesCode==esp,pch=21,col="red",lwd=2)
 	     points(ShootLat~ShootLong,dataIBTS.dat,cex=sqrt(dataIBTS.dat[,"Large"]/(.1*hablar::max_(dataIBTS.dat[dataIBTS.dat$SpeciesCode==esp,"Large"]))),subset=SpeciesCode==esp,pch=21,col="blue",lwd=2)
 	     if(zeros) {legend("bottomright",c("Large","Small","No Catch"),pch=c(21,21,20),

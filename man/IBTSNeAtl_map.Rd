@@ -2,13 +2,14 @@
 % Please edit documentation in R/IBTSNeAtl_map.R
 \name{IBTSNeAtl_map}
 \alias{IBTSNeAtl_map}
-\title{Function IBTSNeAtl_map plots the map with all the surveys **STILL ON DEVELOPMENT**}
+\title{Function IBTSNeAtl_map plots the map with all the surveys \strong{STILL ON DEVELOPMENT}}
 \usage{
 IBTSNeAtl_map(
   nl = 60.5,
   sl = 36,
   xlims = c(-18, 3),
   leg = TRUE,
+  legpos = c("bottomright"),
   cex.leg = 0.7,
   dens = 30,
   load = TRUE,
@@ -33,6 +34,8 @@ IBTSNeAtl_map(
 \item{sl}{= 35 Southernmost limit of the map}
 
 \item{leg}{= TRUE if TRUE includes the legend with the colors of the surveys}
+
+\item{legpos}{defines where the legend is placed}
 
 \item{cex.leg}{= .7 Size of the legend}
 
@@ -69,7 +72,7 @@ IBTSNeAtl_map(
 to Cádiz, Still needs to include the shapefiles within the package, or right references.
 }
 \details{
-The default limits for the IBTS including the North Sea or not, but the script could 
+The default limits for the IBTS including the North Sea or not, but the script could
 be used to get maps all arround the world playing with nl,sl and xlims
 }
 \examples{

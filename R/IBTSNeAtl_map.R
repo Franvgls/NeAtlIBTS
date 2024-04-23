@@ -11,6 +11,7 @@
 #' @param nl = 61.5 northernmost limit of the map
 #' @param sl = 35 Southernmost limit of the map
 #' @param leg = TRUE if TRUE includes the legend with the colors of the surveys
+#' @param legpos defines where the legend is placed
 #' @param cex.leg = .7 Size of the legend
 #' @param dens = 30 density of the shading lines for all the surveys
 #' @param ICESdiv = TRUE if TRUE plots the IBTS divisions behind the shapefiles
@@ -28,7 +29,7 @@
 #' @param load = T or F to load all the shapes files.
 #' @examples IBTSNeAtl_map(out="def",dens=0,nl=45,leg=F,load=TRUE,ICESrect = T);text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
 #' @export
-IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=30,load=TRUE,ICESdiv=TRUE,ICESrect=FALSE,ICESlab=F,ICESlabcex=.8,NS=TRUE,bathy=TRUE,bw=FALSE,axlab=.8,bords=TRUE,out="def",nfile="NeAtlIBTS_map",lwdl=.1,shpdir="c:/GitHubRs/shapes/") {
+IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,legpos=c("bottomright"),cex.leg=.7,dens=30,load=TRUE,ICESdiv=TRUE,ICESrect=FALSE,ICESlab=F,ICESlabcex=.8,NS=TRUE,bathy=TRUE,bw=FALSE,axlab=.8,bords=TRUE,out="def",nfile="NeAtlIBTS_map",lwdl=.1,shpdir="c:/GitHubRs/shapes/") {
   library(mapdata)
   library(maptools)
   library(maps)
@@ -70,7 +71,7 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=
   #windows()
   par(mar=c(3.5,2,2,2)+0.1)
   maps::map(database = "worldHires", xlim = xlims, ylim = c(sl,nl),type="n")
-  if (!bw) rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col=ifelse(bw,"white","lightblue1"))
+  if (!bw) rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],par("usr")[1],col=ifelse(bw,"white","lightblue1"))
   if (bathy) {
     sp::plot(bath100,add=T,col=ifelse(bw,gray(.85),gray(.50)),lwd=.1)
     sp::plot(bathy.geb[bathy.geb$DEPTH!=100,],add=T,col=ifelse(bw,gray(.85),gray(.50)),lwd=.1)
@@ -144,27 +145,28 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,cex.leg=.7,dens=
   rug(seq(c(round(xlims[1],0)+.5),c(round(xlims[2],0)+.5),by=1),.005,side=3,lwd=lwdl,quiet=TRUE)
   rug(seq(c(round(sl,0)+.5),c(round(nl,0)+.5),by=1),.005,side=4,lwd=lwdl,quiet=TRUE)
   if (load){
-    maps::map(SWC_Q1_w84,SWC_Q1_w84$Name,add=T,col=gray(.4),lwd=.1,fill=T,dens=0,angle=0)
-    maps::map(SWC_Q3_w84,SWC_Q3_w84$Name,add=T,col=gray(.4),lwd=.1,fill=T,dens=0,angle=45)
-    maps::map(NIGFS_w84,NIGFS_w84$NAME,add=T,col=gray(.4),lwd=.1,fill=T,dens=0,angle=90)
-    sp::plot(SWC_Q1_w84,add=T,col=gray(.4),lwd=.01,dens=dens,angle=0)
-    sp::plot(SWC_Q3_w84,add=T,col=2,lwd=.01,dens=dens,angle=45)
-    sp::plot(NIGFS_w84,add=T,col=3,lwd=.01,dens=dens,angle=45)
-    sp::plot(IGFS_w84,add=T,col=4,lwd=.01,dens=dens,angle=135)
-    sp::plot(Porc_w84,add=T,col=5,lwd=.01,dens=dens,angle=180)
-    sp::plot(CGFS,add=T,col=6,lwd=.1,dens=dens,angle=225)
-    sp::plot(EVHOE_w84,add=T,col=gray(.4),lwd=.1,dens=dens,angle=270)
-    sp::plot(Sp_North_w84,add=T,col=2,lwd=.1,dens=dens,angle=315)
-    sp::plot(PT_IBTS,add=T,col=3,lwd=.1,dens=dens,angle=0)
-    sp::plot(Sp_Cadiz_w84,add=T,col=4,lwd=.1,dens=dens,angle=45)
+    maps::map(SWC_Q1_w84,SWC_Q1_w84$Name,add=T,col="yellow",lwd=.1,fill=T,dens=0,angle=0)
+    maps::map(SWC_Q3_w84,SWC_Q3_w84$Name,add=T,col="yellow3",lwd=.1,fill=T,dens=0,angle=45)
+    maps::map(NIGFS_w84,NIGFS_w84$NAME,add=T,col="light blue",lwd=.1,fill=T,dens=dens,angle=90)
+    sp::plot(SWC_Q1_w84,add=T,col="yellow",lwd=.01,dens=dens,angle=0)
+    sp::plot(SWC_Q3_w84,add=T,col="yellow3",lwd=.01,dens=dens,angle=45)
+    sp::plot(NIGFS_w84,add=T,col="light blue",lwd=.01,dens=dens,angle=45)
+    sp::plot(IGFS_w84,add=T,col="green",lwd=.01,dens=dens,angle=135)
+    sp::plot(Porc_w84,add=T,col="brown",lwd=.01,dens=dens,angle=180)
+    sp::plot(CGFS,add=T,col="orange",lwd=.1,dens=dens,angle=225)
+    sp::plot(EVHOE_w84,add=T,col="navy",lwd=.1,dens=dens,angle=270)
+    sp::plot(Sp_North_w84,add=T,col="brown",lwd=.1,dens=dens,angle=315)
+    sp::plot(PT_IBTS,add=T,col="salmon",lwd=.1,dens=dens,angle=0)
+    sp::plot(Sp_Cadiz_w84,add=T,col="navy",lwd=.1,dens=dens,angle=45)
   }
   maps::map(database = "worldHires",xlim = xlims, ylim = c(sl,nl),fill=T,col=ifelse(bw,"gray","burlywood3"),add=T,fg="blue",interior = T,boundary = T,lty=1,lwd=.05)
   #maps::map(database = "worldHires",xlim = xlims, ylim = c(sl,nl),fill=T,col=ifelse(bw,"gray",add=T,bg="blue",interior=bords)
   box()
-  if (leg) legend("bottomleft",c("UK-SCOSWCGFS","UK-SCOROC","UK-NIGFS","IE-IGFS","SP-PORC","FR-CGFS",
-                                 "FR-EVHOE","SP-NORTH","PT-PGFS","SP-GCGFS"),fill=c(gray(.4),2:6),
-                  cex=cex.leg,inset=c(.03,.2),title="Surveys",bg="white",text.col="black",
+  colores<-c("yellow","yellow3","light blue","green","red","orange","blue","navy","brown","salmon","navy")
+  #colores<-c("blue","cyan","navy blue","green","orange4","seagreen3","yellow3","seagreen","orange","maroon","orange2")
+  if (leg) legend(legpos,c("UK-SCOSWCGFS","UK-SCOROC","UK-NIGFS","IE-IGFS","SP-PORC","FR-CGFS",
+                                 "FR-WCGFS","FR-EVHOE","SP-NORTH","PT-IBTS","SP-ARSA"),fill=colores,
+                  cex=cex.leg,inset=c(.03,.03),title="Surveys",bg="white",text.col="black",
                   dens=dens,angle=seq(0,315,by=45))
   if (out!="def") dev.off()
 }
-

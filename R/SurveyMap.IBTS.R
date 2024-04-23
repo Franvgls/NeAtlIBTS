@@ -9,13 +9,14 @@
 #' @return Presents the map with the stations and a legend with the countries that have participated in the survey
 #' @examples
 #' SurveyMap.IBTS("NS-IBTS",2021,3)
+#' SurveyMap.ibts("FR-WCGFS",2303,3,ICESrect = T,ICESlab = T,ICESlabcex = .6)
 #' @family maps
 #' @export
-SurveyMap.IBTS<-function(Survey,Year,Quarter,ti=TRUE,leg=TRUE){
-  if (length(Year)>1) stop("Only one year can be shown in this function")
+SurveyMap.IBTS<-function(Survey,Year,Quarter,ti=TRUE,leg=TRUE,ICESrect=FALSE,ICESlab=FALSE,ICESlabcex=.7){
+  if (length(Year)>1) stop("Only one year can be shown in thi,s function")
   hhNS<-icesDatras::getHHdata(Survey,Year,Quarter)
   print(tapply(hhNS$Country,hhNS[,c("Country","Year")],"length"))
-  NeAtlIBTS::IBTSNeAtl_map(load=F,NS=T,leg = F,xlims = c(min(hhNS$HaulLong)-1,1+max(max(hhNS$HaulLong),-5)),sl=min(hhNS$HaulLat)-.5,nl=.5+max(hhNS$HaulLat))
+  NeAtlIBTS::IBTSNeAtl_map(load=F,NS=T,leg = F,xlims = c(min(hhNS$HaulLong)-1,1+max(max(hhNS$HaulLong),-5)),sl=min(hhNS$HaulLat)-.5,nl=.5+max(hhNS$HaulLat),ICESrect = ICESrect,ICESlab = ICESlab,ICESlabcex = ICESlabcex)
   points(HaulLat~HaulLong,hhNS,pch=21,col="black",bg=as.factor(hhNS$Country))
   if (leg) {legend("bottomright","Hauls",pch = 21,bg ="white",pt.bg=as.factor(unique(hhNS$Country)),inset = c(.02))}
   if (is.logical(ti)) {

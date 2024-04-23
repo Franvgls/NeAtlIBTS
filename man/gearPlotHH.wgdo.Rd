@@ -50,7 +50,7 @@ gearPlotHH.wgdo(
 Produces a graph with DoorSpread vs. WingSpread, it also includes information on the ship, the time series used, the models and parameters estimated.
 }
 \description{
-Plots Door Spread vs. Wing Spread behaviour and produces a model using lm. If there are DoorSpread and WingSpread values.  
+Plots Door Spread vs. Wing Spread behaviour and produces a model using lm. If there are DoorSpread and WingSpread values.
 If there are two different sweeps in the data, produces a model for each sweep length.
 }
 \details{
