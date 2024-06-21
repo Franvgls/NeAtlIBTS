@@ -25,7 +25,7 @@ library(NeAtlIBTS)
 
 ## Maps of stations in a given survey, year and quarter
 
-```{r General Map, fig.width=10.1,fig.height=5.1,include=TRUE,results='hide'}
+```{r General Maps, fig.cap="Areas covered by the different surveys in IBTSWG",fig.width=10.1,fig.height=5.1,include=TRUE,results='hide'}
 par(mfrow=c(1,2))
 IBTSNeAtl_map(load=F,leg=F)
 IBTSNeAtl_map(load=T,leg=T,legpos = "bottomright",cex.leg = .35)
@@ -33,7 +33,7 @@ IBTSNeAtl_map(load=T,leg=T,legpos = "bottomright",cex.leg = .35)
 
 ## Maps of stations in a given survey, year and quarter
 
-```{r Maps-Survey, fig.width=10.1,fig.height=5.1,include=TRUE,results='hide'}
+```{r Maps-Survey,fig.cap="Hauls in SCOWGCFS and IE-IGFS IBTS surveys in 2023 4th Quarter" ,fig.width=10.1,fig.height=5.1,include=TRUE,results='hide'}
 par(mfrow=c(1,2))
 SurveyMap.IBTS("SCOWCGFS",2023,4)
 SurveyMap.IBTS("IE-IGFS",2023,4)

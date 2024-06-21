@@ -1,0 +1,65 @@
+---
+title: "NeAtlIBTSR maps"
+author: "Fran Velasco"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: false
+    theme: yeti
+    encoding: {UTF-8}
+---
+
+```{r}
+library(NeAtlIBTS)
+
+```
+
+
+## Map of stations in a given survey, year and quarter
+
+* Maps available from the **NeAtlIBTS** package
+* This package produces maps from the **HH (& HL)** data in DATRAS
+  - Data can be downloaded directly from DATRAS making use of the **icesDATRAS** library, 
+  - Or taken from the working directory, where they should be loaded in advance with the DATRAS HH format 
+
+## Maps of stations in a given survey, year and quarter
+
+```{r General Map, fig.width=10.1,fig.height=5.1,include=TRUE,results='hide'}
+par(mfrow=c(1,2))
+IBTSNeAtl_map(load=F,leg=F)
+IBTSNeAtl_map(load=T,leg=T,legpos = "bottomright",cex.leg = .35)
+```
+
+## Maps of stations in a given survey, year and quarter
+
+```{r Maps-Survey, fig.width=10.1,fig.height=5.1,include=TRUE,results='hide'}
+par(mfrow=c(1,2))
+SurveyMap.IBTS("SCOWCGFS",2023,4)
+SurveyMap.IBTS("IE-IGFS",2023,4)
+```
+
+* Function to get the data from HH and HL to a data frame to get the maps with splitted lengths (recruits and large ones)
+* Produces a map with the selected species (esp="HAD" in the example) to check that it is working. Function SplitLengthsESP will produce the map for the species and survey, working for only one specie.
+
+```{r Get data for SplitLengths IBTS maps,fig.width=10.1,fig.height=10.1,include=TRUE,results='hide'}
+SplitLengths(datSurvey ="SCOWCGFS",dtyear= 2023,dtq=4,esp = "HAD",plot=T,out.dat = FALSE)
+```
+
+* The list of species included and the length split parameters are taken from file **SpeciesCodes** part of the **NeAtlIBTS** package, the **lengthsplit** value gives the split limit between small and large, it is in cm but converted to mm during the split lengths process
+
+```{r File original to Get data for SplitLengths IBTS maps,fig.width=10.1,fig.height=10.1,include=TRUE,results='show'}
+head(SpeciesCodes)
+```
+
+* the function also produces the data for the whole set of species (in present in the survey)
+
+```{r File produced by SplitLengths with only the survey selected,include=TRUE,results='show'}
+head(dplyr::filter(SplitLengths("SCOWCGFS",2023,4,plot=F,out.dat=T),Survey=="SCOWCGFS"))
+```
+
+* The function **SplitLengthsESP** produces from DATRAS HH and HL **records** the map of distribution of one species in a survey (year and quarter) with two length ranges (or just one if L_Split=NA)
+
+```{r File produced by SplitLengthsESP with only the survey selected,fig.width=12.1,fig.height=7.1,include=TRUE,results='show'}
+SplitLengthsESP(datSurvey = "PT-IBTS",dtyear=2023,dtq=4,L_Split = 20,legpos = "bottomleft")
+```

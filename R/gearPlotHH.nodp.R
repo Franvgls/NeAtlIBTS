@@ -34,7 +34,8 @@
 #' @examples gearPlotHH.nodp(getICES=F,Survey=damb,years=c(2014:2016),quarter=4,pF=F)
 #' @export
 gearPlotHH.nodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=FALSE,col1="darkblue",col2="steelblue2",getICES=TRUE,pF=TRUE,ti=TRUE) {
-  if (getICES) {
+## get the data
+    if (getICES) {
    dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
    }
   if (!getICES) {

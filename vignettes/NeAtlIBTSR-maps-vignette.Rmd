@@ -33,16 +33,27 @@ IBTSNeAtl_map(load=T,leg=T,legpos = "bottomright",cex.leg = .35)
 
 ## Maps of stations in a given survey, year and quarter
 
-```{r Maps-Survey, fig.width=10.1,fig.height=5.1,include=TRUE,results='hide'}
+```{r Maps-Survey, fig.cap="Hauls in SCOWCGFS and IE-IGFS IBTS surveys in 2023 4<sup>th</sup> quarter",fig.width=10.1,fig.height=5.1,include=TRUE,results='hide'}
 par(mfrow=c(1,2))
 SurveyMap.IBTS("SCOWCGFS",2023,4)
 SurveyMap.IBTS("IE-IGFS",2023,4)
 ```
 
-* Function to get the data from HH and HL to a data frame to get the maps with splitted lengths (recruits and large ones)
+* In the case of the NS-IBTS the function produces a figure with the hauls per country
+
+```{r Maps-Survey NS,fig.cap="North Sea 2023 surveys. 1<sup>st</sup> and 3<sup>rd</sup> quarters", fig.width=18.1,fig.height=10.1,include=TRUE,results='hide'}
+par(mfrow=c(1,2))
+SurveyMap.IBTS("NS-IBTS",2023,1,legcount = T)
+SurveyMap.IBTS("NS-IBTS",2023,3,legcount = T)
+```
+
+## There's also a function to get data to produce the data for the IBTS Maps with splitted recruits an adults
+
+* The function SplitLengths gets the data from DATRAS HH and HL and produces a data frame to get the maps with splitted lengths
+
 * Produces a map with the selected species (esp="HAD" in the example) to check that it is working. Function SplitLengthsESP will produce the map for the species and survey, working for only one specie.
 
-```{r Get data for SplitLengths IBTS maps,fig.width=10.1,fig.height=10.1,include=TRUE,results='hide'}
+```{r Get data for SplitLengths IBTS maps,fig.cap="Whiting distribution in SCOWCGFS 2023 4<sup>th</sup> quarter ",fig.wide=TRUE,include=TRUE,results='hide'}
 SplitLengths(datSurvey ="SCOWCGFS",dtyear= 2023,dtq=4,esp = "HAD",plot=T,out.dat = FALSE)
 ```
 
@@ -60,6 +71,6 @@ head(dplyr::filter(SplitLengths("SCOWCGFS",2023,4,plot=F,out.dat=T),Survey=="SCO
 
 * The function **SplitLengthsESP** produces from DATRAS HH and HL **records** the map of distribution of one species in a survey (year and quarter) with two length ranges (or just one if L_Split=NA)
 
-```{r File produced by SplitLengthsESP with only the survey selected,fig.width=12.1,fig.height=7.1,include=TRUE,results='show'}
-SplitLengthsESP(datSurvey = "PT-IBTS",dtyear=2023,dtq=4,L_Split = 20,legpos = "bottomleft")
+```{r PTIBTS map,fig.cap="PT-IBTS hake large and small distribution. 2023 4<sup>th</sup> quarter",fig.wide=T,include=TRUE,results='show'}
+SplitLengthsESP(datSurvey = "PT-IBTS",dtyear=2023,dtq=4,L_Split = 20,esp="Merluccius merluccius",legpos = "bottomleft")
 ```

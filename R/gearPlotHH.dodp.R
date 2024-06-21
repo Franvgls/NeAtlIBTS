@@ -78,6 +78,12 @@ gearPlotHH.dodp<-function(Survey,years,quarter,c.inta=.8,c.intb=.3,es=F,col1="da
               points(DoorSpread~Depth,dumbshort,subset=HaulVal=="V",pch=21,col=col2)
               points(DoorSpread~Depth,dumbshort,subset=Year==years[length(years)],pch=21,bg=col2)
             }
+            if (length(years)>1) legend("bottomright",c(paste(c(paste(years[1],years[length(years)-1],sep="-"),years[length(years)]),c(ifelse(es,"Malletas cortas","Short sweeps")),sep=" "),paste(c(paste(years[1],years[length(years)-1],sep="-"),years[length(years)]),c(ifelse(es,"Malletas largas","Long sweeps")),sep=" ")),pch=21,col=c(col2,col2,col1,col1),pt.bg=c(NA,col2,NA,col1),bty="n",inset=c(.02),ncol=2)           
+            else {
+              if (es) legend("bottomright",legend=c("Malletas cortas","Malletas largas"),pch=21,col=c(col1,col1),pt.bg=c(col2,col1),inset=.04,bty="n")
+              else legend("bottomright",legend=c("Short sweeps","Long sweeps"),pch=21,col=c(col1,col1),pt.bg=c(col2,col1),inset=.04,bty="n")
+              text(0,0, as.character(years),adj=0.01,font=1, cex=.9,pos=4)
+            }            
             if (ti) title(main=paste0(ifelse(es,"Abertura de puertas vs. profunfidad en ","Door Spread vs. Depth in "),dumb$Survey[1],".Q",quarter),line=2.5)
             mtext(dumb$Ship[1],line=.4,cex=.8,adj=0)
             a1st<-round(coef(DoorSpreadst.log)[1],2)

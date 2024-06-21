@@ -33,7 +33,7 @@
 #' @export
 gearPlotHH.wgdo<-function(Survey,years,quarter,c.int=.9,c.inta=.8,c.intb=.8,es=FALSE,col1="darkblue",col2="steelblue2",getICES=T,pF=T,ti=T) {
   if (getICES) {
-    dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
+    dumb<-icesDatras::getDATRAS(record = "HH",survey = Survey, year= years,quarter = quarter)
   }
   if (!getICES) {
     dumb<-Survey

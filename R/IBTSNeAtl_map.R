@@ -27,42 +27,43 @@
 #' @param nfile = name for the output file 
 #' @param shpdir = path to the folder with the shapefiles
 #' @param load = T or F to load all the shapes files.
+#' @param places = if T adds towns in the maps
+#' @param minpop = adds the limit of population of cities (places) to plot.
 #' @examples IBTSNeAtl_map(out="def",dens=0,nl=45,leg=F,load=TRUE,ICESrect = T);text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
 #' @export
-IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,legpos=c("bottomright"),cex.leg=.7,dens=30,load=TRUE,ICESdiv=TRUE,ICESrect=FALSE,ICESlab=F,ICESlabcex=.8,NS=TRUE,bathy=TRUE,bw=FALSE,axlab=.8,bords=TRUE,out="def",nfile="NeAtlIBTS_map",lwdl=.1,shpdir="c:/GitHubRs/shapes/") {
+IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,legpos=c("bottomright"),cex.leg=.7,dens=30,load=TRUE,ICESdiv=TRUE,ICESrect=FALSE,ICESlab=F,ICESlabcex=.8,NS=TRUE,bathy=TRUE,bw=FALSE,axlab=.8,bords=TRUE,out="def",nfile="NeAtlIBTS_map",lwdl=.1,shpdir="c:/GitHubRs/shapes/",places=FALSE,minpop=200000) {
   library(mapdata)
   library(maptools)
   library(maps)
-  library(rgdal)
   if (all(c(sl,nl)<0) | all(c(sl,nl)>0)) {
     largo=rev(abs(nl-sl))*1
   } else largo=(nl-sl)
   if (xlims[2] < 0) {
     ancho<- diff(rev(abs(xlims)))*1
   } else ancho<- diff(xlims)*1
-  ices.div<-readOGR(paste0(shpdir,"ices_div.dbf"),"ices_div",verbose = F)
-  bath100<-readOGR(paste0(shpdir,"100m.dbf"),"100m",verbose = F)
-  bathy.geb<-readOGR(paste0(shpdir,"bathy_geb.dbf"),"bathy_geb",verbose = F)
+  ices.div<-rgdal::readOGR(paste0(shpdir,"ices_div.dbf"),"ices_div",verbose = F)
+  bath100<-rgdal::readOGR(paste0(shpdir,"100m.dbf"),"100m",verbose = F)
+  bathy.geb<-rgdal::readOGR(paste0(shpdir,"bathy_geb.dbf"),"bathy_geb",verbose = F)
   if (load) {
-  SWC_Q1<-readOGR(paste0(shpdir,"SWC_Q1.dbf"),"SWC_Q1",verbose = F)
-  SWC_Q1_w84<-spTransform(SWC_Q1,CRS("+proj=longlat +datum=WGS84"))
-  SWC_Q3<-readOGR(paste0(shpdir,"SWC_Q3.dbf"),"SWC_Q3",verbose = F)
-  SWC_Q3_w84<-spTransform(SWC_Q3,CRS("+proj=longlat +datum=WGS84"))
-  IGFS<-readOGR(paste0(shpdir,"IGFS.dbf"),"IGFS",verbose = F)
-  IGFS_w84<-spTransform(IGFS,CRS("+proj=longlat +datum=WGS84")) 
-  NIGFS<-readOGR(paste0(shpdir,"NI_IBTS.dbf"),"NI_IBTS",verbose = F)
-  NIGFS_w84<-spTransform(NIGFS,CRS("+proj=longlat +datum=WGS84")) 
-  CGFS<-readOGR(paste0(shpdir,"CGFS_stratum.dbf"),"CGFS_stratum",verbose = F)
-  Porc<-readOGR(paste0(shpdir,"Porcupine.dbf"),"Porcupine",verbose = F)
-  Porc_w84<-spTransform(Porc,CRS("+proj=longlat +datum=WGS84")) 
-  EVHOE<-readOGR(paste0(shpdir,"EVHOE.dbf"),"EVHOE",verbose = F)
-  EVHOE_w84<-spTransform(EVHOE,CRS("+proj=longlat +datum=WGS84"))
+  SWC_Q1<-rgdal::readOGR(paste0(shpdir,"SWC_Q1.dbf"),"SWC_Q1",verbose = F)
+  SWC_Q1_w84<-sp::spTransform(SWC_Q1,CRS("+proj=longlat +datum=WGS84"))
+  SWC_Q3<-rgdal::readOGR(paste0(shpdir,"SWC_Q3.dbf"),"SWC_Q3",verbose = F)
+  SWC_Q3_w84<-sp::spTransform(SWC_Q3,CRS("+proj=longlat +datum=WGS84"))
+  IGFS<-rgdal::readOGR(paste0(shpdir,"IGFS.dbf"),"IGFS",verbose = F)
+  IGFS_w84<-sp::spTransform(IGFS,CRS("+proj=longlat +datum=WGS84")) 
+  NIGFS<-rgdal::readOGR(paste0(shpdir,"NI_IBTS.dbf"),"NI_IBTS",verbose = F)
+  NIGFS_w84<-sp::spTransform(NIGFS,CRS("+proj=longlat +datum=WGS84")) 
+  CGFS<-rgdal::readOGR(paste0(shpdir,"CGFS_stratum.dbf"),"CGFS_stratum",verbose = F)
+  Porc<-rgdal::readOGR(paste0(shpdir,"Porcupine.dbf"),"Porcupine",verbose = F)
+  Porc_w84<-sp::spTransform(Porc,CRS("+proj=longlat +datum=WGS84")) 
+  EVHOE<-rgdal::readOGR(paste0(shpdir,"EVHOE.dbf"),"EVHOE",verbose = F)
+  EVHOE_w84<-sp::spTransform(EVHOE,CRS("+proj=longlat +datum=WGS84"))
   Sp_North_w84<-rgdal::readOGR(paste0(shpdir,"Sp_North.WGS84.dbf"),verbose = F) #"Sp_North",
-  #Sp_North_w84<-spTransform(Sp_North,CRS("+proj=longlat +datum=WGS84")) 
+  #Sp_North_w84<-sp::spTransform(Sp_North,CRS("+proj=longlat +datum=WGS84")) 
   #Sp_North<-sf::st_read(paste0(shpdir,"Sp_North.dbf"))
-  Sp_Cadiz<-readOGR(paste0(shpdir,"Sp_Cadiz.dbf"),verbose = F) #"Sp_Cadiz"
-  Sp_Cadiz_w84<-spTransform(Sp_Cadiz,CRS("+proj=longlat +datum=WGS84"))
-  PT_IBTS<-readOGR(paste0(shpdir,"PT_IBTS_2015.dbf"),"PT_IBTS_2015",verbose = F)
+  Sp_Cadiz<-rgdal::readOGR(paste0(shpdir,"Sp_Cadiz.dbf"),verbose = F) #"Sp_Cadiz"
+  Sp_Cadiz_w84<-sp::spTransform(Sp_Cadiz,CRS("+proj=longlat +datum=WGS84"))
+  PT_IBTS<-rgdal::readOGR(paste0(shpdir,"PT_IBTS_2015.dbf"),"PT_IBTS_2015",verbose = F)
   }
   switch(out,
          "pdf" = pdf(file = paste0(nfile,".pdf")),
@@ -150,19 +151,20 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,legpos=c("bottom
     maps::map(NIGFS_w84,NIGFS_w84$NAME,add=T,col="light blue",lwd=.1,fill=T,dens=dens,angle=90)
     sp::plot(SWC_Q1_w84,add=T,col="yellow",lwd=.01,dens=dens,angle=0)
     sp::plot(SWC_Q3_w84,add=T,col="yellow3",lwd=.01,dens=dens,angle=45)
-    sp::plot(NIGFS_w84,add=T,col="light blue",lwd=.01,dens=dens,angle=45)
+    sp::plot(NIGFS_w84,add=T,col="darkgreen",lwd=.01,dens=dens,angle=45)
     sp::plot(IGFS_w84,add=T,col="green",lwd=.01,dens=dens,angle=135)
     sp::plot(Porc_w84,add=T,col="brown",lwd=.01,dens=dens,angle=180)
-    sp::plot(CGFS,add=T,col="orange",lwd=.1,dens=dens,angle=225)
-    sp::plot(EVHOE_w84,add=T,col="navy",lwd=.1,dens=dens,angle=270)
+    sp::plot(CGFS,add=T,col="salmon",lwd=.1,dens=dens,angle=225)
+    sp::plot(EVHOE_w84,add=T,col="steelblue",lwd=.1,dens=dens,angle=270)
     sp::plot(Sp_North_w84,add=T,col="brown",lwd=.1,dens=dens,angle=315)
     sp::plot(PT_IBTS,add=T,col="salmon",lwd=.1,dens=dens,angle=0)
     sp::plot(Sp_Cadiz_w84,add=T,col="navy",lwd=.1,dens=dens,angle=45)
   }
   maps::map(database = "worldHires",xlim = xlims, ylim = c(sl,nl),fill=T,col=ifelse(bw,"gray","burlywood3"),add=T,fg="blue",interior = T,boundary = T,lty=1,lwd=.05)
-  #maps::map(database = "worldHires",xlim = xlims, ylim = c(sl,nl),fill=T,col=ifelse(bw,"gray",add=T,bg="blue",interior=bords)
+  if(places) map.cities(minpop = minpop,label = T,font=2,cex=.9,pch=21,bg="navy")
+    #maps::map(database = "worldHires",xlim = xlims, ylim = c(sl,nl),fill=T,col=ifelse(bw,"gray",add=T,bg="blue",interior=bords)
   box()
-  colores<-c("yellow","yellow3","light blue","green","red","orange","blue","navy","brown","salmon","navy")
+  colores<-c("yellow","yellow3","darkgreen","green","red","orange","blue","navy","brown","salmon","navy")
   #colores<-c("blue","cyan","navy blue","green","orange4","seagreen3","yellow3","seagreen","orange","maroon","orange2")
   if (leg) legend(legpos,c("UK-SCOSWCGFS","UK-SCOROC","UK-NIGFS","IE-IGFS","SP-PORC","FR-CGFS",
                                  "FR-WCGFS","FR-EVHOE","SP-NORTH","PT-IBTS","SP-ARSA"),fill=colores,

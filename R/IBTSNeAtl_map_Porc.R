@@ -22,16 +22,15 @@ IBTSNeAtl_map_porc<-function(nl=54.5,sl=50.5,xlims=c(-15.5,-8.5),leg=FALSE,es=FA
   library(mapdata)
   library(maptools)
   library(maps)
-  library(rgdal)
   largo=(nl-sl)*10
   if (xlims[2] < 0) {
     ancho<- diff(rev(abs(xlims)))*10
   } else ancho<- diff(xlims)*10
-  ices.div<-readOGR(paste0(shpdir,"ices_div.dbf"),"ices_div",verbose = F)
-  bath100<-readOGR(paste0(shpdir,"100m.dbf"),"100m",verbose = F)
-  bathy.geb<-readOGR(paste0(shpdir,"bathy_geb.dbf"),"bathy_geb",verbose = F)
-  Porc<-readOGR(paste0(shpdir,"Porcupine.dbf"),"Porcupine",verbose = F)
-  Porc_w84<-spTransform(Porc,CRS("+proj=longlat +datum=WGS84")) 
+  ices.div<-rgdal::readOGR(paste0(shpdir,"ices_div.dbf"),"ices_div",verbose = F)
+  bath100<-rgdal::readOGR(paste0(shpdir,"100m.dbf"),"100m",verbose = F)
+  bathy.geb<-rgdal::readOGR(paste0(shpdir,"bathy_geb.dbf"),"bathy_geb",verbose = F)
+  Porc<-rgdal::readOGR(paste0(shpdir,"Porcupine.dbf"),"Porcupine",verbose = F)
+  Porc_w84<-sp::spTransform(Porc,CRS("+proj=longlat +datum=WGS84")) 
   switch(out,
          "pdf" = pdf(file = paste0(nfile,".pdf")),
          "tiff" = tiff(filename=paste0(nfile,".tiff"),width=660*ancho/largo,height=800*largo/ancho),

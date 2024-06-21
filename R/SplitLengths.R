@@ -2,7 +2,8 @@
 #' @param datSurvey: The Survey to be downloaded from DATRAS (see details), or a data frame with the HH information with  the DATRAS HH format  and the years and quarter selected in years and quarter 
 #' @param dtyear: year to be downloaded and used, had to be available in DATRAS. The time series will be ploted in grey dots, last year in yellow, it depends on the order of years, not the actual chronological year.
 #' @param dtq: the quarter of the survey to be downloaded
-#' @param esp: soecies to be included in the resulting map if plot=True
+#' @param esp: species to be included in the resulting map if plot=True
+#' @param adj: weight abundance within species to the maximum abundance of the specie in the survey
 #' @param plot: if TRUE a map with the data selected in the species esp is presented
 #' @param ti: includes a title with the name of the species in the plot
 #' @param save.dat: by default set to FALSE, if TRUE saves the data in a file: IBTSdataSURVEYyrQX.csv
@@ -15,7 +16,7 @@
 #' @examples SplitLengths("NS-IBTS",2023,3,esp="MEG",zeros=T)
 #' @export
 #setwd("D:/FVG/Campañas/IBTS/IBTS_2024/mapping/DATOS")
-SplitLengths<-function(datSurvey,dtyear,dtq,esp="HKE",plot=TRUE,ti=TRUE,save.dat=FALSE,out.dat=FALSE,zeros=FALSE) {
+SplitLengths<-function(datSurvey,dtyear,dtq,adj=FALSE,esp="HKE",plot=TRUE,ti=TRUE,save.dat=FALSE,out.dat=FALSE,zeros=FALSE) {
   dat.HH<-icesDatras::getHHdata(datSurvey,dtyear,dtq)
   dat.HL<-icesDatras::getHLdata(datSurvey,dtyear,dtq)
   print(unique(dat.HH$DataType)) # if only "C" it would already be CPUE, with "R" or "P" has to be weighted to hour: subfactor*60/hauldur already in the code.
@@ -47,12 +48,13 @@ SplitLengths<-function(datSurvey,dtyear,dtq,esp="HKE",plot=TRUE,ti=TRUE,save.dat
   dumb<-datexch23[datexch23$Species==i,]
   dumbtot<-aggregate(CPUE~Year+Survey+Ship+HaulNo,dumb,sum)
   colnames(dumbtot)[match("CPUE",colnames(dumbtot))]<-c("Total")
-  if (is.na(SpeciesCodes[match(i,SpeciesCodes$Code),"LengthSplitMM"])) dattot<-data.frame(dumbtot[,1:4],SpeciesCode=i,Small=NA,Large=NA,Total=dumbtot[,5])
+  if (is.na(SpeciesCodes[match(i,SpeciesCodes$Code),"LengthSplitMM"])) dattot<-data.frame(dumbtot[,1:4],SpeciesCode=i,Small=NA,Large=NA,Total=dumbtot[,5]/mean(dumbtot[,5]))
   if (!is.na(SpeciesCodes[match(i,SpeciesCodes$Code),"LengthSplitMM"])) {
   dumbsm<-dumb[dumb$LngtClass<SpeciesCodes[match(i,SpeciesCodes$Code),"LengthSplitMM"],]
   if (nrow(dumbsm)>0) {
      dumbsm<-aggregate(CPUE~Year+Survey+Ship+HaulNo,dumbsm,sum)
      colnames(dumbsm)[match("CPUE",colnames(dumbsm))]<-c("Small")
+     if (adj) {dumbsm$Small<-dumbsm$Small/mean(dumbsm$Small)}
      }
   else {
     dumbsm<-data.frame(Year=dtyear,Survey=datSurvey,Ship=dumb$Ship,HaulNo=levels(as.factor(dumb$HaulNo)),Small=0)
@@ -61,6 +63,7 @@ SplitLengths<-function(datSurvey,dtyear,dtq,esp="HKE",plot=TRUE,ti=TRUE,save.dat
   if (nrow(dumblg)>0) {
      dumblg<-aggregate(CPUE~Year+Survey+Ship+HaulNo,dumblg,sum,na.rm=T)
      colnames(dumblg)[match("CPUE",colnames(dumblg))]<-c("Large")
+     if (adj) dumblg$Large<-dumblg$Large/mean(dumblg$Large)
     }
   else  {
     dumblg<-data.frame(Year=dtyear,Survey=datSurvey,Ship=dumb$Ship,HaulNo=levels(as.factor(dumb$HaulNo)),Large=0)
@@ -78,20 +81,23 @@ SplitLengths<-function(datSurvey,dtyear,dtq,esp="HKE",plot=TRUE,ti=TRUE,save.dat
     dumbtot<-aggregate(CPUE~Year+Survey+Ship+HaulNo,dumb,sum)
     colnames(dumbtot)[match("CPUE",colnames(dumbtot))]<-c("Total")
     if (is.na(SpeciesCodes[match(i,SpeciesCodes$Code),"LengthSplitMM"])) {
-      dattot<-data.frame(dumbtot[,1:4],SpeciesCode=i,Small=NA,Large=NA,Total=dumbtot[,5])
+      dattot<-data.frame(dumbtot[,1:4],SpeciesCode=i,Small=NA,Large=NA,Total=dumbtot[,5]/mean(dumbtot[,5]))
     }
     else {
       dumbsm<-dumb[dumb$LngtClass<SpeciesCodes[match(i,SpeciesCodes$Code),"LengthSplitMM"],]
       if (nrow(dumbsm)>0) {
         dumbsm<-aggregate(CPUE~Year+Survey+Ship+HaulNo,dumbsm,sum,na.rm=T)
         colnames(dumbsm)[match("CPUE",colnames(dumbsm))]<-c("Small")
+        dumbsm$Small<-dumbsm$Small/mean(dumbsm$Small)
       }
     else {
       dumbsm<-data.frame(Year=dtyear,Survey=datSurvey,Ship=unique(dumb$Ship),HaulNo=levels(as.factor(dumb$HaulNo)),Small=0)
       }
       dumblg<-dumb[dumb$LngtClas>=SpeciesCodes[match(i,SpeciesCodes$Code),"LengthSplitMM"],]
-    if (nrow(dumblg)>0) {dumblg<-aggregate(CPUE~Year+Survey+Ship+HaulNo,dumblg,sum,na.rm=T)
+    if (nrow(dumblg)>0) {
+      dumblg<-aggregate(CPUE~Year+Survey+Ship+HaulNo,dumblg,sum,na.rm=T)
       colnames(dumblg)[match("CPUE",colnames(dumblg))]<-c("Large")
+      dumblg$Large<-dumblg$Large/mean(dumblg$Large)
       }
     else dumblg<-data.frame(Year=dtyear,Survey=datSurvey,Ship=unique(dumb$Ship),HaulNo=levels(as.factor(dumb$HaulNo)),Large=0)
     datsize<-merge(dumbsm,dumblg,all.x=T,all.y=T)
@@ -107,7 +113,6 @@ SplitLengths<-function(datSurvey,dtyear,dtq,esp="HKE",plot=TRUE,ti=TRUE,save.dat
     print(tapply(dataIBTS.dat$SpeciesCode,dataIBTS.dat$SpeciesCode,length))
     dataIBTS.dat<-dataIBTS.dat[,c(3,10:9,13,2,1,4,5,11:12,8,6:7)]
     #dataIBTS.dat
-    if (out.dat)  write.csv(dataIBTS.dat,paste0("IBTSdata",datSurvey,substr(dtyear,3,4),"Q",dtq,".csv"),row.names=F)
     #windows()
     if (plot) {
     NeAtlIBTS::IBTSNeAtl_map(out="def",load=F,leg=F,dens=0,nl=max(dataIBTS.dat$ShootLat)+.5,sl=min(dataIBTS.dat$ShootLat)-.5,xlims=c(min(dataIBTS.dat$ShootLong)-1,1+ifelse(max(dataIBTS.dat$ShootLong)>-8,max(dataIBTS.dat$ShootLong),-8)))
@@ -127,4 +132,5 @@ SplitLengths<-function(datSurvey,dtyear,dtq,esp="HKE",plot=TRUE,ti=TRUE,save.dat
     }
     if (save.dat)  write.csv(dataIBTS.dat,paste0("IBTSdata",datSurvey,substr(dtyear,3,4),"Q",dtq,".csv"),row.names=F)
     if (out.dat)  dataIBTS.dat
-  }
+#    if (out.dat)  write.csv(dataIBTS.dat,paste0("IBTSdata",datSurvey,substr(dtyear,3,4),"Q",dtq,".csv"),row.names=F)
+}

@@ -2,7 +2,7 @@
 #' @param datSurvey: The Survey to be downloaded from DATRAS (see details), or a data frame with the HH information with  the DATRAS HH format  and the years and quarter selected in years and quarter 
 #' @param dtyear: year to be downloaded and used, had to be available in DATRAS. The time series will be ploted in grey dots, last year in yellow, it depends on the order of years, not the actual chronological year.
 #' @param dtq: the quarter of the survey to be downloaded
-#' @param esp: soecies to be included in the resulting map if plot=True, name as scientific upto date with WoRMS
+#' @param esp: species to be included in the resulting map if plot=True, name as scientific upto date with WoRMS
 #' @param plot: if TRUE a map with the data selected in the species esp is presented
 #' @param legpos: by default "bottomright", but could be should be one of “bottomright”, “bottom”, “bottomleft”, “left”, “topleft”, “top”, “topright”, “right”, “center”
 #' @param ti: includes a title with the name of the species in the plot
@@ -16,8 +16,8 @@
 #' @examples SplitLengths("NS-IBTS",2023,3,esp="MEG",zeros=T)
 #' @export
 #setwd("D:/FVG/Campañas/IBTS/IBTS_2024/mapping/DATOS")
-SplitLengthsESP<-function(datSurvey,dtyear,dtq,esp="Merluccius merluccius",L_Split=21,plot=TRUE,legpos="bottomright",ti=TRUE,save.dat=FALSE,out.dat=FALSE,zeros=FALSE) {
-  Aphia_esp<-worrms::wm_name2id(esp)  
+SplitLengthsESP<-function(datSurvey,dtyear,dtq,esp="Merluccius merluccius",aphia=FALSE,L_Split=21,plot=TRUE,legpos="bottomright",ti=TRUE,save.dat=FALSE,out.dat=FALSE,zeros=FALSE) {
+  if (aphia) Aphia_esp<-worrms::wm_name2id(esp) else Aphia_esp<-esp  
   dat.HH<-icesDatras::getHHdata(datSurvey,dtyear,dtq)
   dat.HL<-dplyr::filter(icesDatras::getHLdata(datSurvey,dtyear,dtq),Valid_Aphia==Aphia_esp)
   #print(unique(dat.HH$DataType)) # if only "C" it would already be CPUE, with "R" or "P" has to be weighted to hour: subfactor*60/hauldur already in the code.
@@ -31,6 +31,7 @@ SplitLengthsESP<-function(datSurvey,dtyear,dtq,esp="Merluccius merluccius",L_Spl
 # str(dat.HL)
   dat.HL<-dat.HL[dat.HL$HaulVal=="V",]
   if (nrow(dplyr::filter(dat.HL,is.na(SubFactor)))>0) {print(dplyr::filter(dat.HL,is.na(SubFactor)))}
+  # else {stop(paste0("No catches of ",esp," in ",dtyear," ",datSurvey,"-Q",dtq),call. = F)}
   dat.HL$CPUE<-NA
   for (i in 1:nrow(dat.HL)) {
     if (dat.HL$DataType[i]=="C") dat.HL$CPUE[i]<-dat.HL$HLNoAtLngt[i]*dat.HL$SubFactor[i]
@@ -58,7 +59,7 @@ SplitLengthsESP<-function(datSurvey,dtyear,dtq,esp="Merluccius merluccius",L_Spl
   else {
     dumbsm<-data.frame(Year=dtyear,Survey=datSurvey,Ship=unique(dumb$Ship),HaulNo=levels(as.factor(dumb$HaulNo)),Small=0)
     }
-  dumblg<-dumb[dumb$LngtClas>=L_Split,]
+  dumblg<-dumb[dumb$LngtClas>=L_SplitMM,]
   if (nrow(dumblg)>0) {
      dumblg<-aggregate(CPUE~Year+Survey+Ship+HaulNo,dumblg,sum,na.rm=T)
      colnames(dumblg)[match("CPUE",colnames(dumblg))]<-c("Large")
@@ -81,7 +82,8 @@ SplitLengthsESP<-function(datSurvey,dtyear,dtq,esp="Merluccius merluccius",L_Spl
     #windows()
     if (plot) {
     NeAtlIBTS::IBTSNeAtl_map(out="def",load=F,leg=F,dens=0,nl=max(dataIBTS.dat$ShootLat)+.5,sl=min(dataIBTS.dat$ShootLat)-.5,xlims=c(min(dataIBTS.dat$ShootLong)-1,1+ifelse(max(dataIBTS.dat$ShootLong)>-8,max(dataIBTS.dat$ShootLong),-8)))
-    if (ti) title(main=esp,font.main=4,line=2,sub=ifelse(!is.na(L_Split),paste(">",L_Split,"cm"),""))
+    if (ti) title(main= ifelse(!aphia,worrms::wm_name2id(esp),esp),font.main=4,line=2,sub=bquote(" ">=.(format(paste0(L_Split," cm")))))
+#      bquote(" ">=.(format(paste0(tmin,ifelse(unid.camp(gr,esp)$MED==2," mm"," cm")))))
     if (zeros)  points(ShootLat~ShootLong,dat.HH,pch=20,cex=.8,col="black")  
     if (!is.na(L_Split)) {
 	     points(ShootLat~ShootLong,dataIBTS.dat,cex=sqrt(dataIBTS.dat[,"Small"]/(.1*hablar::max_(dataIBTS.dat[,"Small"])))*1,pch=21,col="red",lwd=2)

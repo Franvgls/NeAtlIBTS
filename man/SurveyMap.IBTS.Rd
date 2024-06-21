@@ -10,6 +10,7 @@ SurveyMap.IBTS(
   Quarter,
   ti = TRUE,
   leg = TRUE,
+  legcount = FALSE,
   ICESrect = FALSE,
   ICESlab = FALSE,
   ICESlabcex = 0.7
