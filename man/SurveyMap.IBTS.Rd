@@ -10,22 +10,48 @@ SurveyMap.IBTS(
   Quarter,
   ti = TRUE,
   leg = TRUE,
-  legcount = FALSE,
+  legpos = "bottomright",
+  sweeplngt = TRUE,
+  country = FALSE,
+  colhaul = "yellow",
+  depth = FALSE,
   ICESrect = FALSE,
   ICESlab = FALSE,
-  ICESlabcex = 0.7
+  ICESlabcex = 0.7,
+  graf = FALSE,
+  xpng = 800,
+  ypng = 800,
+  ppng = 15
 )
 }
 \arguments{
 \item{Survey}{Code to plot. Has to be one of those available from DATRAS survey list, and from a year and quarter avalable}
 
-\item{Year}{year to plot}
+\item{Year}{year data to plot}
 
-\item{Quarter}{to plot}
+\item{Quarter}{quarter data to plot}
 
 \item{ti}{TRUE includes the Survey Year Quarter title by default, a text includes the txt as title}
 
-\item{leg}{TRUE includes a legend with the country-colors codes}
+\item{leg}{TRUE includes a legend with the country-sweeplength-colors codes}
+
+\item{legpos}{Position of the legend, by default bottomright, (bottomleft, upperleft...)}
+
+\item{sweeplngt}{if TRUE haul symbols change with different sweeptlengths. Useful to check if sweep lengths and depths math}
+
+\item{country}{if TRUE hauls have different colors by country, useful only for NS where there are different countries}
+
+\item{colhaul}{choose the color for the bg of the haul if country and sweeplngth are False}
+
+\item{graf}{if FALSE the graph goes to screen, if its a file name (i.e. "graf") a file with that name is created and a message with location (wd) is shown in screen}
+
+\item{xpng}{width file png if graf is the name of the file}
+
+\item{ypng}{height file png if graf is the name of the file}
+
+\item{ppng}{points png parameter if graf is the name of the file}
+
+\item{Depth}{if TRUE includes the depth of each haul, useful to check if it matches sweep length used}
 }
 \value{
 Presents the map with the stations and a legend with the countries that have participated in the survey
@@ -34,7 +60,7 @@ Presents the map with the stations and a legend with the countries that have par
 Uses the DATRAS HH data of a survey, year and quarter to plot stations in a map
 }
 \examples{
-SurveyMap.IBTS("NS-IBTS",2021,3)
-SurveyMap.ibts("FR-WCGFS",2303,3,ICESrect = T,ICESlab = T,ICESlabcex = .6)
+SurveyMap.IBTS("NS-IBTS",2021,3,sweeplngt=F,country=T,graf="NS_2021_Q3")
+SurveyMap.IBTS("FR-WCGFS",2023,3,ICESrect = T,ICESlab = T,ICESlabcex = .6)
 }
 \concept{maps}

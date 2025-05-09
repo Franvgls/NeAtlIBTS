@@ -9,6 +9,7 @@ SplitLengthsESP(
   dtyear,
   dtq,
   esp = "Merluccius merluccius",
+  aphia = FALSE,
   L_Split = 21,
   plot = TRUE,
   legpos = "bottomright",
@@ -25,7 +26,7 @@ SplitLengthsESP(
 
 \item{dtq:}{the quarter of the survey to be downloaded}
 
-\item{esp:}{soecies to be included in the resulting map if plot=True, name as scientific upto date with WoRMS}
+\item{esp:}{species to be included in the resulting map if plot=True, name as scientific upto date with WoRMS}
 
 \item{plot:}{if TRUE a map with the data selected in the species esp is presented}
 

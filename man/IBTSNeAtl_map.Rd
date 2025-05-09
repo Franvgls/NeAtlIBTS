@@ -22,10 +22,14 @@ IBTSNeAtl_map(
   bw = FALSE,
   axlab = 0.8,
   bords = TRUE,
-  out = "def",
-  nfile = "NeAtlIBTS_map",
   lwdl = 0.1,
-  shpdir = "c:/GitHubRs/shapes/"
+  shpdir = "c:/GitHubRs/shapes/",
+  places = FALSE,
+  minpop = 2e+05,
+  graf = FALSE,
+  xpng = 1200,
+  ypng = 800,
+  ppng = 15
 )
 }
 \arguments{
@@ -59,11 +63,19 @@ IBTSNeAtl_map(
 
 \item{bords}{= TRUE plots the borders o the countries, FALSE leaves dashed lines}
 
-\item{out}{= format of the output, can be "def" default device, "pdf", "tiff" or "png"}
-
-\item{nfile}{= name for the output file}
-
 \item{shpdir}{= path to the folder with the shapefiles}
+
+\item{places}{= if T adds towns in the maps}
+
+\item{minpop}{= adds the limit of population of cities (places) to plot.}
+
+\item{graf}{si F el gráfico sale en la pantalla, si nombre fichero va a fichero en el directorio de trabajo del Rstudio ver getwd()}
+
+\item{xpng}{width archivo png si graf es el nombre del fichero}
+
+\item{ypng}{height archivo png si graf es el nombre del fichero}
+
+\item{ppng}{points png archivo si graf es el nombre del fichero}
 
 \item{axlab=}{.8 decides the size of the axis numbers}
 }
@@ -76,5 +88,5 @@ The default limits for the IBTS including the North Sea or not, but the script c
 be used to get maps all arround the world playing with nl,sl and xlims
 }
 \examples{
-IBTSNeAtl_map(out="def",dens=0,nl=45,leg=F,load=TRUE,ICESrect = T);text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
+IBTSNeAtl_map(dens=0,nl=45,leg=F,load=TRUE,ICESrect = T,graf="MapIBTS");text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
 }

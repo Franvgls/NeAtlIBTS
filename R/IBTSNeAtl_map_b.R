@@ -33,13 +33,13 @@
 #' @param ppng points png archivo si graf es el nombre del fichero
 #' @examples IBTSNeAtl_map(dens=0,nl=45,leg=F,load=TRUE,ICESrect = T,graf="MapIBTS");text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
 #' @export
-IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,legpos=c("bottomright"),cex.leg=.7,dens=30,
+IBTSNeAtl_map_b<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,legpos=c("bottomright"),cex.leg=.7,dens=30,
                         load=TRUE,ICESdiv=TRUE,ICESrect=FALSE,ICESlab=F,ICESlabcex=.8,NS=FALSE,bathy=TRUE,
                         bw=FALSE,axlab=.8,bords=TRUE,lwdl=.1,shpdir="c:/GitHubRs/shapes/",places=FALSE,minpop=200000,
                         graf=FALSE,xpng=1200,ypng=800,ppng=15) {
   library(mapdata)
   library(maptools)
-  library(maps)
+  library(maps,gpclibPermit())
   if (all(c(sl,nl)<0) | all(c(sl,nl)>0)) {
     largo=rev(abs(nl-sl))*1
   } else largo=(nl-sl)
@@ -49,8 +49,7 @@ IBTSNeAtl_map<-function(nl=60.5,sl=36.0,xlims=c(-18,3),leg=TRUE,legpos=c("bottom
   ices.div<-rgdal::readOGR(paste0(shpdir,"ices_div.dbf"),"ices_div",verbose = F)
   bath100<-rgdal::readOGR(paste0(shpdir,"100m.dbf"),"100m",verbose = F)
   bathy.geb<-rgdal::readOGR(paste0(shpdir,"bathy_geb.dbf"),"bathy_geb",verbose = F)
-  ices.areas<-rgdal::readOGR(paste0(shpdir,"ICES_Areas_20160601_cut_dense_3857.dbf"),"ICES_Areas_20160601_cut_dense_3857",verbose = F)
-  ices.areas_wg84<-sp::spTransform(ices.areas,CRS("+proj=longlat +datum=WGS84"))
+  ices.areasWG84<-sf::st_read(paste0(shpdir,"ices_areasWGS84.shp"),stringAsFactors = FALSE)
   if (load) {
   SWC_Q1<-rgdal::readOGR(paste0(shpdir,"SWC_Q1.dbf"),"SWC_Q1",verbose = F)
   SWC_Q1_w84<-sp::spTransform(SWC_Q1,CRS("+proj=longlat +datum=WGS84"))

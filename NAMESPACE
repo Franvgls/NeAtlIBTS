@@ -3,6 +3,7 @@
 export(IBTSNeAtl_map)
 export(IBTSNeAtl_map_porc)
 export(InfoHH)
+export(MapLengths)
 export(SpeciesCAperYear)
 export(SplitLengths)
 export(SplitLengthsESP)

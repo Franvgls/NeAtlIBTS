@@ -25,11 +25,11 @@ SurveyMap.IBTS<-function(Survey,Year,Quarter,ti=TRUE,leg=TRUE,legpos="bottomrigh
                          depth=FALSE,ICESrect=FALSE,ICESlab=FALSE,ICESlabcex=.7,graf=FALSE,xpng=800,ypng=800,ppng=15){
   if (length(Year)>1) stop("Only one year can be shown in this function")
   if (country & sweeplngt) stop(("Choose to show country or sweeplngt"))
-  hhNS<-icesDatras::getHHdata(Survey,Year,Quarter)
+  hhNS<-icesDatras::getDATRAS("HH",Survey,Year,Quarter)
   print(tapply(hhNS$Country,hhNS[,c("Country","SweepLngt","Year")],"length"))
   if (!is.logical(graf)) png(filename=paste0(graf,".png"),width = xpng,height = ypng, pointsize = ppng)
   if (is.logical(graf)) par(mar=c(2,2.5,2, 2.5) + 0.3,xaxs="i",yaxs="i")
-    NeAtlIBTS::IBTSNeAtl_map(load=F,NS=T,leg = F,xlims = c(min(hhNS$HaulLong)-1,1+max(max(hhNS$HaulLong),-5)),sl=min(hhNS$HaulLat)-.5,nl=.5+max(hhNS$HaulLat),ICESrect = ICESrect,ICESlab = ICESlab,ICESlabcex = ICESlabcex)
+    NeAtlIBTS::IBTSNeAtl_map(load=F,NS=F,leg = F,xlims = c(min(hhNS$HaulLong)-1,1+max(max(hhNS$HaulLong),-5)),sl=min(hhNS$HaulLat)-.5,nl=.5+max(hhNS$HaulLat),ICESrect = ICESrect,ICESlab = ICESlab,ICESlabcex = ICESlabcex)
   if (!country & !sweeplngt) {
     points(HaulLat~HaulLong,hhNS,pch=21,col="black",bg=colhaul)
     if (leg) {legend(legpos,"Hauls",pch = 21,bg ="white",pt.bg=colhaul,inset = c(.02))}
