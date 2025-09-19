@@ -21,43 +21,22 @@
 #' SurveyMap.IBTS("FR-WCGFS",2023,3,ICESrect = T,ICESlab = T,ICESlabcex = .6)
 #' @family maps
 #' @export
-SurveyMap.IBTS<-function(Survey,Year,Quarter,ti=TRUE,leg=TRUE,legpos="bottomright",sweeplngt=TRUE,country=FALSE,colhaul="yellow",
-                         depth=FALSE,ICESrect=FALSE,ICESlab=FALSE,ICESlabcex=.7,getICES=TRUE,graf=FALSE,xpng=800,ypng=800,ppng=15){
+SurveyMap.IBTSbl<-function(Survey,Year,Quarter,ti=TRUE,leg=TRUE,legpos="bottomright",colhaul="yellow",
+                         ICESrect=FALSE,ICESlab=FALSE,ICESlabcex=.7,graf=FALSE,xpng=800,ypng=800,ppng=15){
   if (length(Year)>1) stop("Only one year can be shown in this function")
-  if (getICES) {
-    hauls<-icesDatras::getDATRAS("HH",Survey,Year,Quarter)
-  }
-  if (!getICES) {
-    hauls<-Survey
-    Survey<-hauls$Survey
-    if (!all(unique(Year) %in% unique(hauls$Year))) stop(paste0("Not all years selected in years are present in the data.frame, check: ",unique(Year)[which(!(unique(Year) %in% unique(hauls$Year)))]))
-    if (unique(hauls$Quarter)!=Quarter) stop(paste0("Quarter selected ",quarter," is not available in the data.frame, check please"))
-  }
+  hauls<-icesDatras::getDATRAS("HH",Survey,Year,Quarter)
   print(tapply(hauls$Country,hauls[,c("Country","SweepLngt","Year")],"length"))
   if (!is.logical(graf)) png(filename=paste0(graf,".png"),width = xpng,height = ypng, pointsize = ppng)
   if (is.logical(graf)) par(mar=c(2,2.5,2, 2.5) + 0.3,xaxs="i",yaxs="i")
 ## Creates *replong* variable correct the longitude in PORCUPINE and ROCKALL surveys that
 ##  are faraway from land and are not displayed otherwise
-  if (any(Survey=="SP-PORC")) replong<-2
-  if (any(Survey=="SCOROC")) replong<-4.5
-  if (any(! Survey %in% c("SP-PORC","SCOROC"))) replong<-.5
-  ##  
-  IBTSNeAtl_map(load=F,NS=F,leg = F,xlims = c(min(hauls$ShootLong)-.5,replong+max(hauls$ShootLong)),sl=min(hauls$ShootLat)-.5,nl=.5+max(hauls$ShootLat),ICESrect = ICESrect,ICESlab = ICESlab,ICESlabcex = ICESlabcex)
-  if (country) {
-    sweeplngt=FALSE
-    points(ShootLat~ShootLong,hauls,pch=21,col="black",bg=as.factor(hauls$Country))
-    legend(legpos,title = "Country",legend=as.factor(unique(hauls$Country)),pch=21,pt.bg=as.factor(unique(hauls$Country)),bg="white",inset=.01)
-  }
-  else {
-    if (is.na(all(hauls$SweepLngt))) {hauls$SweepLngt<-0}
-    points(ShootLat~ShootLong,hauls,pch=21,col="black",bg=as.factor(hauls$SweepLngt))
-    legend(legpos,title = "Sweep lengths",legend=as.factor(unique(hauls$SweepLngt)),pch=21,pt.bg=as.factor(unique(hauls$SweepLngt)),bg="white",inset=.01)
-    }
-  if (depth) {
-    text(ShootLat~ShootLong,hauls,label=Depth,cex=.8,font=2,pos=1)
-  }
+  if (Survey=="SP-PORC") replong<-2
+  if (Survey=="SCOROC") replong<-5
+  if (! Survey %in% c("SP-PORC","SCOROC")) replong<-.5
+##  
+  IBTSNeAtl_map(load=F,NS=F,leg = F,xlims = c(min(hauls$HaulLong)-.5,replong+max(hauls$HaulLong)),sl=min(hauls$HaulLat)-.5,nl=.5+max(hauls$HaulLat),ICESrect = ICESrect,ICESlab = ICESlab,ICESlabcex = ICESlabcex)
   if (is.logical(ti)) {
-    if (ti) {tit<-list(paste0(unique(Survey)," ",Year," ",paste0("Q",Quarter,collapse = "-")),font=2,cex=1.2)}
+    if (ti) {tit<-list(paste0(Survey," ",Year," ",paste0("Q",Quarter,collapse = "-")),font=2,cex=1.2)}
     else {tit<-NULL}
   }
   else {

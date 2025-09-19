@@ -49,7 +49,7 @@ gearPlotHH.dowg<-function(Survey,years,quarter,c.int=.9,c.inta=.8,c.intb=.8,es=F
   if (length(subset(dumb$WingSpread,dumb$WingSpread> c(-9)))==0) {stop("No records with valid WingSpread > 0")}
   #if (length(subset(dumb$DoorSpread,dumb$DoorSpread==0))>0) {stop("Records with DoorSpread = 0, please check and remove")}
   if (length(subset(dumb,WingSpread>c(-9)))>0){
-     dumb<-dplyr::filter(dumb,HaulVal=="V")
+    dumb<-dumb[dumb$HaulVAl=="V",] #dumb<-dplyr::filter(dumb,HaulVal=="V")
      dumb<-dumb[c(dumb$WingSpread>c(-9) & dumb$WingSpread>c(-9)),]
      wspr<-range(subset(dumb$WingSpread,dumb$WingSpread> c(0)))
      dspr<-range(subset(dumb$DoorSpread,dumb$DoorSpread>c(0)))
@@ -132,7 +132,7 @@ gearPlotHH.dowg<-function(Survey,years,quarter,c.int=.9,c.inta=.8,c.intb=.8,es=F
             mtext(dumbo,line=.4,side=3,cex=.8,font=2,adj=1)
          }
    } else {stop("No records with DoorSpread>0")}
-  yearsb<-unique(dplyr::filter(dumb,!is.na(WingSpread) & WingSpread>0)$Year)
+  yearsb<-unique(dplyr::filter(dumb,!is.na(dumb$WingSpread) & dumb$WingSpread>0)$Year)
   if (length(years)>1 & !all(years %in% yearsb)) txt<-paste(ifelse(es,"Años: ","Years:"),paste0(c(yearsb[yearsb %in% years]),collapse=" "))
   if (length(years)>1 & all(years %in% yearsb)) txt<-paste0(ifelse(es,"Años: ","Years:"),paste0(c(years[1],"-",years[length(years)]),collapse=" "))
   if (length(years)==1) txt<-paste0("Year: ",as.character(years))

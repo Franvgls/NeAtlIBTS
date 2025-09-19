@@ -115,7 +115,7 @@ SplitLengths<-function(datSurvey,dtyear,dtq,adj=FALSE,esp="HKE",plot=TRUE,ti=TRU
     #dataIBTS.dat
     #windows()
     if (plot) {
-    NeAtlIBTS::IBTSNeAtl_map(out="def",load=F,leg=F,dens=0,nl=max(dataIBTS.dat$ShootLat)+.5,sl=min(dataIBTS.dat$ShootLat)-.5,xlims=c(min(dataIBTS.dat$ShootLong)-1,1+ifelse(max(dataIBTS.dat$ShootLong)>-8,max(dataIBTS.dat$ShootLong),-8)))
+    IBTSNeAtl_map(out="def",load=F,leg=F,dens=0,nl=max(dataIBTS.dat$ShootLat)+.5,sl=min(dataIBTS.dat$ShootLat)-.5,xlims=c(min(dataIBTS.dat$ShootLong)-1,1+ifelse(max(dataIBTS.dat$ShootLong)>-8,max(dataIBTS.dat$ShootLong),-8)))
     if (ti) title(main=SpeciesCodes[match(esp,SpeciesCodes$Code),"Scientific"],font.main=4,line=1.5)
     if (zeros)  points(ShootLat~ShootLong,dat.HH,pch=20,cex=.8,col="black")  
     if (!is.na(SpeciesCodes[match(esp,SpeciesCodes$Code),"LengthSplit"])) {
