@@ -11,6 +11,7 @@
 #' @param Depth if TRUE includes the depth of each haul, useful to check if it matches sweep length used
 #' @param leg TRUE includes a legend with the country-sweeplength-colors codes
 #' @param legpos Position of the legend, by default bottomright, (bottomleft, upperleft...) 
+#' @param axlab Size of the axis labs
 #' @param graf if FALSE the graph goes to screen, if its a file name (i.e. "graf") a file with that name is created and a message with location (wd) is shown in screen
 #' @param xpng width file png if graf is the name of the file
 #' @param ypng height file png if graf is the name of the file
@@ -22,7 +23,7 @@
 #' @family maps
 #' @export
 SurveyMap.IBTS<-function(Survey,Year,Quarter,ti=TRUE,leg=TRUE,legpos="bottomright",sweeplngt=TRUE,country=FALSE,colhaul="yellow",
-                         depth=FALSE,ICESrect=FALSE,ICESlab=FALSE,ICESlabcex=.7,getICES=TRUE,graf=FALSE,xpng=800,ypng=800,ppng=15){
+                         depth=FALSE,ICESrect=FALSE,ICESlab=FALSE,ICESlabcex=.7,getICES=TRUE,axlab=1,graf=FALSE,xpng=800,ypng=800,ppng=15){
   if (length(Year)>1) stop("Only one year can be shown in this function")
   if (getICES) {
     hauls<-icesDatras::getDATRAS("HH",Survey,Year,Quarter)
@@ -42,7 +43,7 @@ SurveyMap.IBTS<-function(Survey,Year,Quarter,ti=TRUE,leg=TRUE,legpos="bottomrigh
   if (any(Survey=="SCOROC")) replong<-4.5
   if (any(! Survey %in% c("SP-PORC","SCOROC"))) replong<-.5
   ##  
-  IBTSNeAtl_map(load=F,NS=F,leg = F,xlims = c(min(hauls$ShootLong)-.5,replong+max(hauls$ShootLong)),sl=min(hauls$ShootLat)-.5,nl=.5+max(hauls$ShootLat),ICESrect = ICESrect,ICESlab = ICESlab,ICESlabcex = ICESlabcex)
+  IBTSNeAtl_map(load=F,NS=F,leg = F,xlims = c(min(hauls$ShootLong)-.5,replong+max(hauls$ShootLong)),sl=min(hauls$ShootLat)-.5,nl=.5+max(hauls$ShootLat),ICESrect = ICESrect,ICESlab = ICESlab,ICESlabcex = ICESlabcex,axlab = axlab)
   if (country) {
     sweeplngt=FALSE
     points(ShootLat~ShootLong,hauls,pch=21,col="black",bg=as.factor(hauls$Country))
@@ -57,7 +58,7 @@ SurveyMap.IBTS<-function(Survey,Year,Quarter,ti=TRUE,leg=TRUE,legpos="bottomrigh
     text(ShootLat~ShootLong,hauls,label=Depth,cex=.8,font=2,pos=1)
   }
   if (is.logical(ti)) {
-    if (ti) {tit<-list(paste0(unique(Survey)," ",Year," ",paste0("Q",Quarter,collapse = "-")),font=2,cex=1.2)}
+    if (ti) {tit<-list(paste0(unique(Survey)," ",Year," ",paste0("Q",Quarter,collapse = "-")),font=2,cex=1.2*axlab)}
     else {tit<-NULL}
   }
   else {

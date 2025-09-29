@@ -19,6 +19,7 @@ SurveyMap.IBTS(
   ICESlab = FALSE,
   ICESlabcex = 0.7,
   getICES = TRUE,
+  axlab = 1,
   graf = FALSE,
   xpng = 800,
   ypng = 800,
@@ -43,6 +44,8 @@ SurveyMap.IBTS(
 \item{country}{if TRUE hauls have different colors by country, useful only for NS where there are different countries}
 
 \item{colhaul}{choose the color for the bg of the haul if country and sweeplngth are False}
+
+\item{axlab}{Size of the axis labs}
 
 \item{graf}{if FALSE the graph goes to screen, if its a file name (i.e. "graf") a file with that name is created and a message with location (wd) is shown in screen}
 

@@ -81,7 +81,7 @@ SplitLengthsESP<-function(datSurvey,dtyear,dtq,esp="Merluccius merluccius",aphia
   #if (out.dat)  write.csv(dataIBTS.dat,paste0("IBTSdata",datSurvey,substr(dtyear,3,4),"Q",dtq,".csv"),row.names=F)
     #windows()
     if (plot) {
-    IBTSNeAtl_map(out="def",load=F,leg=F,dens=0,nl=max(dataIBTS.dat$ShootLat)+.5,sl=min(dataIBTS.dat$ShootLat)-.5,xlims=c(min(dataIBTS.dat$ShootLong)-1,1+ifelse(max(dataIBTS.dat$ShootLong)>-8,max(dataIBTS.dat$ShootLong),-8)))
+    IBTSNeAtl_map(load=F,leg=F,dens=0,nl=max(dataIBTS.dat$ShootLat)+.5,sl=min(dataIBTS.dat$ShootLat)-.5,xlims=c(min(dataIBTS.dat$ShootLong)-1,1+ifelse(max(dataIBTS.dat$ShootLong)>-8,max(dataIBTS.dat$ShootLong),-8)))
     if (ti) title(main= ifelse(!aphia,worrms::wm_name2id(esp),esp),font.main=4,line=2,sub=bquote(" ">=.(format(paste0(L_Split," cm")))))
 #      bquote(" ">=.(format(paste0(tmin,ifelse(unid.camp(gr,esp)$MED==2," mm"," cm")))))
     if (zeros)  points(ShootLat~ShootLong,dat.HH,pch=20,cex=.8,col="black")  

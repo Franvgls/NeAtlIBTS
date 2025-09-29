@@ -13,6 +13,7 @@ qcHaulsPosit(
   Hpoints = FALSE,
   Nhauls = FALSE,
   getICES = TRUE,
+  esc.mult = 1,
   graf = FALSE,
   xpng = 800,
   ypng = 800,

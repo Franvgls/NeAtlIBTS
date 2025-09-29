@@ -57,7 +57,7 @@ MapLengths_nc<-function(esp,dtSurv,dtyear,dtq,tmin,tmax,add=FALSE,ti=TRUE,subti=
   datmap<-aggregate(CPUE~Year+Survey+Ship+HaulNo,dat.HL,sum)
   toplot<-merge(datmap,dat.HH[,c("HaulNo","ShootLat","ShootLong")],by="HaulNo")
       if (!add) {
-      IBTSNeAtl_map(out="def",load=F,leg=F,dens=0,nl=max(dat.HH$ShootLat)+.5,sl=min(dat.HH$ShootLat)-.5,bw=ifelse(bw,T,F),
+      IBTSNeAtl_map(load=F,leg=F,dens=0,nl=max(dat.HH$ShootLat)+.5,sl=min(dat.HH$ShootLat)-.5,bw=ifelse(bw,T,F),
                              xlims=c(min(dat.HH$ShootLong)-1,1+ifelse(max(dat.HH$ShootLong)>-8,max(dat.HH$ShootLong),-8)))
       }
         if (ti) title(main=SpeciesCodes[match(esp,SpeciesCodes$Code),"Scientific"],font.main=4,line=2.1,cex.main=1*cexleg)

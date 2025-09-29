@@ -20,7 +20,7 @@
 #' @return data.frame with survey, haul, distance and estimated values different errors and hours of dawn/sunrise/dusk
 #' @examples qcHaulsDist("SP-NORTH",c(2024),4,error="Speed"); qcHaulsDist("IE-IAMS",2024,quarter=c(1,1),error="Course")
 #' @export
-qcHaulsDist<-function(Survey="NS-IBTS",years,quarter,pc.error=2,error.rb=TRUE,allHauls=FALSE,plots=TRUE,getICES=TRUE,error=c("Dist","Speed","Course"),graf=FALSE,xpng=800,ypng=800,ppng=15) {
+qcHaulsDist<-function(Survey="NS-IBTS",years,quarter,pc.error=2,error.rb=TRUE,allHauls=FALSE,plots=TRUE,getICES=TRUE,error=c("Dist"),esc.mult=1,graf=FALSE,xpng=800,ypng=800,ppng=15) {
   if (!error %in% c("Dist","Speed","Course")) {stop("Options for error are Dist, Speed or Course")}
   if (getICES) {
       dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
@@ -35,7 +35,7 @@ qcHaulsDist<-function(Survey="NS-IBTS",years,quarter,pc.error=2,error.rb=TRUE,al
   }
   quarter<-unique(dumb$Quarter)
   dumb<-dplyr::filter(dumb,HaulVal=="V")
-  if (any(dumb$HaulLat==c(-9))) stop("Some latitude/longitude data are missing, this function could not be used, Check data")
+#  if (any(dumb$HaulLat==c(-9))) stop("Some latitude/longitude data are missing, this function could not be used, Check data")
   if (any(is.na(dumb$Distance))) {
     datafromNA<-dumb[is.na(dumb$Distance),]
     dumb[is.na(dumb$Distance),"Distance"]<-geosphere::distHaversine(datafromNA[,c("ShootLong","ShootLat")],datafromNA[,c("HaulLong","HaulLat")])
@@ -97,51 +97,51 @@ qcHaulsDist<-function(Survey="NS-IBTS",years,quarter,pc.error=2,error.rb=TRUE,al
       if (length(countries)==1) {
       plot(error.dist~HaulNo,temp,cex=sqrt(1+abs(error.dist)),pch=21,
          bg= dplyr::if_else(error.dist<0,"red","blue"),type="o",xlim=c(0,max(HaulNo)+1),
-         ylim=c(-ylims,ylims),ylab="Error",xlab="Haul number")
+         ylim=c(-ylims,ylims),ylab="Error",xlab="Haul number",cex.lab=1*esc.mult,cex.axis=1*esc.mult)
       }
       else {
         plot(error.dist~HaulNo,temp,cex=sqrt(1+abs(error.dist)),pch=21,xlim=c(0,max(HaulNo)+1),
              bg= as.factor(Country),type="o",
-             ylim=c(-ylims,ylims),ylab="Error",xlab="Haul number")
+             ylim=c(-ylims,ylims),ylab="Error",xlab="Haul number",cex.lab=1*esc.mult,cex.axis=1*esc.mult)
         legend("bottomright",unique(temp$Country),pch=21,cex=1,pt.bg=as.factor(temp$Country),inset = .05)
       }
-      mtext(paste("Survey",unique(dumb$Survey)),side=3,line =0,adj =0,cex=0.8,font=2)
+      mtext(paste("Survey",unique(dumb$Survey)),side=3,line =0,adj =0,cex=0.8*esc.mult,font=2)
       abline(h=c(-quantile(temp$error.dist+mean(temp$error.dist,na.rm=T),pc.error/10),0,quantile(temp$error.dist+mean(temp$error.dist,na.rm=T),pc.error/10)),lty=c(3,2,3),lwd=c(.5,1,.5))
-      title(main="Distance-Points error")
+      title(main="Distance-Points error",cex.main=1.1*esc.mult)
     }
     if (error=="Speed"){
     ylims<-hablar::max_(abs(temp$error.vel))*1.1
     if (length(countries)==1) {
       plot(error.vel~HaulNo,temp,cex=sqrt(abs(error.vel)),pch=21,
          bg=dplyr::if_else(error.vel<0,"red","blue"),type="o",ylim=c(-ylims,ylims),xlim=c(0,max(HaulNo)+1),
-         ylab="Error",xlab="Haul Number")
+         ylab="Error",xlab="Haul Number",cex.lab=1*esc.mult,cex.axis=1*esc.mult)
     }
     else {
       plot(error.vel~HaulNo,temp,cex=sqrt(abs(error.vel)),pch=21,
            bg= as.factor(Country),type="o",ylim=c(-ylims,ylims),xlim=c(0,max(HaulNo)+1),
-           ylab="Error",xlab="Haul Number")
+           ylab="Error",xlab="Haul Number",cex.lab=1*esc.mult,cex.axis=1*esc.mult)
       legend("bottomright",unique(temp$Country),pch=21,cex=1,pt.bg=as.factor(temp$Country),inset = .05)
     }
-    mtext(paste("Survey",unique(dumb$Survey)),side=3,line =0,adj =0,cex=0.8,font=2)
+    mtext(paste("Survey",unique(dumb$Survey)),side=3,line =0,adj =0,cex=0.8*esc.mult,font=2)
     abline(h=c(-quantile(temp$error.vel,pc.error/10),0,quantile(temp$error.vel,pc.error/10)),lty=c(3,2,3),lwd=c(.5,1,.5))
-    title(main="Distance-speed error")
+    title(main="Distance-speed error",cex.main=1.1*esc.mult)
     }
     if (error=="Course"){
     ylims<-hablar::max_(abs(temp$error.rumb))*1.1
     if (length(countries)==1) {
       plot(error.rumb~HaulNo,temp,cex=sqrt(abs(error.rumb)),pch=21,
          bg=dplyr::if_else(error.rumb<0,"red","blue"),type="o",ylim=c(-ylims,ylims),xlim=c(0,max(HaulNo)+1),
-         ylab="Error",xlab="Haul Number")
+         ylab="Error",xlab="Haul Number",cex.lab=1*esc.mult,cex.axis=1*esc.mult)
     }
     else {
       plot(error.rumb~HaulNo,temp,cex=sqrt(abs(error.rumb)),pch=21,
            bg= as.factor(Country),type="o",ylim=c(-ylims,ylims),xlim=c(0,max(HaulNo)+1),
-           ylab="Error",xlab="Haul Number")
+           ylab="Error",xlab="Haul Number",cex.lab=1*esc.mult,cex.axis=1*esc.mult)
       legend("bottomright",unique(temp$Country),pch=21,cex=1,pt.bg=as.factor(temp$Country),inset = .05)
     }
-    mtext(paste("Survey",unique(dumb$Survey)),side=3,line =0,adj =0,cex=0.8,font=2)
+    mtext(paste("Survey",unique(dumb$Survey)),side=3,line =0,adj =0,cex=0.8*esc.mult,font=2)
     abline(h=c(-quantile(temp$error.rumb,pc.error/10),0,quantile(temp$error.rumb,pc.error/10)),lty=c(3,2,3),lwd=c(.5,1,.5))
-    title(main="Course vs. Shoot-end points error")
+    title(main="Course vs. Shoot-end points error",cex.main=1.1*esc.mult)
     }
     }
   if (length(unique(lubridate::year(dumb$date)))>1) 

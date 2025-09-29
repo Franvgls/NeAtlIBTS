@@ -30,7 +30,7 @@ IBTSNeAtl_map_porc(
 
 \item{leg}{= TRUE if TRUE includes the legend with the colors of the surveys}
 
-\item{es}{= F if F letreros en inglés si T en español}
+\item{es}{= F if F texts in English, if TRUE in Spanish}
 
 \item{places}{=T if T incluye letreros de Irlanda y Galway}
 
@@ -56,5 +56,5 @@ IBTSNeAtl_map_porc(
 Produces a map from the shapefiles that define the IBTSNeAtl solo Porcupine
 }
 \examples{
-IBTSNeAtl_map_porc(out="def",dens=0,leg=F,ICESrect = T);text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
+IBTSNeAtl_map_porc(dens=0,leg=F,ICESrect = T);text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
 }

@@ -61,6 +61,8 @@ IBTSNeAtl_map(
 
 \item{bw}{= True plots the map with land in grey, if F in light brown (burlywood3)}
 
+\item{axlab}{=1 size of axis labs}
+
 \item{bords}{= TRUE plots the borders o the countries, FALSE leaves dashed lines}
 
 \item{shpdir}{= path to the folder with the shapefiles}

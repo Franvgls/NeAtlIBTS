@@ -18,6 +18,7 @@
 #' @param ICESrect = FALSE if TRUE plots the lines of the ICES statistic rectangles
 #' @param ICESlab = FALSE if TRUE plots labs por ICES rectangles
 #' @param ICESlabcex tamaño del ICESlab en cex, .5 por defecto subirlo si se quiere más grande
+#' @param axlab =1 size of axis labs
 #' @param NS = FALSE if TRUE includes the ICES rectangles only for the North Sea area
 #' @param bathy = TRUE if TRUE plots the isobaths under the behind the shapefiles
 #' @param bw = True plots the map with land in grey, if F in light brown (burlywood3)

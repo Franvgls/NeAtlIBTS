@@ -21,7 +21,7 @@
 #, it also includes information on the ship, the time series used the model used and parameters estimated.
 #' @examples gearPlotdumb.wrpdp("NS-IBTS",c(2014:2017),1,"SWE")
 #' @export
-qcHaulsPosit<-function(Survey="NS-IBTS",years,quarter,col1="red",ti=TRUE,Hpoints=FALSE,Nhauls=FALSE,getICES=TRUE,graf=FALSE,xpng=800,ypng=800,ppng=15) {
+qcHaulsPosit<-function(Survey="NS-IBTS",years,quarter,col1="red",ti=TRUE,Hpoints=FALSE,Nhauls=FALSE,getICES=TRUE,esc.mult=1,graf=FALSE,xpng=800,ypng=800,ppng=15) {
   if (getICES) {
     dumb<-icesDatras::getDATRAS("HH",Survey,years,quarter)
   }
@@ -54,7 +54,7 @@ qcHaulsPosit<-function(Survey="NS-IBTS",years,quarter,col1="red",ti=TRUE,Hpoints
   if (Nhauls) text(dumb$ShootLong,dumb$ShootLat,labels = dumb$HaulNo,cex=.8) 
   if (Hpoints) points(ShootLat~ShootLong,dumb,pch=21,cex=2,bg="blue") 
   if (is.logical(ti)) {
-    if (ti) {tit<-list(paste0(Survey," ",years," ",paste0("Q",quarter,collapse = "-")),font=2,cex=1.2)}
+    if (ti) {tit<-list(paste0(Survey," ",years," ",paste0("Q",quarter,collapse = "-")),font=2,cex=1.2*esc.mult)}
     else {tit<-NULL}
   }
   else {

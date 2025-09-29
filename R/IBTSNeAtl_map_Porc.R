@@ -14,8 +14,8 @@
 #' @param shpdir = path to the folder with the shapefiles
 #' @param load = T or F to load all the shapes files
 #' @param places =T if T incluye letreros de Irlanda y Galway
-#' @param es = F if F letreros en inglés si T en español
-#' @examples IBTSNeAtl_map_porc(out="def",dens=0,leg=F,ICESrect = T);text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
+#' @param es = F if F texts in English, if TRUE in Spanish
+#' @examples IBTSNeAtl_map_porc(dens=0,leg=F,ICESrect = T);text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
 #' @export
 IBTSNeAtl_map_porc<-function(nl=54.5,sl=50.5,xlims=c(-15.5,-8.5),leg=FALSE,es=FALSE,places=T,cex.leg=.7,dens=30,ICESdiv=TRUE,ICESrect=FALSE,bathy=TRUE,out="def",
                              nfile="NeAtlIBTS_map_porc",lwdl=.1,load=TRUE,shpdir="c:/GitHubRs/shapes/") {
