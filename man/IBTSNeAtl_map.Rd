@@ -15,7 +15,7 @@ IBTSNeAtl_map(
   load = TRUE,
   ICESdiv = TRUE,
   ICESrect = FALSE,
-  ICESlab = F,
+  ICESlab = FALSE,
   ICESlabcex = 0.8,
   NS = FALSE,
   bathy = TRUE,

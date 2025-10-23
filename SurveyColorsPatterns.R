@@ -4,7 +4,7 @@ cbind(surveys,colores,seq(0,350,by=32))
 
 library(NeAtlIBTS)
 png("NeAtlIBTS_map_old.png",width = 1500,height = 2200,pointsize = 40)
-NeAtlIBTS::IBTSNeAtl_map(shpdir="c:/GitHubRs/shapes/",dens=100)
+IBTSNeAtl_map(shpdir="c:/GitHubRs/shapes/",dens=100)
 dev.off()
 
 png("NeAtlIBTS_map_new.NS.png",width = 2000,height = 2200,pointsize = 40)
