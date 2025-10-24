@@ -34,7 +34,7 @@
 #' @param ppng points png archivo si graf es el nombre del fichero
 #' @examples IBTSNeAtl_map(dens=0,nl=45,leg=F,load=TRUE,ICESrect = T,graf="MapIBTS");text(stat_y~stat_x,Area,labels=ICESNAME,cex=.8,font=4);text(stat_y~stat_x,Area,labels=Area,cex=.6,pos=1,col=2) 
 #' @export
-IBTSNeAtl_map <- function(nl=60.5, sl=36.0, xlims=c(-18,3), leg=TRUE, legpos=c("bottomright"), cex.leg=.7, dens=30,
+IBTSNeAtl_map <- function(nl=60.5, sl=36.0, xlims=c(-18,3), leg=TRUE, legpos=c("bottomright"), cex.leg=.9, dens=300,
                           load=TRUE, ICESdiv=TRUE, ICESrect=FALSE, ICESlab=FALSE, ICESlabcex=.8, NS=FALSE, bathy=TRUE,
                           bw=FALSE, axlab=.8, bords=TRUE, lwdl=.1, shpdir="c:/GitHubRs/shapes/", places=FALSE, minpop=200000,
                           graf=FALSE, xpng=1200, ypng=800, ppng=15) {
@@ -180,9 +180,11 @@ IBTSNeAtl_map <- function(nl=60.5, sl=36.0, xlims=c(-18,3), leg=TRUE, legpos=c("
       survs<- c("SCOWCGFS","SCOROC","NIGFS","IE-IGFS","SP-PORC","FR-CGFS","FR-WCGFS","EVHOE","SP-NORTH","PT-IBTS","SP-ARSA")
       colores=colores[2:length(colores)]
     }
-    legend(legpos, legend=survs, pch=15,col=colores, cex=cex.leg,
-           inset=c(.03,.03),pt.cex = 2, title="SURVEYS", bg="white", text.col="black",
-           dens=dens, angle=seq(0,350,by=32))
+    legend(legpos,legend = survs,fill = colores,density = dens,angle = seq(0, 350, by = 32),cex = cex.leg,
+           inset = c(.03, .03),title = "SURVEYS",bg = "white",text.col = "black")
+    # legend(legpos, legend=survs, pch=15,col=colores, cex=cex.leg,
+    #        inset=c(.03,.03),pt.cex = cex.leg, title="SURVEYS", bg="white", text.col="black",
+    #        dens=dens, angle=seq(0,350,by=32))
   }
   
   if (!is.logical(graf)) {
