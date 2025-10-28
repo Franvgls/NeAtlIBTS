@@ -117,8 +117,8 @@ IBTSNeAtl_map <- function(nl=60.5, sl=36.0, xlims=c(-18,3), leg=TRUE, legpos=c("
   
   # --- Dibujos base ---
   if (bathy) {
-    sp::plot(bath100_sp[1], add=TRUE, col=ifelse(bw,gray(.85),gray(.50)), lwd=.1)
-    sp::plot(bathy.geb_sp[bathy.geb_sp$DEPTH!=100,1], add=TRUE, col=ifelse(bw,gray(.85),gray(.50)), lwd=.1)
+    sp::plot(bath100_sp[1], add=TRUE, col=ifelse(bw,gray(.85),gray(.70)), lwd=.1)
+    sp::plot(bathy.geb_sp[bathy.geb_sp$DEPTH!=100,1], add=TRUE, col=ifelse(bw,gray(.85),gray(.65)), lwd=.1)
   }
   if (ICESdiv) sp::plot(ices.div_sp[1], add=TRUE, col=NA, border="burlywood")
   
